@@ -1,0 +1,25 @@
+{
+  "name": "cgpa_book",
+  "version": "1.0.0",
+  "description": "Easy to use , generalized app to calculate CGPA with ease ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parth-07/cgpa_book.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/parth-07/cgpa_book/issues"
+  },
+  "homepage": "https://github.com/parth-07/cgpa_book#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.6.0",
+    "mongoose": "^5.9.28",
+    "morgan": "^1.10.0"
+  }
+}
