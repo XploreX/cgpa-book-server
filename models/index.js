@@ -17,7 +17,7 @@ function addModelsToExports(dir) {
     for(const file of files) {
         if(file != path.relative(dir,__filename))
         {
-            let modelName = capitalizeFirstLetter(file.split('.')[0].split('/').slice(-1)[0]);
+            let modelName = capitalizeFirstLetter(file.split('.')[0].split('/').slice(-1)[0]);  //basically getting file base name with first letter capitalized
             // let schemaName = file.split('.')[0] + 'Schema';
             let schemaFile = './'+file;
             // console.log(modelName,schemaFile);
