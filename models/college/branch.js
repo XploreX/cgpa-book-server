@@ -11,4 +11,22 @@ var branchSchema = new Schema({
     'semesters' : [semesterSchema]
 });
 
+branchSchema.methods.getSemester = function(semesterNumber) {
+    for(semester of this.semesters ) {
+        if(semester.semester == semesterNumber) {
+            return semester;
+        }
+    }
+    return null;
+}
+
+branchSchema.methods.semesterID = function(semesterNumber) {
+    for(semester of this.semesters) {
+        if(semester.semester == semesterNumber) {
+            return semester._id;
+        }
+    }
+    return -1;
+}
+
 module.exports = branchSchema

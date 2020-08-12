@@ -12,4 +12,22 @@ var courseSchema = new Schema({
     'branches' : [branchSchema]
 });
 
+courseSchema.methods.getBranch = function(branchName) {
+    for(branch of this.branches) {
+        if(branch.branch == branchName) {
+            return branch;
+        }
+    }
+    return null;
+}
+
+courseSchema.methods.branchID = function(branchName) {
+    for(branch of this.branches) {
+        if(branch.branch == branchName) {
+            return branch._id;
+        }
+    }
+    return -1;
+}
+
 module.exports = courseSchema;
