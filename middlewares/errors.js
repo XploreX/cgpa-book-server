@@ -14,6 +14,9 @@ function genericErrorHandler(err,req,res,next) {
         err.status = 500;
         err.type = 'MongoError';
     }
+    else {
+        next(err);
+    }
     res.status(err.status).json({
         type : err.type,
         message : err.message
