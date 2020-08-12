@@ -22,6 +22,20 @@ router.get('/college', (req, res, next) => {
         .catch(next);
 })
 
+router.post('/course', (req, res, next) => {
+    let query = req.body;
+    College.findOne({ college: query['college'] })
+        .then((college) => {
+            courses = college.courses;
+            courses.push(query['course']);
+            return college.save()
+        })
+        .then((doc)=>{
+            res.sendStatus(STATUS_OK);
+        })
+        .catch(next);
+})
+
 router.get('/course', (req, res, next) => {
     let query = req.body;
     College.findOne({ college: query['college'] })
@@ -56,6 +70,22 @@ router.get('/branch', (req, res, next) => {
             let course = college.getCourse(query['course']);
             let branch = course.getBranch(query['branch']);
             res.status(STATUS_OK).json(branch);
+        })
+        .catch(next);
+})
+
+router.post('/semester', (req, res, next) => {
+    let query = req.body;
+    College.findOne({ college: query['college'] })
+        .then((college) => {
+            let course = college.getCourse(query['course']);
+            let branch = course.getBranch(query['branch']);
+            let semesters = branch.semesters;
+            semesters.push(query['semester']);
+            return college.save()
+        })
+        .then((doc) => {
+            res.sendStatus(STATUS_OK);
         })
         .catch(next);
 })
