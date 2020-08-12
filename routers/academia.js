@@ -15,4 +15,22 @@ router.post('/college',(req,res,next) => {
     });
 })
 
+router.get('/college',(req,res,next) => {
+    College.findOne(req.body)
+    .then((college) => {
+        console.log(college);
+        res.status(200).json(college);
+    })
+    .catch((err) => {
+        err.status = 400;
+        next(err);
+    })
+})
+
+/* router.post('/branch',(req,res,next) => {
+    let collegeName = req.body['college'];
+    let courseName = req.body['course'];
+
+}) */
+
 module.exports = router;
