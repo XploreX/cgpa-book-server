@@ -31,29 +31,17 @@ router.post('/branch', (req, res, next) => {
     let collegeName = req.body['college'];
     let courseName = req.body['course'];
     let branch = req.body['branch'];
-    console.log(branch);
     College.findOne({ college: collegeName })
         .then((college) => {
-            if (!college) {
-                throw new Error("Given college not found");
-            }
             let course = college.getCourse(courseName);
-            if(!course) {
-                throw new Error("Given college course not found");
-            }
             branches = course.branches;
-            // branches.push(branch);
-            console.log(course);
+            branches.push(branch);
             return college.save()
         })
         .then((doc) => {
             res.sendStatus(200);
         })
-        .catch((err) => {
-            err.status = 400;
-            next(err);
-        })
-
+        .catch(next);
 })
 
 module.exports = router;
