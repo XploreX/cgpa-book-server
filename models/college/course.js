@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const semesterSchema = require('./semester.js');
+const branchSchema = require('./branch.js');
 const Schema = mongoose.Schema;
 
 var courseSchema = new Schema({
@@ -9,7 +9,7 @@ var courseSchema = new Schema({
         trim: true,
         minlength: 1
     },
-    'semesters': [semesterSchema]
+    'branches' : [branchSchema]
 });
 
 module.exports = courseSchema;

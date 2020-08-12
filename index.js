@@ -1,9 +1,10 @@
-const mongoose = require('mongoose');
-const {College} = require('./models/index.js');
-const { glob } = require('glob');
-const { basicErrorHandler } = require('./utility/error-handlers');
+const express = require('express');
+const morgan = require('morgan');
+var app = express();
 
-mongoose.Promise = global.Promise;
+app.use(express.json());
+app.use(express.urlencoded({extended : true}));
+app.use('/academia',require('./routers/academia.js'));
 
-mongoose.connect("mongodb://localhost:27017/cgpa_book",{useNewUrlParser : true , useUnifiedTopology : true})
-    .catch(basicErrorHandler);
+
+module.exports = app;

@@ -1,5 +1,10 @@
-function basicErrorHandler(err) {
-    console.log("Error occured");
+function basicErrorHandler(err, message = null) {
+    if(message)
+    {
+        console.log(message);
+    }
+    else
+        console.log("Error occured");
     throw err;
 }
 
