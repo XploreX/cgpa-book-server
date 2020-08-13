@@ -6,13 +6,14 @@ var semesterSchema = new Schema({
     'semester' : {
         type : Number,
         required : true,
+        unique : true
     },
     'subjects' : [subjectSchema]
 });
 
 semesterSchema.methods.getSubject = function(subjectName) {
     for(subject of this.subjects) {
-        if(subject.subject == subjectName) {
+        if(subject.subject.match(subjectName)) {
             return subject;
         }
     }
@@ -21,7 +22,7 @@ semesterSchema.methods.getSubject = function(subjectName) {
 
 semesterSchema.methods.subjectID = function(subjectName) {
     for(subject of this.subjects) {
-        if(subject.subject == subjectName) {
+        if(subject.subject.match(subjectName)) {
             return subject._id;
         }
     }

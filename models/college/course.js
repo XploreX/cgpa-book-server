@@ -7,14 +7,15 @@ var courseSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        minlength: 1
+        minlength: 1,
+        unique : true
     },
     'branches' : [branchSchema]
 });
 
 courseSchema.methods.getBranch = function(branchName) {
     for(branch of this.branches) {
-        if(branch.branch == branchName) {
+        if(branch.branch.match(branchName)) {
             return branch;
         }
     }
@@ -23,7 +24,7 @@ courseSchema.methods.getBranch = function(branchName) {
 
 courseSchema.methods.branchID = function(branchName) {
     for(branch of this.branches) {
-        if(branch.branch == branchName) {
+        if(branch.branch.match(branchName)) {
             return branch._id;
         }
     }

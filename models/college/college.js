@@ -7,6 +7,12 @@ var collegeSchema = new Schema({
         type : String,
         required : true,
         trim : true,
+        minlength : 1,
+        unique : true ,
+    },
+    nameShort : {
+        type : String,
+        trim : true ,
         minlength : 1
     },
     courses : [courseSchema]
@@ -14,7 +20,7 @@ var collegeSchema = new Schema({
 
 collegeSchema.methods.courseID = function (courseName) {
     for(course of this.courses) {
-        if(course.course == courseName)
+        if(course.course.match(courseName))
         {
             return course._id;
         }
@@ -24,7 +30,7 @@ collegeSchema.methods.courseID = function (courseName) {
 
 collegeSchema.methods.getCourse = function(courseName) {
     for(course of this.courses) {
-        if(course.course == courseName) {
+        if(course.course.match(courseName)) {
             return course;
         }
     }

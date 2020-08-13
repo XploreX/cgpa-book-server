@@ -1,6 +1,7 @@
 const express = require('express');
-const { College } = require('../models/index.js');
+const { College, Course } = require('../models/index.js');
 const courseSchema = require('../models/college/course.js');
+const { updateToIgnorecase } = require('../utility/dictionary-helpers');
 
 var router = express.Router();
 const STATUS_OK = 200;
@@ -15,22 +16,39 @@ router.post('/college', (req, res, next) => {
 })
 
 router.get('/college', (req, res, next) => {
-    College.findOne(req.body)
+    let query = req.body;
+    if (query['ignorecase'] == true) {
+        updateToIgnorecase(query);
+    }
+    College.findOne({college : query['college']})
         .then((college) => {
             res.status(STATUS_OK).json(college);
         })
         .catch(next);
 })
 
+router.get('/college-list', (req, res, next) => {
+    query = req.body;
+
+    Course.findOne({ course: query['course'] })
+        .then((course) => {
+            console.log(course);
+        })
+        .catch(next);
+})
+
 router.post('/course', (req, res, next) => {
     let query = req.body;
+    if(query['ignorecase']) {
+        updateToIgnorecase(query);
+    }
     College.findOne({ college: query['college'] })
         .then((college) => {
             courses = college.courses;
             courses.push(query['course']);
             return college.save()
         })
-        .then((doc)=>{
+        .then((doc) => {
             res.sendStatus(STATUS_OK);
         })
         .catch(next);
@@ -38,6 +56,9 @@ router.post('/course', (req, res, next) => {
 
 router.get('/course', (req, res, next) => {
     let query = req.body;
+    if(query['ignorecase']) {
+        updateToIgnorecase(query);
+    }
     College.findOne({ college: query['college'] })
         .then((college) => {
             let course = college.getCourse(query['course']);
@@ -65,6 +86,9 @@ router.post('/branch', (req, res, next) => {
 
 router.get('/branch', (req, res, next) => {
     let query = req.body;
+    if(query['ignorecase']) {
+        updateToIgnorecase(query);
+    }
     College.findOne({ college: query['college'] })
         .then((college) => {
             let course = college.getCourse(query['course']);
@@ -92,6 +116,9 @@ router.post('/semester', (req, res, next) => {
 
 router.get('/semester', (req, res, next) => {
     let query = req.body;
+    if(query['ignorecase']) {
+        updateToIgnorecase(query);
+    }
     College.findOne({ college: query['college'] })
         .then((college) => {
             let course = college.getCourse(query['course']);
@@ -104,6 +131,9 @@ router.get('/semester', (req, res, next) => {
 
 router.get('/subject', (req, res, next) => {
     let query = req.body;
+    if(query['ignorecase']) {
+        updateToIgnorecase(query);
+    }
     College.findOne({ college: query['college'] })
         .then((college) => {
             let course = college.getCourse(query['course']);

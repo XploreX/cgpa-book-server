@@ -6,6 +6,12 @@ var branchSchema = new Schema({
     'branch' : {
         type : String,
         trim : true,
+        minlength : 1,
+        unique : true
+    },
+    nameShort : {
+        type : String,
+        trim : true ,
         minlength : 1
     },
     'semesters' : [semesterSchema]
