@@ -10,11 +10,12 @@ function genericErrorHandler(err,req,res,next) {
         err.status = 400;
         err.type = 'TypeError';
     }
-    else if(err instanceof MongoError) {
+    else if(err instanceof MongoError || err.name == 'MongoError') {
         err.status = 500;
         err.type = 'MongoError';
     }
     else {
+        err.status = 503;
         next(err);
     }
     res.status(err.status).json({

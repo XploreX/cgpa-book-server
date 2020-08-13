@@ -7,7 +7,6 @@ var subjectSchema = new Schema({
         required : true,
         trim : true,
         minlength : 1,
-        unique : true
     },
     'subjectCode' : {
         type : String ,

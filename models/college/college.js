@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const courseSchema = require('./course.js');
+const {getAbbreviation} = require('../../utility/string-helpers.js');
 const Schema = mongoose.Schema;
 
 var collegeSchema = new Schema({
@@ -10,7 +11,7 @@ var collegeSchema = new Schema({
         minlength : 1,
         unique : true ,
     },
-    nameShort : {
+    abbreviation : {
         type : String,
         trim : true ,
         minlength : 1
@@ -18,8 +19,13 @@ var collegeSchema = new Schema({
     courses : [courseSchema]
 });
 
+collegeSchema.pre('save',function (next) {
+    this.abbreviation = getAbbreviation(this.college);
+    next();
+})
+
 collegeSchema.methods.courseID = function (courseName) {
-    for(course of this.courses) {
+    for(let course of this.courses) {
         if(course.course.match(courseName))
         {
             return course._id;
@@ -29,7 +35,7 @@ collegeSchema.methods.courseID = function (courseName) {
 }
 
 collegeSchema.methods.getCourse = function(courseName) {
-    for(course of this.courses) {
+    for(let course of this.courses) {
         if(course.course.match(courseName)) {
             return course;
         }

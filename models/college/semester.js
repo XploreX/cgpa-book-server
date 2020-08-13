@@ -6,13 +6,23 @@ var semesterSchema = new Schema({
     'semester' : {
         type : Number,
         required : true,
-        unique : true
+    },
+    'creditsTotal' : {
+        type : Number,
     },
     'subjects' : [subjectSchema]
 });
 
+semesterSchema.pre('save',function(next) {
+    this.creditsTotal = 0;
+    for(let subject of this.subjects) {
+        this.creditsTotal+=subject.credits;
+    }
+    next();
+})
+
 semesterSchema.methods.getSubject = function(subjectName) {
-    for(subject of this.subjects) {
+    for(let subject of this.subjects) {
         if(subject.subject.match(subjectName)) {
             return subject;
         }
@@ -21,7 +31,7 @@ semesterSchema.methods.getSubject = function(subjectName) {
 }
 
 semesterSchema.methods.subjectID = function(subjectName) {
-    for(subject of this.subjects) {
+    for(let subject of this.subjects) {
         if(subject.subject.match(subjectName)) {
             return subject._id;
         }

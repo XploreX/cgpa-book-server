@@ -1,10 +1,24 @@
 const express = require('express');
 const { College, Course } = require('../models/index.js');
 const courseSchema = require('../models/college/course.js');
-const { updateToIgnorecase } = require('../utility/dictionary-helpers');
+const { updateValuesToIgnorecase,updateValuesToRegExp } = require('../utility/dictionary-helpers');
 
 var router = express.Router();
 const STATUS_OK = 200;
+
+router.get('/*',(req,res,next) => {
+    query = req.body;
+    if(!('college' in query))
+        query['college'] = '.*';
+    if(query['ignorecase'])
+    {
+        updateValuesToIgnorecase(query);
+    }
+    else {
+        updateValuesToRegExp(query);
+    }
+    next();
+})
 
 router.post('/college', (req, res, next) => {
     college = new College(req.body);
@@ -17,10 +31,7 @@ router.post('/college', (req, res, next) => {
 
 router.get('/college', (req, res, next) => {
     let query = req.body;
-    if (query['ignorecase'] == true) {
-        updateToIgnorecase(query);
-    }
-    College.findOne({college : query['college']})
+    College.findOne({ college: query['college'] })
         .then((college) => {
             res.status(STATUS_OK).json(college);
         })
@@ -29,19 +40,35 @@ router.get('/college', (req, res, next) => {
 
 router.get('/college-list', (req, res, next) => {
     query = req.body;
-
-    Course.findOne({ course: query['course'] })
-        .then((course) => {
-            console.log(course);
+    collegeList = [];
+    // console.log(query);
+    College.find({ college: query['college'] })
+        .then((colleges) => {
+            for (college of colleges) {
+                if ('course' in query) {
+                    let course = college.getCourse(query['course']);
+                    if (course) {
+                        if ('branch' in query) {
+                            let branch = course.getBranch(query['branch']);
+                            if (!branch)
+                                continue;
+                        }
+                    }
+                    else continue;
+                }
+                collegeName = college.college;
+                if (college['abbreviation']) {
+                    collegeName += ' ( ' + college.abbreviation + ' ) ';
+                }
+                collegeList.push(collegeName);
+            }
+            res.status(STATUS_OK).json(collegeList);
         })
         .catch(next);
 })
 
 router.post('/course', (req, res, next) => {
     let query = req.body;
-    if(query['ignorecase']) {
-        updateToIgnorecase(query);
-    }
     College.findOne({ college: query['college'] })
         .then((college) => {
             courses = college.courses;
@@ -56,9 +83,7 @@ router.post('/course', (req, res, next) => {
 
 router.get('/course', (req, res, next) => {
     let query = req.body;
-    if(query['ignorecase']) {
-        updateToIgnorecase(query);
-    }
+    
     College.findOne({ college: query['college'] })
         .then((college) => {
             let course = college.getCourse(query['course']);
@@ -86,9 +111,6 @@ router.post('/branch', (req, res, next) => {
 
 router.get('/branch', (req, res, next) => {
     let query = req.body;
-    if(query['ignorecase']) {
-        updateToIgnorecase(query);
-    }
     College.findOne({ college: query['college'] })
         .then((college) => {
             let course = college.getCourse(query['course']);
@@ -116,9 +138,6 @@ router.post('/semester', (req, res, next) => {
 
 router.get('/semester', (req, res, next) => {
     let query = req.body;
-    if(query['ignorecase']) {
-        updateToIgnorecase(query);
-    }
     College.findOne({ college: query['college'] })
         .then((college) => {
             let course = college.getCourse(query['course']);
@@ -131,9 +150,6 @@ router.get('/semester', (req, res, next) => {
 
 router.get('/subject', (req, res, next) => {
     let query = req.body;
-    if(query['ignorecase']) {
-        updateToIgnorecase(query);
-    }
     College.findOne({ college: query['college'] })
         .then((college) => {
             let course = college.getCourse(query['course']);

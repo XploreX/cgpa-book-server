@@ -7,9 +7,8 @@ var branchSchema = new Schema({
         type : String,
         trim : true,
         minlength : 1,
-        unique : true
     },
-    nameShort : {
+    abbreviation : {
         type : String,
         trim : true ,
         minlength : 1
@@ -18,7 +17,7 @@ var branchSchema = new Schema({
 });
 
 branchSchema.methods.getSemester = function(semesterNumber) {
-    for(semester of this.semesters ) {
+    for(let semester of this.semesters ) {
         if(semester.semester == semesterNumber) {
             return semester;
         }
@@ -27,7 +26,7 @@ branchSchema.methods.getSemester = function(semesterNumber) {
 }
 
 branchSchema.methods.semesterID = function(semesterNumber) {
-    for(semester of this.semesters) {
+    for(let semester of this.semesters) {
         if(semester.semester == semesterNumber) {
             return semester._id;
         }
