@@ -4,7 +4,7 @@ const { basicErrorHandler } = require('./utility/error-handlers.js');
 
 
 const PORT = process.env.PORT || 3000;
-const DB_CONNECTION_STRING = "mongodb://localhost:27017/cgpa_book";
+const DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING || "mongodb://localhost:27017/cgpa_book";
 
 console.log(DB_CONNECTION_STRING);
 
