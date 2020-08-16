@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const { logErrors, genericErrorHandler } = require('./middlewares/errors');
+const errors = require('./middlewares/errors');
 var app = express();
 
 app.use(express.json());
@@ -12,6 +12,7 @@ app.get('/', (req, res) => {
     res.status(200).send('Okaeri');
 })
 
-app.use(logErrors);
-app.use(genericErrorHandler);
+app.use(errors.notFoundHandler);
+app.use(errors.logErrors);
+app.use(errors.genericErrorHandler);
 module.exports = app;
