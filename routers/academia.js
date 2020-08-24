@@ -3,19 +3,21 @@ const { College, Course } = require('../models/index.js');
 const courseSchema = require('../models/college/course.js');
 const { prepareQuery} = require('../utility/dictionary-helpers');
 const {updateLastModifed} = require('../utility/mongo-helpers');
+const { query } = require('express');
 
 var router = express.Router();
 const STATUS_OK = 200;
 const LAST_MODIFIED_HEADER = 'Last-Modified';
 
 router.get('/*', (req, res, next) => {
-    query = req.body;
+    let query = req.body;
     if (!('college' in query))
         query['college'] = '.*';
     let flags = '';
-    if (query['ignorecase']) {
+    if (query['ignorecase'].toLowerCase() == 'true') {
         flags += 'i';
     }
+    query['semester'] = Number(query['semester']);
     prepareQuery(query,flags);
     next();
 })
@@ -210,6 +212,7 @@ router.get('/semester', (req, res, next) => {
         .then((college) => {
             let course = college.getCourse(query['course']);
             let branch = course.getBranch(query['branch']);
+            console.log(branch);
             let semester = branch.getSemester(query['semester']);
             res.append(LAST_MODIFIED_HEADER, semester.lastModified);
             res.status(STATUS_OK).json(semester);
