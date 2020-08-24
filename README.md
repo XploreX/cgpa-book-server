@@ -48,9 +48,9 @@ Currently query object supports following keys :
 
 [https://cgpa-book.herokuapp.com/academia/college-list](https://cgpa-book.herokuapp.com/academia/college-list) : Get json array of college names satisfying provided query
 
-[https://cgpa-book.herokuapp.com/academia/branch-list](https://cgpa-book.herokuapp.com/academia/branch-list) : Get json array of branch names satisfying provided query
+[https://cgpa-book.herokuapp.com/academia/branch-list](https://cgpa-book.herokuapp.com/academia/branch-list) : Get json array of branch names of a particular college and course satisfying provided query
 
-[https://cgpa-book.herokuapp.com/academia/semester-list](https://cgpa-book.herokuapp.com/academia/semester-list) : Get json array of semester names satisfying provided query
+[https://cgpa-book.herokuapp.com/academia/semester-list](https://cgpa-book.herokuapp.com/academia/semester-list) : Get json array of semester numbers of a particular college,course and branch satisfying provided query
 
 [https://cgpa-book.herokuapp.com/academia/college](https://cgpa-book.herokuapp.com/academia/college) : Get complete data of first college satisfying provided query
 
@@ -59,3 +59,37 @@ Currently query object supports following keys :
 [https://cgpa-book.herokuapp.com/academia/branch](https://cgpa-book.herokuapp.com/academia/branch) : Get complete data of first branch satisfying provided query
 
 [https://cgpa-book.herokuapp.com/academia/semester](https://cgpa-book.herokuapp.com/academia/semester) : Get complete data of first semester satisfying provided query
+
+##### Examples
+
+To get all branches of a course ,json query object should look like , 
+
+{
+
+  college : college_name_RegExp,
+  
+  course : course_name_RegExp,
+  
+  ignorecase : true
+  
+}
+
+and api call should be made to [https://cgpa-book.herokuapp.com/academia/branch-list](https://cgpa-book.herokuapp.com/academia/branch-list)
+
+To get complete grading information of a semester ,json query object should look like , 
+
+{
+
+  college : college_name_RegExp,
+  
+  course : course_name_RegExp,
+  
+  branch : branch_name_RegExp,
+  
+  semester : semester_number,
+  
+  ignorecase : true
+  
+}
+
+and api call should be made to [https://cgpa-book.herokuapp.com/academia/semester](https://cgpa-book.herokuapp.com/academia/semester)
