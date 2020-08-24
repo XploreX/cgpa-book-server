@@ -1,30 +1,22 @@
 const express = require('express');
 const { College, Course } = require('../models/index.js');
 const courseSchema = require('../models/college/course.js');
-const { updateValuesToIgnorecase,updateValuesToRegExp } = require('../utility/dictionary-helpers');
+const { prepareQuery} = require('../utility/dictionary-helpers');
+const {updateLastModifed} = require('../utility/mongo-helpers');
 
 var router = express.Router();
 const STATUS_OK = 200;
 const LAST_MODIFIED_HEADER = 'Last-Modified';
 
-function updateLastModifed(arr) {
-    let current = new Date();
-    for(let item of arr) {
-        item.lastModified = current;
-    }
-}
-
-router.get('/*',(req,res,next) => {
+router.get('/*', (req, res, next) => {
     query = req.body;
-    if(!('college' in query))
+    if (!('college' in query))
         query['college'] = '.*';
-    if(query['ignorecase'])
-    {
-        updateValuesToIgnorecase(query);
+    let flags = '';
+    if (query['ignorecase']) {
+        flags += 'i';
     }
-    else {
-        updateValuesToRegExp(query);
-    }
+    prepareQuery(query,flags);
     next();
 })
 
@@ -33,7 +25,6 @@ router.post('/college', (req, res, next) => {
     updateLastModifed([college]);
     college.save()
         .then((doc) => {
-            // console.log(doc);
             res.sendStatus(STATUS_OK);
         })
         .catch(next);
@@ -43,7 +34,7 @@ router.get('/college', (req, res, next) => {
     let query = req.body;
     College.findOne({ college: query['college'] })
         .then((college) => {
-            res.append(LAST_MODIFIED_HEADER,college.lastModified);
+            res.append(LAST_MODIFIED_HEADER, college.lastModified);
             res.status(STATUS_OK).json(college);
         })
         .catch(next);
@@ -52,7 +43,6 @@ router.get('/college', (req, res, next) => {
 router.get('/college-list', (req, res, next) => {
     query = req.body;
     collegeList = [];
-    // console.log(query);
     College.find({ college: query['college'] })
         .then((colleges) => {
             for (college of colleges) {
@@ -86,7 +76,7 @@ router.post('/course', (req, res, next) => {
         .then((college) => {
             let courses = college.courses;
             courses.push(query['course']);
-            updateLastModifed([college,college.getCourse(query['course']['course'])])
+            updateLastModifed([college, college.getCourse(query['course']['course'])])
             return college.save()
         })
         .then((doc) => {
@@ -97,34 +87,36 @@ router.post('/course', (req, res, next) => {
 
 router.get('/course', (req, res, next) => {
     let query = req.body;
-    
+
     College.findOne({ college: query['college'] })
         .then((college) => {
             let course = college.getCourse(query['course']);
-            res.append(LAST_MODIFIED_HEADER,course.lastModified);
+            res.append(LAST_MODIFIED_HEADER, course.lastModified);
             res.status(STATUS_OK).json(course);
         })
         .catch(next);
 })
 
-router.get('/course-list',(req,res,next) => {
+router.get('/course-list', (req, res, next) => {
     let query = req.body;
     courseList = []
 
-    College.findOne({college : query['course']})
+    College.findOne({ college: query['college'] })
         .then((college) => {
-            for(course of college.courses)
-            {
-                if('course' in query) {
-                    if(! course.course.match(query['course']))
+            for (course of college.courses) {
+                if ('course' in query) {
+                    if (!course.course.match(query['course']))
                         continue;
-                    if('branch' in query) {
+                    if ('branch' in query) {
                         let branch = course.getBranch(query['branch'])
-                        if(! branch)
+                        if (!branch)
                             continue;
                     }
                 }
-                courseList.push(course.course); 
+                let courseName = course.course;
+                if(course.abbreviation)
+                    courseName+=" ("+course.abbreviation+")";
+                courseList.push(courseName);
             }
             res.status(STATUS_OK).json(courseList);
         })
@@ -137,13 +129,14 @@ router.post('/branch', (req, res, next) => {
     College.findOne({ college: query['college'] })
         .then((college) => {
             let course = college.getCourse(query['course']);
-            if(! course) {
-                college.courses.push({course : query['course']})
+            if (!course) {
+                college.courses.push({ course: query['course'] })
                 course = college.getCourse(query['course'])
             }
+            
             branches = course.branches;
             branches.push(branch);
-            updateLastModifed([college,course,course.getBranch(query['branch']['branch'])]);
+            updateLastModifed([college, course, course.getBranch(query['branch']['branch'])]);
             return college.save()
         })
         .then((doc) => {
@@ -156,27 +149,30 @@ router.get('/branch', (req, res, next) => {
     let query = req.body;
     College.findOne({ college: query['college'] })
         .then((college) => {
-            console.log(query['college']);
             let course = college.getCourse(query['course']);
             let branch = course.getBranch(query['branch']);
-            res.append(LAST_MODIFIED_HEADER,branch.lastModified);
+            res.append(LAST_MODIFIED_HEADER, branch.lastModified);
             res.status(STATUS_OK).json(branch);
         })
         .catch(next);
 })
 
-router.get('/branch-list',(req,res,next) => {
+router.get('/branch-list', (req, res, next) => {
     let query = req.body;
-    College.findOnce({college : query['college']})
+    College.findOne({ college: query['college'] })
         .then((college) => {
             let course = college.getCourse(query['course']);
             let branchList = [];
-            for(branch of course.branches) {
-                if('branch' in query) {
-                    if(! branch.branch.match(query['branch']))
+            for (branch of course.branches) {
+                if ('branch' in query) {
+                    if (!branch.branch.match(query['branch']))
                         continue;
                 }
-                branchList.push(branch.branch);
+                let branchName = branch.branch;
+                if(branch.abbreviation) {
+                    branchName+=" ("+branch.abbreviation+")";
+                }
+                branchList.push(branchName);
             }
             res.status(STATUS_OK).json(branchList);
         })
@@ -188,18 +184,18 @@ router.post('/semester', (req, res, next) => {
     College.findOne({ college: query['college'] })
         .then((college) => {
             let course = college.getCourse(query['course']);
-            if(! course) {
-                college.courses.push({'course' : query['course']});
+            if (!course) {
+                college.courses.push({ 'course': query['course'] });
                 course = college.getCourse(query['course']);
             }
             let branch = course.getBranch(query['branch']);
-            if(! branch) {
-                course.branches.push({'branch' : query['branch']});
+            if (!branch) {
+                course.branches.push({ 'branch': query['branch'] });
                 branch = course.getBranch(query['branch']);
             }
             let semesters = branch.semesters;
             semesters.push(query['semester']);
-            updateLastModifed([college,course,branch,branch.getSemester(query['semester']['semester'])]);
+            updateLastModifed([college, course, branch, branch.getSemester(query['semester']['semester'])]);
             return college.save()
         })
         .then((doc) => {
@@ -215,20 +211,20 @@ router.get('/semester', (req, res, next) => {
             let course = college.getCourse(query['course']);
             let branch = course.getBranch(query['branch']);
             let semester = branch.getSemester(query['semester']);
-            res.append(LAST_MODIFIED_HEADER,semester.lastModified);
+            res.append(LAST_MODIFIED_HEADER, semester.lastModified);
             res.status(STATUS_OK).json(semester);
         })
         .catch(next);
 })
 
-router.get('/semester-list',(req,res,next) => {
+router.get('/semester-list', (req, res, next) => {
     let query = req.body;
-    College.findOne({college : query['college']})
+    College.findOne({ college: query['college'] })
         .then((college) => {
             let course = college.getCourse(query['course']);
             let branch = course.getBranch(query['branch']);
             let semesterList = [];
-            for(semester of branch.semesters) {
+            for (semester of branch.semesters) {
                 semesterList.push(semester.semester);
             }
             res.status(STATUS_OK).json(semesterList);

@@ -10,5 +10,8 @@ var gradeSchema = new Schema({
     credits : {
         type : Number,
         required : true
+    },
+    lastModified : {
+        type : Date
     }
 })

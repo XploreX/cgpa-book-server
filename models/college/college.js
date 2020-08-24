@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const courseSchema = require('./course.js');
 const { getAbbreviation } = require('../../utility/string-helpers.js');
+const {uniqueKeyVal} = require('../../utility/validation-helpers');
+
 const Schema = mongoose.Schema;
 
 var collegeSchema = new Schema({
@@ -21,6 +23,9 @@ var collegeSchema = new Schema({
         type : Date
     }
 });
+
+
+collegeSchema.path('courses').validate(uniqueKeyVal('course'),"Course already exists","Value Error");
 
 collegeSchema.pre('save', function (next) {
     if (!this.abbreviation) {

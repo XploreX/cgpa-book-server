@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const branchSchema = require('./branch.js');
 const stringHelpers = require('../../utility/string-helpers.js');
+const {uniqueKeyVal} = require('../../utility/validation-helpers.js')
+
 const Schema = mongoose.Schema;
 
 var courseSchema = new Schema({
@@ -20,6 +22,9 @@ var courseSchema = new Schema({
         type : Date
     }
 });
+
+courseSchema.path('branches').validate(uniqueKeyVal('branch'),"Branch already exists","Value Error");
+
 
 courseSchema.methods.getBranch = function(branchName) {
     for(let branch of this.branches) {
