@@ -1,9 +1,8 @@
 const express = require('express');
 const { College, Course } = require('../models/index.js');
 const courseSchema = require('../models/college/course.js');
-const { prepareQuery} = require('../utility/dictionary-helpers');
-const {updateLastModifed} = require('../utility/mongo-helpers');
-const { query } = require('express');
+const { prepareQuery } = require('../utility/dictionary-helpers');
+const { updateLastModifed } = require('../utility/mongo-helpers');
 
 var router = express.Router();
 const STATUS_OK = 200;
@@ -14,11 +13,15 @@ router.get('/*', (req, res, next) => {
     if (!('college' in query))
         query['college'] = '.*';
     let flags = '';
-    if (query['ignorecase'].toLowerCase() == 'true') {
-        flags += 'i';
+    if ('ignorecase' in query) {
+        if (query['ignorecase'].toLowerCase() == 'true') {
+            flags += 'i';
+        }
     }
-    query['semester'] = Number(query['semester']);
-    prepareQuery(query,flags);
+    if ('semster' in query) {
+        query['semester'] = Number(query['semester']);
+    }
+    prepareQuery(query, flags);
     next();
 })
 
@@ -43,8 +46,8 @@ router.get('/college', (req, res, next) => {
 })
 
 router.get('/college-list', (req, res, next) => {
-    query = req.body;
-    collegeList = [];
+    let query = req.body;
+    let collegeList = [];
     College.find({ college: query['college'] })
         .then((colleges) => {
             for (college of colleges) {
@@ -116,8 +119,8 @@ router.get('/course-list', (req, res, next) => {
                     }
                 }
                 let courseName = course.course;
-                if(course.abbreviation)
-                    courseName+=" ("+course.abbreviation+")";
+                if (course.abbreviation)
+                    courseName += " (" + course.abbreviation + ")";
                 courseList.push(courseName);
             }
             res.status(STATUS_OK).json(courseList);
@@ -135,7 +138,7 @@ router.post('/branch', (req, res, next) => {
                 college.courses.push({ course: query['course'] })
                 course = college.getCourse(query['course'])
             }
-            
+
             branches = course.branches;
             branches.push(branch);
             updateLastModifed([college, course, course.getBranch(query['branch']['branch'])]);
@@ -171,8 +174,8 @@ router.get('/branch-list', (req, res, next) => {
                         continue;
                 }
                 let branchName = branch.branch;
-                if(branch.abbreviation) {
-                    branchName+=" ("+branch.abbreviation+")";
+                if (branch.abbreviation) {
+                    branchName += " (" + branch.abbreviation + ")";
                 }
                 branchList.push(branchName);
             }
