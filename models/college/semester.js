@@ -3,14 +3,17 @@ const subjectSchema = require('./subject.js');
 const Schema = mongoose.Schema;
 
 var semesterSchema = new Schema({
-    'semester' : {
+    semester : {
         type : Number,
         required : true,
     },
-    'creditsTotal' : {
+    creditsTotal : {
         type : Number,
     },
-    'subjects' : [subjectSchema]
+    subjects : [subjectSchema],
+    lastModified : {
+        type : Date,
+    }
 });
 
 semesterSchema.pre('save',function(next) {

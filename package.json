@@ -4,7 +4,7 @@
   "description": "Easy to use , generalized app to calculate CGPA with ease ",
   "main": "index.js",
   "scripts": {
-    "start" : "node server.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,6 +22,7 @@
     "glob": "^7.1.6",
     "mongodb": "^3.6.0",
     "mongoose": "^5.9.28",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "stopword": "^1.0.1"
   }
 }

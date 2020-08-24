@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const branchSchema = require('./branch.js');
+const stringHelpers = require('../../utility/string-helpers.js');
 const Schema = mongoose.Schema;
 
 var courseSchema = new Schema({
@@ -9,7 +10,15 @@ var courseSchema = new Schema({
         trim: true,
         minlength: 1,
     },
-    'branches' : [branchSchema]
+    'branches' : [branchSchema],
+    'gpaMetric' : {
+        type : String,
+        trim : true,
+        minlength : 1
+    },
+    'lastModified' : {
+        type : Date
+    }
 });
 
 courseSchema.methods.getBranch = function(branchName) {

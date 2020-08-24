@@ -11,7 +11,7 @@ app.use('/academia', require('./routers/academia.js'));
 app.get('/', (req, res) => {
     res.status(200).send('Okaeri');
 })
-
+ 
 app.use(errors.notFoundHandler);
 app.use(errors.logErrors);
 app.use(errors.genericErrorHandler);

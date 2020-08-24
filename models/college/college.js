@@ -16,7 +16,10 @@ var collegeSchema = new Schema({
         trim: true,
         minlength: 1
     },
-    courses: [courseSchema]
+    courses: [courseSchema],
+    lastModified : {
+        type : Date
+    }
 });
 
 collegeSchema.pre('save', function (next) {

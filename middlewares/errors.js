@@ -13,7 +13,7 @@ function logErrors(err, req, res, next) {
 
 function genericErrorHandler(err, req, res, next) {
     if (!('status' in err)) {
-        if (err instanceof TypeError) {
+        if (err instanceof TypeError || err.code == 11000) {    //error code 11000 is mongodb duplicate key error 
             err.status = 400;
             err.type = 'TypeError';
         }

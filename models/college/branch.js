@@ -3,7 +3,7 @@ const semesterSchema = require('./semester.js');
 const Schema = mongoose.Schema;
 
 var branchSchema = new Schema({
-    'branch' : {
+    branch : {
         type : String,
         trim : true,
         minlength : 1,
@@ -13,7 +13,10 @@ var branchSchema = new Schema({
         trim : true ,
         minlength : 1
     },
-    'semesters' : [semesterSchema]
+    semesters : [semesterSchema],
+    lastModified : {
+        type : Date
+    }
 });
 
 branchSchema.methods.getSemester = function(semesterNumber) {
