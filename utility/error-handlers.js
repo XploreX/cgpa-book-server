@@ -8,6 +8,8 @@ function basicErrorHandler(err, message = null) {
     throw err;
 }
 
+
+
 module.exports = {
-    basicErrorHandler : basicErrorHandler
+    basicErrorHandler : basicErrorHandler,
 }

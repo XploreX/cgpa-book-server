@@ -13,9 +13,13 @@ function logErrors(err, req, res, next) {
 
 function genericErrorHandler(err, req, res, next) {
     if (!('status' in err)) {
-        if (err instanceof TypeError || err.code == 11000 || err.name == 'ValidationError') {    //error code 11000 is mongodb duplicate key error 
+        if (err instanceof TypeError || err.name == 'TypeError' ) { 
             err.status = 400;
             err.type = 'TypeError';
+        }
+        else if(err.code == 11000 || err.name == 'ValidationError' || err.name == 'ValueError') {      //error code 11000 is mongodb duplicate key error 
+            err.status = 400;
+            err.type = 'ValueError';
         }
         else if (err instanceof MongoError || err.name == 'MongoError') {
             err.status = 500;

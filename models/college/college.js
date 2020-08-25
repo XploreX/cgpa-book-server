@@ -21,6 +21,9 @@ var collegeSchema = new Schema({
     courses: [courseSchema],
     lastModified : {
         type : Date
+    },
+    lastListAdded : {
+        type : Date
     }
 });
 
