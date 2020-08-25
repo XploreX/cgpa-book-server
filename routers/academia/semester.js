@@ -26,6 +26,7 @@ router.post('/semester', (req, res, next) => {
             let semesters = branch.semesters;
             semesters.push(query['semester']);
             mongoHelpers.updateLastModifed([college, course, branch, branch.getSemester(query['semester']['semester'])]);
+            branch.lastListModification = new Date();
             return college.save()
         })
         .then((doc) => {
@@ -81,6 +82,7 @@ router.get('/semester-list', (req, res, next) => {
             for (semester of branch.semesters) {
                 semesterList.push(semester.semester);
             }
+            res.append(academiaConsts.LAST_MODIFIED_HEADER,branch.lastListModification);
             res.status(academiaConsts.STATUS_OK).json(semesterList);
         })
         .catch(next);

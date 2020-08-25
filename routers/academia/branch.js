@@ -21,6 +21,7 @@ router.post('/branch', (req, res, next) => {
             branches = course.branches;
             branches.push(branch);
             mongoHelpers.updateLastModifed([college, course, course.getBranch(query['branch']['branch'])]);
+            course.lastListModification = new Date();
             return college.save()
         })
         .then((doc) => {
@@ -74,6 +75,7 @@ router.get('/branch-list', (req, res, next) => {
                 }
                 branchList.push(branchName);
             }
+            res.append(academiaConsts.LAST_MODIFIED_HEADER,course.lastListModification);
             res.status(academiaConsts.STATUS_OK).json(branchList);
         })
         .catch(next);

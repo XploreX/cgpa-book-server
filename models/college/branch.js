@@ -19,6 +19,9 @@ var branchSchema = new Schema({
     semesters : [semesterSchema],
     lastModified : {
         type : Date
+    },
+    lastListModification : {
+        type : String
     }
 });
 

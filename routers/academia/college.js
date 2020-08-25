@@ -1,5 +1,5 @@
 const express = require('express');
-const { College } = require('../../models/index.js');
+const { College , CollegeExtra } = require('../../models/index.js');
 const academiaConsts = require('../academia-constants.js');
 const { updateLastModifed } = require('../../utility/mongo-helpers');
 const { checkExistance, checkQuery, addMissingKeysToQuery} = require('../../utility/mongo-helpers');

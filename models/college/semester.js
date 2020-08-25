@@ -13,6 +13,9 @@ var semesterSchema = new Schema({
     subjects : [subjectSchema],
     lastModified : {
         type : Date,
+    },
+    lastListModification : {
+        type : Date
     }
 });
 

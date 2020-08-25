@@ -16,6 +16,7 @@ router.post('/course', (req, res, next) => {
             let courses = college.courses;
             courses.push(query['course']);
             updateLastModifed([college, college.getCourse(query['course']['course'])])
+            college.lastListModification = new Date();
             return college.save()
         })
         .then((doc) => {
@@ -64,6 +65,7 @@ router.get('/course-list', (req, res, next) => {
                     courseName += " (" + course.abbreviation + ")";
                 courseList.push(courseName);
             }
+            res.append(academiaConsts.LAST_MODIFIED_HEADER,college.lastListModification);
             res.status(academiaConsts.STATUS_OK).json(courseList);
         })
         .catch(next)
