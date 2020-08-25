@@ -30,7 +30,7 @@ var collegeSchema = new Schema({
 
 collegeSchema.path('courses').validate(uniqueKeyVal('course'),"Course already exists","Value Error");
 
-collegeSchema.pre('save', function (next) {
+collegeSchema.pre('validate', function (next) {
     if (!this.abbreviation) {
         this.abbreviation = getAbbreviation(this.college);
     }

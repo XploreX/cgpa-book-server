@@ -24,7 +24,7 @@ var branchSchema = new Schema({
 
 branchSchema.path('semesters').validate(uniqueKeyVal('semester'),"Semester already exists","Value Error");
 
-branchSchema.pre('save',function(next) {
+branchSchema.pre('validate',function(next) {
     if(!this.abbreviation) {
         this.abbreviation = getAbbreviation(this.branch);
     }

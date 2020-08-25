@@ -5,8 +5,11 @@ const { checkQuery, checkExistance,addMissingKeysToQuery} = require('../../utili
 const {sendEmptyList,sendEmptyDict} = require('../../utility/express-helpers.js');
 let router = express.Router();
 
+let checkList = ['college','course'];
+
 router.post('/course', (req, res, next) => {
     let query = req.body;
+    checkQuery(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             checkExistance(college, 'college');
@@ -23,7 +26,7 @@ router.post('/course', (req, res, next) => {
 
 router.get('/course', (req, res, next) => {
     let query = req.body;
-    checkQuery(query, ['college', 'course']);
+    checkQuery(query, checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             if (!college) {
@@ -41,8 +44,8 @@ router.get('/course', (req, res, next) => {
 
 router.get('/course-list', (req, res, next) => {
     let query = req.body;
-    addMissingKeysToQuery(query, ['college', 'branch']);
-    checkQuery(query, ['college']);
+    addMissingKeysToQuery(query, ['course','branch']);
+    checkQuery(query, checkList);
     let courseList = [];
 
     College.findOne({ college: query['college'] })

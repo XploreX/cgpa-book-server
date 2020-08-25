@@ -7,6 +7,8 @@ const {sendEmptyDict,sendEmptyList} = require('../../utility/express-helpers');
 
 let router = express.Router();
 
+let checkList = ['college'];
+
 router.post('/college', (req, res, next) => {
     college = new College(req.body);
     updateLastModifed([college]);
@@ -19,7 +21,7 @@ router.post('/college', (req, res, next) => {
 
 router.get('/college', (req, res, next) => {
     let query = req.body;
-    checkQuery(query, ['college']);
+    checkQuery(query, checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             if(!college) {
@@ -34,7 +36,7 @@ router.get('/college', (req, res, next) => {
 router.get('/college-list', (req, res, next) => {
     let query = req.body;
     addMissingKeysToQuery(query, ['college', 'course', 'branch']);
-    checkQuery(query, ['college']);
+    checkQuery(query, checkList);
     let collegeList = [];
     College.find({ college: query['college'] })
         .then((colleges) => {
