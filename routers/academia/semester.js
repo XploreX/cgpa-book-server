@@ -67,15 +67,15 @@ router.get('/semester-list', (req, res, next) => {
     College.findOne({ college: query['college'] })
         .then((college) => {
             if(!college) {
-                return sendEmptyList();
+                return sendEmptyList(res);
             }
             let course = college.getCourse(query['course']);
             if(!course) {
-                return sendEmptyList();
+                return sendEmptyList(res);
             }
             let branch = course.getBranch(query['branch']);
             if(!branch) {
-                return sendEmptyList();
+                return sendEmptyList(res);
             }
             let semesterList = [];
             for (semester of branch.semesters) {
