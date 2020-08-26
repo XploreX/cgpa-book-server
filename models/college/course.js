@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const branchSchema = require('./branch.js');
 const stringHelpers = require('../../utility/string-helpers.js');
 const { uniqueKeyVal } = require('../../utility/validation-helpers.js')
+const {findNeedle} = require('../../utility/array-helpers.js');
 
 const Schema = mongoose.Schema;
 
@@ -28,17 +29,22 @@ var courseSchema = new Schema({
 
 courseSchema.path('branches').validate(uniqueKeyVal('branch'), "Branch already exists", "Value Error");
 
-courseSchema.pre('validate',function(next) {
+courseSchema.pre('validate', function (next) {
     this.course = stringHelpers.getTitleForm(this.course);
     next();
 })
 
 
 courseSchema.methods.getBranch = function (branchName) {
-    for (let branch of this.branches) {
-        if (branch.branch.match(branchName)) {
-            return branch;
+    if (branchName instanceof RegExp) {
+        for (let branch of this.branches) {
+            if (branch.branch.match(branchName)) {
+                return branch;
+            }
         }
+    }
+    else {
+        return findNeedle(this.branches,branchName,true,'branch');
     }
     return null;
 }

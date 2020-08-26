@@ -58,7 +58,7 @@ router.get('/course-list', (req, res, next) => {
                 if (!course.course.match(query['course']))
                     continue;
                 let branch = course.getBranch(query['branch'])
-                if (!branch && (''.match(query['branch'])))
+                if (!branch && !(''.match(query['branch'])))
                     continue;
                 let courseName = course.course;
                 if (course.abbreviation)

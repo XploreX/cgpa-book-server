@@ -15,6 +15,7 @@ function getICRegexString(str) {
     return new RegExp(str,'i');
 }
 
+
 function getAbbreviation(str) {
     let line = str.split(' ');
     line = sw.removeStopwords(line);

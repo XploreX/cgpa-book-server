@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const courseSchema = require('./course.js');
-const { getAbbreviation,getTitleForm } = require('../../utility/string-helpers.js');
-const {uniqueKeyVal} = require('../../utility/validation-helpers');
+const { getAbbreviation, getTitleForm } = require('../../utility/string-helpers.js');
+const { uniqueKeyVal } = require('../../utility/validation-helpers');
+const {findNeedle} = require('../../utility/array-helpers.js');
 
 const Schema = mongoose.Schema;
 
@@ -19,19 +20,19 @@ var collegeSchema = new Schema({
         minlength: 1
     },
     courses: [courseSchema],
-    lastModified : {
-        type : Date
+    lastModified: {
+        type: Date
     },
-    lastListModification : {
-        type : Date
+    lastListModification: {
+        type: Date
     }
 });
 
 
-collegeSchema.path('courses').validate(uniqueKeyVal('course'),"Course already exists","Value Error");
+collegeSchema.path('courses').validate(uniqueKeyVal('course'), "Course already exists", "Value Error");
 
 collegeSchema.pre('validate', function (next) {
-    this.college = getTitleForm(this.college);
+    // this.college = getTitleForm(this.college);
     if (!this.abbreviation) {
         this.abbreviation = getAbbreviation(this.college);
     }
@@ -48,10 +49,15 @@ collegeSchema.methods.courseID = function (courseName) {
 }
 
 collegeSchema.methods.getCourse = function (courseName) {
-    for (let course of this.courses) {
-        if (course.course.match(courseName)) {
-            return course;
+    if (courseName instanceof RegExp) {
+        for (let course of this.courses) {
+            if (course.course.match(courseName)) {
+                return course;
+            }
         }
+    }
+    else {
+        return findNeedle(this.courses,courseName,true,'course');
     }
     return null
 }

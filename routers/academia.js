@@ -20,12 +20,30 @@ router.get('/*', (req, res, next) => {
     if ('ignorecase' in query) {
         if (query['ignorecase'].toLowerCase() == 'true') {
             flags += 'i';
+            query['ignorecase'] = true;
+        }
+        else {
+            query['ignorecase'] = false;
         }
     }
     if ('semester' in query) {
         query['semester'] = Number(query['semester']);
     }
     prepareQuery(query, flags);
+    next();
+})
+
+router.post('/*',(req,res,next) => {
+    let query = req.body;
+    let flags = '';
+    if('ignorecase' in query) {
+        if(query['ignorecase'].toLowerCase() == 'true') {
+            query['ignorecase'] = true;
+        }
+        else {
+            query['ignorecase'] = false;
+        }
+    }
     next();
 })
 

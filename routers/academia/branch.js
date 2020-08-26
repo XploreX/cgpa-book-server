@@ -13,7 +13,7 @@ router.post('/branch', (req, res, next) => {
     let branch = req.body['branch'];
     College.findOne({ college: query['college'] })
         .then((college) => {
-            let course = college.getCourse(query['course']);
+            let course = college.getCourse(query['course'],false);
             if (!course) {
                 college.courses.push({ course: query['course'] })
                 course = college.getCourse(query['course'])

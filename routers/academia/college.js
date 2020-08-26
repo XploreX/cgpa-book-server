@@ -10,7 +10,9 @@ let router = express.Router();
 let checkList = ['college'];
 
 router.post('/college', (req, res, next) => {
-    college = new College(req.body);
+    const query = req.body;
+    checkQuery(query,checkList);
+    college = new College(query['college']);
     updateLastModifed([college]);
     college.save()
         .then((doc) => {
@@ -24,7 +26,6 @@ router.post('/college', (req, res, next) => {
             return head.save()
         })
         .then((head) => {
-            console.log(head);
             res.sendStatus(academiaConsts.STATUS_OK);
         })
         .catch(next);
@@ -57,7 +58,7 @@ router.get('/college-list', (req, res, next) => {
                     let branch = null;
                     if (course)
                         branch = course.getBranch(query['branch']);
-                    if (!branch && (''.match(query['branch'])))
+                    if (!branch && !(''.match(query['branch'])))
                         continue;
                 }
                 else continue;
