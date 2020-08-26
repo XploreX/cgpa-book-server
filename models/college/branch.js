@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const semesterSchema = require('./semester.js');
 const {uniqueKeyVal} = require('../../utility/validation-helpers.js');
-const {getAbbreviation} = require('../../utility/string-helpers');
+const {getAbbreviation , getTitleForm} = require('../../utility/string-helpers');
 
 const Schema = mongoose.Schema;
 
@@ -28,6 +28,7 @@ var branchSchema = new Schema({
 branchSchema.path('semesters').validate(uniqueKeyVal('semester'),"Semester already exists","Value Error");
 
 branchSchema.pre('validate',function(next) {
+    this.branch = getTitleForm(this.branch);
     if(!this.abbreviation) {
         this.abbreviation = getAbbreviation(this.branch);
     }

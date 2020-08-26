@@ -1,5 +1,12 @@
 const sw = require('stopword');
 
+stopwordsTemp = sw.en;
+stopwords = new Set();
+
+for(word of stopwordsTemp) {
+    stopwords.add(word);
+}
+
 function capitalizeFirstLetter(str) {
     return str[0].toUpperCase() + str.slice(1);
 }
@@ -21,8 +28,21 @@ function getAbbreviation(str) {
     return s;
 }
 
+function getTitleForm(str) {   //First letter capitalize of all words which are not stopwords
+    let title = [];
+    let line = str.split(' ');
+    for(let word of line) {
+        word = word.toLowerCase();
+        if(stopwords.has(word))
+            title.push(word);
+        else title.push(capitalizeFirstLetter(word));
+    }
+    return title.join(' ');
+}
+
 module.exports = {
     capitalizeFirstLetter  : capitalizeFirstLetter,
     getICRegexString : getICRegexString,
-    getAbbreviation : getAbbreviation
+    getAbbreviation : getAbbreviation,
+    getTitleForm : getTitleForm
 }

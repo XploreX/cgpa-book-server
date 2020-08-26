@@ -28,6 +28,11 @@ var courseSchema = new Schema({
 
 courseSchema.path('branches').validate(uniqueKeyVal('branch'), "Branch already exists", "Value Error");
 
+courseSchema.pre('validate',function(next) {
+    this.course = stringHelpers.getTitleForm(this.course);
+    next();
+})
+
 
 courseSchema.methods.getBranch = function (branchName) {
     for (let branch of this.branches) {

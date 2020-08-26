@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const stringHelpers = require('../../utility/string-helpers.js');
+
 const Schema = mongoose.Schema;
 
 var subjectSchema = new Schema({
@@ -21,5 +23,10 @@ var subjectSchema = new Schema({
         type : Date
     }
 });
+
+subjectSchema.pre('validate',function(next) {
+    this.subject = stringHelpers.getTitleForm(this.subject);
+    next();
+})
 
 module.exports = subjectSchema;
