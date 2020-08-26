@@ -46,7 +46,6 @@ router.get('/college', (req, res, next) => {
 
 router.get('/college-list', (req, res, next) => {
     let query = req.body;
-    let emptyRegExp = new RegExp('');
     addMissingKeysToQuery(query, ['college', 'course', 'branch']);
     checkQuery(query, checkList);
     let collegeList = [];
@@ -54,11 +53,11 @@ router.get('/college-list', (req, res, next) => {
         .then((colleges) => {
             for (college of colleges) {
                 let course = college.getCourse(query['course']);
-                if (course || (query['course'].toString() === emptyRegExp.toString())) {
+                if (course || (''.match(query['course']))) {
                     let branch = null;
                     if (course)
                         branch = course.getBranch(query['branch']);
-                    if (!branch && (query['branch'].toString() !== emptyRegExp.toString()))
+                    if (!branch && (''.match(query['branch'])))
                         continue;
                 }
                 else continue;
