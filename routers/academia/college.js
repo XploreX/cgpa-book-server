@@ -72,7 +72,7 @@ router.get('/college-list', (req, res, next) => {
         })
         .then((head) => {
             if (head)
-                res.append(academiaConsts.LAST_MODIFIED_HEADER, head.lastListModified);
+                res.append(academiaConsts.LAST_MODIFIED_HEADER, head.lastListModification);
             res.status(academiaConsts.STATUS_OK).json(collegeList);
         })
         .catch(next);
