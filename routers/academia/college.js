@@ -1,9 +1,9 @@
 const express = require('express');
-const { College , CollegeExtra } = require('../../models/index.js');
+const { College, CollegeHeader } = require('../../models/index.js');
 const academiaConsts = require('../academia-constants.js');
 const { updateLastModifed } = require('../../utility/mongo-helpers');
-const { checkExistance, checkQuery, addMissingKeysToQuery} = require('../../utility/mongo-helpers');
-const {sendEmptyDict,sendEmptyList} = require('../../utility/express-helpers');
+const { checkExistance, checkQuery, addMissingKeysToQuery } = require('../../utility/mongo-helpers');
+const { sendEmptyDict, sendEmptyList } = require('../../utility/express-helpers');
 
 let router = express.Router();
 
@@ -14,6 +14,17 @@ router.post('/college', (req, res, next) => {
     updateLastModifed([college]);
     college.save()
         .then((doc) => {
+            return CollegeHeader.findOne();
+        })
+        .then((head) => {
+            if(!head) {
+                head = new CollegeHeader();
+            }
+            head.lastListModification = new Date();
+            return head.save()
+        })
+        .then((head) => {
+            console.log(head);
             res.sendStatus(academiaConsts.STATUS_OK);
         })
         .catch(next);
@@ -24,7 +35,7 @@ router.get('/college', (req, res, next) => {
     checkQuery(query, checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
-            if(!college) {
+            if (!college) {
                 return sendEmptyDict(res);
             }
             res.append(academiaConsts.LAST_MODIFIED_HEADER, college.lastModified);
@@ -35,6 +46,7 @@ router.get('/college', (req, res, next) => {
 
 router.get('/college-list', (req, res, next) => {
     let query = req.body;
+    let emptyRegExp = new RegExp('');
     addMissingKeysToQuery(query, ['college', 'course', 'branch']);
     checkQuery(query, checkList);
     let collegeList = [];
@@ -42,9 +54,11 @@ router.get('/college-list', (req, res, next) => {
         .then((colleges) => {
             for (college of colleges) {
                 let course = college.getCourse(query['course']);
-                if (course) {
-                    let branch = course.getBranch(query['branch']);
-                    if (!branch)
+                if (course || (query['course'].toString() === emptyRegExp.toString())) {
+                    let branch = null;
+                    if (course)
+                        branch = course.getBranch(query['branch']);
+                    if (!branch && (query['branch'].toString() !== emptyRegExp.toString()))
                         continue;
                 }
                 else continue;
@@ -54,6 +68,11 @@ router.get('/college-list', (req, res, next) => {
                 }
                 collegeList.push(collegeName);
             }
+            return CollegeHeader.findOne();
+        })
+        .then((head) => {
+            if (head)
+                res.append(academiaConsts.LAST_MODIFIED_HEADER, head.lastListModified);
             res.status(academiaConsts.STATUS_OK).json(collegeList);
         })
         .catch(next);
