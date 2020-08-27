@@ -3,7 +3,7 @@ const courseSchema = require('./course.js');
 const { getAbbreviation, getTitleForm } = require('../../utility/string-helpers.js');
 const { uniqueKeyVal } = require('../../utility/validation-helpers');
 const {findNeedle} = require('../../utility/array-helpers.js');
-
+const mongoHelpers = require('../../utility/mongo-helpers.js');
 const Schema = mongoose.Schema;
 
 var collegeSchema = new Schema({
@@ -40,7 +40,6 @@ collegeSchema.pre('validate', function (next) {
 })
 
 collegeSchema.pre('save' , function(next) {
-    this.lastModified = new Date();
     next();
 })
 
@@ -71,5 +70,8 @@ collegeSchema.methods.getCourse = function (courseName) {
     }
     return null
 }
+
+collegeSchema.methods.getLastModified = mongoHelpers.getLastModified;
+collegeSchema.methods.getLastListModification = mongoHelpers.getLastListModification;
 
 module.exports = collegeSchema;

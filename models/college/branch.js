@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const semesterSchema = require('./semester.js');
 const {uniqueKeyVal} = require('../../utility/validation-helpers.js');
 const {getAbbreviation , getTitleForm} = require('../../utility/string-helpers');
-
+const mongoHelpers = require('../../utility/mongo-helpers.js');
 const Schema = mongoose.Schema;
 
 var branchSchema = new Schema({
@@ -36,7 +36,6 @@ branchSchema.pre('validate',function(next) {
 })
 
 branchSchema.pre('save',function(next) {
-    this.lastModified = new Date();
     next();
 })
 
@@ -62,5 +61,8 @@ branchSchema.methods.semesterID = function(semesterNumber) {
     }
     return -1;
 }
+
+branchSchema.methods.getLastModified = mongoHelpers.getLastModified;
+branchSchema.methods.getLastListModification = mongoHelpers.getLastListModification;
 
 module.exports = branchSchema

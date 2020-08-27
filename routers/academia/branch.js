@@ -13,7 +13,7 @@ router.post('/branch', (req, res, next) => {
     let branch = req.body['branch'];
     College.findOne({ college: query['college'] })
         .then((college) => {
-            let course = college.getCourse(query['course'],false);
+            let course = college.getCourse(query['course']);
             if (!course) {
                 college.addToList({course: query['course'] })
                 course = college.getCourse(query['course'])
@@ -73,7 +73,8 @@ router.get('/branch-list', (req, res, next) => {
                 }
                 branchList.push(branchName);
             }
-            res.append(academiaConsts.LAST_MODIFIED_HEADER,course.lastListModification.toUTCString());
+            console.log(course.lastListModification);
+            res.append(academiaConsts.LAST_MODIFIED_HEADER,course.getLastListModification());
             res.status(academiaConsts.STATUS_OK).json(branchList);
         })
         .catch(next);

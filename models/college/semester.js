@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const subjectSchema = require('./subject.js');
 const { findNeedle } = require('../../utility/array-helpers.js');
+const mongoHelpers = require('../../utility/mongo-helpers.js');
+
 const Schema = mongoose.Schema;
 
 var semesterSchema = new Schema({
@@ -25,7 +27,6 @@ semesterSchema.pre('save', function (next) {
     for (let subject of this.subjects) {
         this.creditsTotal += subject.credits;
     }
-    this.lastModified = new Date();
     next();
 })
 
@@ -56,6 +57,9 @@ semesterSchema.methods.subjectID = function (subjectName) {
     }
     return -1;
 }
+
+semesterSchema.methods.getLastModified = mongoHelpers.getLastModified;
+semesterSchema.methods.getLastListModification = mongoHelpers.getLastListModification;
 
 module.exports = semesterSchema;
 

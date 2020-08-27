@@ -63,7 +63,7 @@ router.get('/course-list', (req, res, next) => {
                     courseName += " (" + course.abbreviation + ")";
                 courseList.push(courseName);
             }
-            res.append(academiaConsts.LAST_MODIFIED_HEADER,college.lastListModification.toUTCList());
+            res.append(academiaConsts.LAST_MODIFIED_HEADER,college.getLastListModification());
             res.status(academiaConsts.STATUS_OK).json(courseList);
         })
         .catch(next)

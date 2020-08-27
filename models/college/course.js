@@ -3,7 +3,7 @@ const branchSchema = require('./branch.js');
 const stringHelpers = require('../../utility/string-helpers.js');
 const { uniqueKeyVal } = require('../../utility/validation-helpers.js')
 const {findNeedle} = require('../../utility/array-helpers.js');
-
+const mongoHelpers = require('../../utility/mongo-helpers.js');
 const Schema = mongoose.Schema;
 
 var courseSchema = new Schema({
@@ -35,7 +35,6 @@ courseSchema.pre('validate', function (next) {
 })
 
 courseSchema.pre('save',function(next) {
-    this.lastModified = new Date();
     next();
 })
 
@@ -66,5 +65,8 @@ courseSchema.methods.branchID = function (branchName) {
     }
     return -1;
 }
+
+courseSchema.methods.getLastModified = mongoHelpers.getLastModified;
+courseSchema.methods.getLastListModification = mongoHelpers.getLastListModification;
 
 module.exports = courseSchema;

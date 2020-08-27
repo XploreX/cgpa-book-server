@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const stringHelpers = require('../../utility/string-helpers.js');
+const mongoHelpers = require('../../utility/mongo-helpers.js');
 
 const Schema = mongoose.Schema;
 
@@ -30,8 +31,9 @@ subjectSchema.pre('validate',function(next) {
 })
 
 subjectSchema.pre('save',function(next) {
-    this.lastModified = new Date();
     next();
 })
+
+subjectSchema.methods.getLastModified = mongoHelpers.getLastModified;
 
 module.exports = subjectSchema;

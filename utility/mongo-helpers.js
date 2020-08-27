@@ -40,10 +40,20 @@ function addMissingKeysToQuery(query,keys) {    //Semester not handled here yet 
     }
 }
 
+function getLastModified() {
+    return this.lastModified.toUTCString();
+}
+
+function getLastListModification() {
+    return this.lastListModification.toUTCString();
+}
+
 module.exports = {
     updateLastModifed : updateLastModifed,
     updateLastListModification : updateLastListModification,
     checkExistance : checkExistance,
     checkQuery : checkQuery,
-    addMissingKeysToQuery : addMissingKeysToQuery
+    addMissingKeysToQuery : addMissingKeysToQuery,
+    getLastModified : getLastModified,
+    getLastListModification : getLastListModification
 }

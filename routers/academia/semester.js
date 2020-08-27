@@ -80,7 +80,7 @@ router.get('/semester-list', (req, res, next) => {
             for (semester of branch.semesters) {
                 semesterList.push(semester.semester);
             }
-            res.append(academiaConsts.LAST_MODIFIED_HEADER,branch.lastListModification.toUTCString());
+            res.append(academiaConsts.LAST_MODIFIED_HEADER,branch.getLastListModification());
             res.status(academiaConsts.STATUS_OK).json(semesterList);
         })
         .catch(next);
