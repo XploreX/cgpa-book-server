@@ -39,6 +39,16 @@ collegeSchema.pre('validate', function (next) {
     next();
 })
 
+collegeSchema.pre('save' , function(next) {
+    this.lastModified = new Date();
+    next();
+})
+
+collegeSchema.methods.addToList = function (course) {
+    this.courses.push(course);
+    this.lastListModification = new Date();
+}
+
 collegeSchema.methods.courseID = function (courseName) {
     for (let course of this.courses) {
         if (course.course.match(courseName)) {

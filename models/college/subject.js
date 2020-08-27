@@ -25,7 +25,12 @@ var subjectSchema = new Schema({
 });
 
 subjectSchema.pre('validate',function(next) {
-    this.subject = stringHelpers.getTitleForm(this.subject);
+    // this.subject = stringHelpers.getTitleForm(this.subject);
+    next();
+})
+
+subjectSchema.pre('save',function(next) {
+    this.lastModified = new Date();
     next();
 })
 

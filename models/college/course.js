@@ -30,10 +30,19 @@ var courseSchema = new Schema({
 courseSchema.path('branches').validate(uniqueKeyVal('branch'), "Branch already exists", "Value Error");
 
 courseSchema.pre('validate', function (next) {
-    this.course = stringHelpers.getTitleForm(this.course);
+    // this.course = stringHelpers.getTitleForm(this.course);
     next();
 })
 
+courseSchema.pre('save',function(next) {
+    this.lastModified = new Date();
+    next();
+})
+
+courseSchema.methods.addToList = function (branch) {
+    this.branches.push(branch);
+    this.lastListModification = new Date();
+}
 
 courseSchema.methods.getBranch = function (branchName) {
     if (branchName instanceof RegExp) {

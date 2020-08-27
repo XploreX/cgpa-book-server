@@ -28,12 +28,22 @@ var branchSchema = new Schema({
 branchSchema.path('semesters').validate(uniqueKeyVal('semester'),"Semester already exists","Value Error");
 
 branchSchema.pre('validate',function(next) {
-    this.branch = getTitleForm(this.branch);
+    // this.branch = getTitleForm(this.branch);
     if(!this.abbreviation) {
         this.abbreviation = getAbbreviation(this.branch);
     }
     next();
 })
+
+branchSchema.pre('save',function(next) {
+    this.lastModified = new Date();
+    next();
+})
+
+branchSchema.methods.addToList = function (semester) {
+    this.semesters.push(semester);
+    this.lastListModification = new Date();
+}
 
 branchSchema.methods.getSemester = function(semesterNumber) {
     for(let semester of this.semesters ) {

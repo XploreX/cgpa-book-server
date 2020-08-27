@@ -13,7 +13,7 @@ router.post('/college', (req, res, next) => {
     const query = req.body;
     checkQuery(query,checkList);
     college = new College(query['college']);
-    updateLastModifed([college]);
+    // updateLastModifed([college]);
     college.save()
         .then((doc) => {
             return CollegeHeader.findOne();
@@ -72,7 +72,7 @@ router.get('/college-list', (req, res, next) => {
         })
         .then((head) => {
             if (head)
-                res.append(academiaConsts.LAST_MODIFIED_HEADER, head.lastListModification);
+                res.append(academiaConsts.LAST_MODIFIED_HEADER, head.lastListModification.toUTCString());
             res.status(academiaConsts.STATUS_OK).json(collegeList);
         })
         .catch(next);

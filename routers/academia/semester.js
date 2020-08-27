@@ -15,18 +15,16 @@ router.post('/semester', (req, res, next) => {
             mongoHelpers.checkExistance(college,'college');
             let course = college.getCourse(query['course']);
             if (!course) {
-                college.courses.push({ 'course': query['course'] });
+                college.addToList({ 'course': query['course'] });
                 course = college.getCourse(query['course']);
             }
             let branch = course.getBranch(query['branch']);
             if (!branch) {
-                course.branches.push({ 'branch': query['branch'] });
+                course.addToList({ 'branch': query['branch'] });
                 branch = course.getBranch(query['branch']);
             }
-            let semesters = branch.semesters;
-            semesters.push(query['semester']);
-            mongoHelpers.updateLastModifed([college, course, branch, branch.getSemester(query['semester']['semester'])]);
-            branch.lastListModification = new Date();
+            branch.addToList(query['semester']);
+            // mongoHelpers.updateLastModifed([college, course, branch, branch.getSemester(query['semester']['semester'])]);
             return college.save()
         })
         .then((doc) => {
@@ -82,7 +80,7 @@ router.get('/semester-list', (req, res, next) => {
             for (semester of branch.semesters) {
                 semesterList.push(semester.semester);
             }
-            res.append(academiaConsts.LAST_MODIFIED_HEADER,branch.lastListModification);
+            res.append(academiaConsts.LAST_MODIFIED_HEADER,branch.lastListModification.toUTCString());
             res.status(academiaConsts.STATUS_OK).json(semesterList);
         })
         .catch(next);

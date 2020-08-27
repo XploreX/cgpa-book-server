@@ -25,8 +25,14 @@ semesterSchema.pre('save', function (next) {
     for (let subject of this.subjects) {
         this.creditsTotal += subject.credits;
     }
+    this.lastModified = new Date();
     next();
 })
+
+semesterSchema.methods.addToList = function(subject) {
+    this.subjects.push(subject);
+    this.lastListModification = new Date();
+}
 
 semesterSchema.methods.getSubject = function (subjectName) {
     if (subjectName instanceof RegExp) {

@@ -15,13 +15,11 @@ router.post('/branch', (req, res, next) => {
         .then((college) => {
             let course = college.getCourse(query['course'],false);
             if (!course) {
-                college.courses.push({ course: query['course'] })
+                college.addToList({course: query['course'] })
                 course = college.getCourse(query['course'])
             }
-            branches = course.branches;
-            branches.push(branch);
-            mongoHelpers.updateLastModifed([college, course, course.getBranch(query['branch']['branch'])]);
-            course.lastListModification = new Date();
+            course.addToList(branch);
+            // mongoHelpers.updateLastModifed([college, course, course.getBranch(query['branch']['branch'])]);
             return college.save()
         })
         .then((doc) => {
@@ -75,7 +73,7 @@ router.get('/branch-list', (req, res, next) => {
                 }
                 branchList.push(branchName);
             }
-            res.append(academiaConsts.LAST_MODIFIED_HEADER,course.lastListModification);
+            res.append(academiaConsts.LAST_MODIFIED_HEADER,course.lastListModification.toUTCString());
             res.status(academiaConsts.STATUS_OK).json(branchList);
         })
         .catch(next);
