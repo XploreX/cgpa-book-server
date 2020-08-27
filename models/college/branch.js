@@ -21,7 +21,7 @@ var branchSchema = new Schema({
         type : Date
     },
     lastListModification : {
-        type : String
+        type : Date
     }
 });
 
