@@ -10,7 +10,7 @@ let router = express.Router();
 let checkList = ['college'];
 
 router.post('/college', (req, res, next) => {
-    const query = req.query;
+    const query = req.body;
     checkQuery(query,checkList);
     college = new College(query['college']);
     // updateLastModifed([college]);

@@ -8,7 +8,7 @@ let router = express.Router();
 let checkList = ['college','course','branch','semester'];
 
 router.post('/semester', (req, res, next) => {
-    let query = req.query;
+    let query = req.body;
     mongoHelpers.checkQuery(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {

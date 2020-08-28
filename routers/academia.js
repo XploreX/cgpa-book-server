@@ -41,7 +41,7 @@ router.get('/*', (req, res, next) => {
 })
 
 router.post('/*',(req,res,next) => {
-    let query = req.query;
+    let query = req.body;
     let flags = '';
     if('ignorecase' in query) {
         if(query['ignorecase'].toLowerCase() == 'true') {
