@@ -15,6 +15,8 @@ var router = express.Router();
 
 router.use((req,res,next) => {
     console.log("request.body = ",req.body);
+    console.log("Content-Type = ",req.get('Content-Type'));
+    console.log('User-Agent = ',req.get('User-Agent'));
     next();
 })
 
