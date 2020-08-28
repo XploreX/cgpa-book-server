@@ -14,7 +14,7 @@ const subjectRouter = require('./academia/subject.js');
 var router = express.Router();
 
 router.use((req,res,next) => {
-    console.log(req);
+    console.log("request.body = ",req.body);
     next();
 })
 
