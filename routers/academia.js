@@ -13,6 +13,11 @@ const semesterRouter = require('./academia/semester.js');
 const subjectRouter = require('./academia/subject.js');
 var router = express.Router();
 
+router.use((req,res,next) => {
+    console.log(req);
+    next();
+})
+
 
 router.get('/*', (req, res, next) => {
     let query = req.body;
