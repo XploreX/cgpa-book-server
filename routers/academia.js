@@ -14,7 +14,7 @@ const subjectRouter = require('./academia/subject.js');
 var router = express.Router();
 
 router.use((req,res,next) => {
-    console.log("request.body = ",req.body);
+    console.log("request.query = ",req.query);
     console.log("Content-Type = ",req.get('Content-Type'));
     console.log('User-Agent = ',req.get('User-Agent'));
     next();
@@ -22,7 +22,7 @@ router.use((req,res,next) => {
 
 
 router.get('/*', (req, res, next) => {
-    let query = req.body;
+    let query = req.query;
     let flags = '';
     if ('ignorecase' in query) {
         if (query['ignorecase'].toLowerCase() == 'true') {

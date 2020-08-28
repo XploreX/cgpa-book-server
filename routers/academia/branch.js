@@ -29,7 +29,7 @@ router.post('/branch', (req, res, next) => {
 })
 
 router.get('/branch', (req, res, next) => {
-    let query = req.body;
+    let query = req.query;
     mongoHelpers.checkQuery(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
@@ -51,7 +51,7 @@ router.get('/branch', (req, res, next) => {
 })
 
 router.get('/branch-list', (req, res, next) => {
-    let query = req.body;
+    let query = req.query;
     mongoHelpers.addMissingKeysToQuery(query, ['branch']);
     mongoHelpers.checkQuery(query,checkList);
     College.findOne({ college: query['college'] })
@@ -73,7 +73,6 @@ router.get('/branch-list', (req, res, next) => {
                 }
                 branchList.push(branchName);
             }
-            console.log(course.lastListModification);
             res.append(academiaConsts.LAST_MODIFIED_HEADER,course.getLastListModification());
             res.status(academiaConsts.STATUS_OK).json(branchList);
         })
