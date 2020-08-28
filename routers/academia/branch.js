@@ -8,9 +8,9 @@ let router = express.Router();
 let checkList = ['college','course','branch'];
 
 router.post('/branch', (req, res, next) => {
-    let query = req.body;
+    let query = req.query;
     mongoHelpers.checkQuery(query,checkList);
-    let branch = req.body['branch'];
+    let branch = req.query['branch'];
     College.findOne({ college: query['college'] })
         .then((college) => {
             let course = college.getCourse(query['course']);
@@ -29,7 +29,7 @@ router.post('/branch', (req, res, next) => {
 })
 
 router.get('/branch', (req, res, next) => {
-    let query = req.body;
+    let query = req.query;
     mongoHelpers.checkQuery(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
@@ -51,7 +51,7 @@ router.get('/branch', (req, res, next) => {
 })
 
 router.get('/branch-list', (req, res, next) => {
-    let query = req.body;
+    let query = req.query;
     mongoHelpers.addMissingKeysToQuery(query, ['branch']);
     mongoHelpers.checkQuery(query,checkList);
     College.findOne({ college: query['college'] })

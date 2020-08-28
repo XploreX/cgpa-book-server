@@ -8,7 +8,7 @@ let router = express.Router();
 let checkList = ['college','course'];
 
 router.post('/course', (req, res, next) => {
-    let query = req.body;
+    let query = req.query;
     checkQuery(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
@@ -24,7 +24,7 @@ router.post('/course', (req, res, next) => {
 })
 
 router.get('/course', (req, res, next) => {
-    let query = req.body;
+    let query = req.query;
     checkQuery(query, checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
@@ -42,7 +42,7 @@ router.get('/course', (req, res, next) => {
 })
 
 router.get('/course-list', (req, res, next) => {
-    let query = req.body;
+    let query = req.query;
     addMissingKeysToQuery(query, ['course','branch']);
     checkQuery(query, checkList);
     let courseList = [];
