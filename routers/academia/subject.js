@@ -3,6 +3,7 @@ const {College} = require('../../models/index.js');
 const academiaConsts = require('../academia-constants.js');
 const mongoHelpers = require('../../utility/mongo-helpers.js');
 const {sendEmptyList,sendEmptyDict} = require('../../utility/express-helpers.js');
+const httpConsts = require('../../utility/http-helpers.js');
 let router = express.Router();
 
 let checkList = ['college','course','branch','semester','subject'];
@@ -31,7 +32,7 @@ router.get('/subject', (req, res, next) => {
             if(!subject) {
                 return sendEmptyDict(res);
             }
-            res.status(academiaConsts.STATUS_OK).json(subject);
+            res.status(httpConsts.STATUS_OK).json(subject);
         })
         .catch(next);
 })

@@ -3,6 +3,7 @@ const {College} = require('../../models/index.js');
 const academiaConsts = require('../academia-constants.js');
 const mongoHelpers = require('../../utility/mongo-helpers.js');
 const {sendEmptyList,sendEmptyDict} = require('../../utility/express-helpers.js');
+const httpHelpers = require('../../utility/http-helpers.js');
 let router = express.Router();
 
 let checkList = ['college','course','branch','semester'];
@@ -28,7 +29,7 @@ router.post('/semester', (req, res, next) => {
             return college.save()
         })
         .then((doc) => {
-            res.sendStatus(academiaConsts.STATUS_OK);
+            res.sendStatus(httpHelpers.STATUS_OK);
         })
         .catch(next);
 })
@@ -53,8 +54,8 @@ router.get('/semester', (req, res, next) => {
             if(!semester) {
                 return sendEmptyDict(res);
             }
-            res.append(academiaConsts.LAST_MODIFIED_HEADER, semester.lastModified);
-            res.status(academiaConsts.STATUS_OK).json(semester);
+            res.append(httpHelpers.HEADER_LAST_MODIFIED, semester.lastModified);
+            res.status(httpHelpers.STATUS_OK).json(semester);
         })
         .catch(next);
 })
@@ -76,12 +77,13 @@ router.get('/semester-list', (req, res, next) => {
             if(!branch) {
                 return sendEmptyList(res);
             }
+            httpHelpers.handleIfModifiedSince(req,res,branch.getLastListModification());
             let semesterList = [];
             for (semester of branch.semesters) {
                 semesterList.push(semester.semester);
             }
-            res.append(academiaConsts.LAST_MODIFIED_HEADER,branch.getLastListModification());
-            res.status(academiaConsts.STATUS_OK).json(semesterList);
+            res.append(httpHelpers.HEADER_LAST_MODIFIED,branch.getLastListModification());
+            res.status(httpHelpers.STATUS_OK).json(semesterList);
         })
         .catch(next);
 })

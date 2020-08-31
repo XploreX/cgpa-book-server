@@ -5,13 +5,16 @@ var app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// app.use(morgan('combined'));
+
 app.use('/academia', require('./routers/academia.js'));
 // app.use('/users',require('./routers/uses.js'))
 
 app.get('/', (req, res) => {
     res.status(200).send('Okaeri');
 })
- 
+
+
 app.use(errors.notFoundHandler);
 app.use(errors.logErrors);
 app.use(errors.genericErrorHandler);

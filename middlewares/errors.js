@@ -1,4 +1,5 @@
 const { MongoError } = require("mongodb");
+const httpHelpers = require('../utility/http-helpers.js');
 
 function notFoundHandler(req, res, next) {
     err = new Error("Content not found");
@@ -7,11 +8,17 @@ function notFoundHandler(req, res, next) {
 }
 
 function logErrors(err, req, res, next) {
+    if('status' in err) {
+        if(err.status === httpHelpers.STATUS_NOT_MODIFIED)
+            return next(err);
+    }
     console.log(err);
     next(err);
 }
 
 function genericErrorHandler(err, req, res, next) {
+
+
     if (!('status' in err)) {
         if (err instanceof TypeError || err.name == 'TypeError' ) { 
             err.status = 400;
@@ -30,6 +37,8 @@ function genericErrorHandler(err, req, res, next) {
             next(err);
         }
     }
+    if(err.status === httpHelpers.STATUS_NOT_MODIFIED)
+        return;
     res.status(err.status).json({
         type: err.type,
         message: err.message

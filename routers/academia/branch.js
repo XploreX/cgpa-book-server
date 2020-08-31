@@ -3,6 +3,7 @@ const {College} = require('../../models/index.js');
 const academiaConsts = require('../academia-constants.js');
 const mongoHelpers = require('../../utility/mongo-helpers.js');
 const expressHelpers = require('../../utility/express-helpers.js');
+const httpHelpers = require('../../utility/http-helpers.js');
 let router = express.Router();
 
 let checkList = ['college','course','branch'];
@@ -23,7 +24,7 @@ router.post('/branch', (req, res, next) => {
             return college.save()
         })
         .then((doc) => {
-            res.sendStatus(academiaConsts.STATUS_OK);
+            res.sendStatus(httpHelpers.STATUS_OK);
         })
         .catch(next);
 })
@@ -44,8 +45,8 @@ router.get('/branch', (req, res, next) => {
             if (!branch) {
                 return expressHelpers.sendEmptyDict(res);
             }
-            res.append(academiaConsts.LAST_MODIFIED_HEADER, branch.lastModified);
-            res.status(academiaConsts.STATUS_OK).json(branch);
+            res.append(httpHelpers.HEADER_LAST_MODIFIED, branch.lastModified);
+            res.status(httpHelpers.STATUS_OK).json(branch);
         })
         .catch(next);
 })
@@ -64,6 +65,7 @@ router.get('/branch-list', (req, res, next) => {
                 return expressHelpers.sendEmptyList(res);
             }
             let branchList = [];
+            httpHelpers.handleIfModifiedSince(req,res,course.getLastListModification());
             for (branch of course.branches) {
                 if (!branch.branch.match(query['branch']))
                     continue;
@@ -73,8 +75,8 @@ router.get('/branch-list', (req, res, next) => {
                 }
                 branchList.push(branchName);
             }
-            res.append(academiaConsts.LAST_MODIFIED_HEADER,course.getLastListModification());
-            res.status(academiaConsts.STATUS_OK).json(branchList);
+            res.append(httpHelpers.HEADER_LAST_MODIFIED,course.getLastListModification());
+            res.status(httpHelpers.STATUS_OK).json(branchList);
         })
         .catch(next);
 })

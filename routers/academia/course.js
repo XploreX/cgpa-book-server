@@ -3,6 +3,7 @@ const {College} = require('../../models/index.js');
 const academiaConsts = require('../academia-constants.js');
 const { checkQuery, checkExistance,addMissingKeysToQuery} = require('../../utility/mongo-helpers.js');
 const {sendEmptyList,sendEmptyDict} = require('../../utility/express-helpers.js');
+const httpHelpers = require('../../utility/http-helpers.js');
 let router = express.Router();
 
 let checkList = ['college','course'];
@@ -18,7 +19,7 @@ router.post('/course', (req, res, next) => {
             return college.save()
         })
         .then((doc) => {
-            res.sendStatus(academiaConsts.STATUS_OK);
+            res.sendStatus(httpHelpers.STATUS_OK);
         })
         .catch(next);
 })
@@ -35,8 +36,8 @@ router.get('/course', (req, res, next) => {
             if(! course) {
                 return sendEmptyDict();
             }
-            res.append(academiaConsts.LAST_MODIFIED_HEADER, course.lastModified);
-            res.status(academiaConsts.STATUS_OK).json(course);
+            res.append(httpHelpers.HEADER_LAST_MODIFIED, course.lastModified);
+            res.status(httpHelpers.STATUS_OK).json(course);
         })
         .catch(next);
 })
@@ -52,6 +53,7 @@ router.get('/course-list', (req, res, next) => {
             if (!college) {
                 return sendEmptyList(res);
             }
+            httpHelpers.handleIfModifiedSince(req,res,college.getLastListModification());
             for (course of college.courses) {
                 if (!course.course.match(query['course']))
                     continue;
@@ -63,8 +65,8 @@ router.get('/course-list', (req, res, next) => {
                     courseName += " (" + course.abbreviation + ")";
                 courseList.push(courseName);
             }
-            res.append(academiaConsts.LAST_MODIFIED_HEADER,college.getLastListModification());
-            res.status(academiaConsts.STATUS_OK).json(courseList);
+            res.append(httpHelpers.HEADER_LAST_MODIFIED,college.getLastListModification());
+            res.status(httpHelpers.STATUS_OK).json(courseList);
         })
         .catch(next)
 })
