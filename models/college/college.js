@@ -5,6 +5,7 @@ const { uniqueKeyVal } = require('../../utility/validation-helpers');
 const {findNeedle} = require('../../utility/array-helpers.js');
 const mongoHelpers = require('../../utility/mongo-helpers.js');
 const Schema = mongoose.Schema;
+const collegeHelpers = require('./college-helpers.js');
 
 var collegeSchema = new Schema({
     college: {
@@ -70,6 +71,11 @@ collegeSchema.methods.getCourse = function (courseName) {
     }
     return null
 }
+
+collegeSchema.methods.updateAncestorsLastModified = collegeHelpers.updateAncestorsLastModified;
+collegeSchema.methods.updateLastModified = collegeHelpers.updateLastModified;
+collegeSchema.methods.updateDescendantsLastModified = collegeHelpers.genUpdateDescendantsLastModified('courses');
+collegeSchema.methods.updateRelevantLastModifieds = collegeHelpers.updateRelevantLastModifieds;
 
 collegeSchema.methods.getLastModified = mongoHelpers.getLastModified;
 collegeSchema.methods.getLastListModification = mongoHelpers.getLastListModification;

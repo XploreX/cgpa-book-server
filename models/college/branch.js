@@ -3,6 +3,7 @@ const semesterSchema = require('./semester.js');
 const {uniqueKeyVal} = require('../../utility/validation-helpers.js');
 const {getAbbreviation , getTitleForm} = require('../../utility/string-helpers');
 const mongoHelpers = require('../../utility/mongo-helpers.js');
+const collegeHelpers = require('./college-helpers.js');
 const Schema = mongoose.Schema;
 
 var branchSchema = new Schema({
@@ -61,6 +62,12 @@ branchSchema.methods.semesterID = function(semesterNumber) {
     }
     return -1;
 }
+
+branchSchema.methods.updateAncestorsLastModified = collegeHelpers.updateAncestorsLastModified;
+branchSchema.methods.updateLastModified = collegeHelpers.updateLastModified;
+branchSchema.methods.updateDescendantsLastModified = collegeHelpers.genUpdateDescendantsLastModified('semesters');
+branchSchema.methods.updateRelevantLastModifieds = collegeHelpers.updateRelevantLastModifieds;
+
 
 branchSchema.methods.getLastModified = mongoHelpers.getLastModified;
 branchSchema.methods.getLastListModification = mongoHelpers.getLastListModification;

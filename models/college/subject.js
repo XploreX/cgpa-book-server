@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const stringHelpers = require('../../utility/string-helpers.js');
 const mongoHelpers = require('../../utility/mongo-helpers.js');
-
+const collegeHelpers = require('./college-helpers.js');
 const Schema = mongoose.Schema;
 
 var subjectSchema = new Schema({
@@ -33,6 +33,12 @@ subjectSchema.pre('validate',function(next) {
 subjectSchema.pre('save',function(next) {
     next();
 })
+
+subjectSchema.methods.updateAncestorsLastModified = collegeHelpers.updateAncestorsLastModified;
+subjectSchema.methods.updateLastModified = collegeHelpers.updateLastModified;
+subjectSchema.methods.updateDescendantsLastModified = collegeHelpers.genUpdateDescendantsLastModified();
+subjectSchema.methods.updateRelevantLastModifieds = collegeHelpers.updateRelevantLastModified;
+
 
 subjectSchema.methods.getLastModified = mongoHelpers.getLastModified;
 

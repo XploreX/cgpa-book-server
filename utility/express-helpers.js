@@ -1,4 +1,4 @@
-const {STATUS_OK} = require('../routers/academia-constants.js');
+const {STATUS_OK} = require('./http-helpers.js');
 
 function sendEmptyDict(res) {
     return res.status(STATUS_OK).json({});

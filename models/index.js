@@ -6,6 +6,7 @@ const {basicErrorHandler} = require('../utility/error-handlers.js');
 const {capitalizeFirstLetter} = require('../utility/string-helpers');
 
 let jsFilePattern = /\.js$/; //Not getting used at the moment , can be useful later on
+let helperFilePattern = /.*helper.*/i;
 
 function addModelsToExports(dir) {
     try {
@@ -17,6 +18,8 @@ function addModelsToExports(dir) {
     for(const file of files) {
         if(file != path.relative(dir,__filename))
         {
+            if(file.match(helperFilePattern))
+                continue;
             let modelName = capitalizeFirstLetter(file.split('.')[0].split('/').slice(-1)[0]);  //basically getting file base name with first letter capitalized
             // let schemaName = file.split('.')[0] + 'Schema';
             let schemaFile = './'+file;

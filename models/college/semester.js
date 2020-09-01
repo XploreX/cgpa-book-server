@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const subjectSchema = require('./subject.js');
 const { findNeedle } = require('../../utility/array-helpers.js');
 const mongoHelpers = require('../../utility/mongo-helpers.js');
-
+const collegeHelpers = require('./college-helpers.js');
 const Schema = mongoose.Schema;
 
 var semesterSchema = new Schema({
@@ -57,6 +57,12 @@ semesterSchema.methods.subjectID = function (subjectName) {
     }
     return -1;
 }
+
+semesterSchema.methods.updateAncestorsLastModified = collegeHelpers.updateAncestorsLastModified;
+semesterSchema.methods.updateLastModified = collegeHelpers.updateLastModified;
+semesterSchema.methods.updateDescendantsLastModified = collegeHelpers.genUpdateDescendantsLastModified('subjects');
+semesterSchema.methods.updateRelevantLastModifieds = collegeHelpers.updateRelevantLastModifieds;
+
 
 semesterSchema.methods.getLastModified = mongoHelpers.getLastModified;
 semesterSchema.methods.getLastListModification = mongoHelpers.getLastListModification;

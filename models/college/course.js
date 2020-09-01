@@ -4,6 +4,8 @@ const stringHelpers = require('../../utility/string-helpers.js');
 const { uniqueKeyVal } = require('../../utility/validation-helpers.js')
 const {findNeedle} = require('../../utility/array-helpers.js');
 const mongoHelpers = require('../../utility/mongo-helpers.js');
+const collegeHelpers = require('./college-helpers.js');
+
 const Schema = mongoose.Schema;
 
 var courseSchema = new Schema({
@@ -65,6 +67,12 @@ courseSchema.methods.branchID = function (branchName) {
     }
     return -1;
 }
+
+courseSchema.methods.updateAncestorsLastModified = collegeHelpers.updateAncestorsLastModified;
+courseSchema.methods.updateLastModified = collegeHelpers.updateLastModified;
+courseSchema.methods.updateDescendantsLastModified = collegeHelpers.genUpdateDescendantsLastModified('branches');
+courseSchema.methods.updateRelevantLastModifieds = collegeHelpers.updateRelevantLastModifieds;
+
 
 courseSchema.methods.getLastModified = mongoHelpers.getLastModified;
 courseSchema.methods.getLastListModification = mongoHelpers.getLastListModification;

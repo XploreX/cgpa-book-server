@@ -4,7 +4,6 @@ const courseSchema = require('../models/college/course.js');
 const { prepareQuery } = require('../utility/dictionary-helpers');
 const { updateLastModifed } = require('../utility/mongo-helpers');
 const {checkExistance} = require('../utility/error-handlers');
-const academiaConsts = require('./academia-constants.js');
 
 const collegeRouter = require('./academia/college.js');
 const courseRouter = require('./academia/course.js');

@@ -1,6 +1,6 @@
 const express = require('express');
 const {College} = require('../../models/index.js');
-const academiaConsts = require('../academia-constants.js');
+const academiaHelpers = require('../academia-helpers.js');
 const { checkQuery, checkExistance,addMissingKeysToQuery} = require('../../utility/mongo-helpers.js');
 const {sendEmptyList,sendEmptyDict} = require('../../utility/express-helpers.js');
 const httpHelpers = require('../../utility/http-helpers.js');
@@ -15,7 +15,8 @@ router.post('/course', (req, res, next) => {
         .then((college) => {
             checkExistance(college, 'college');
             college.addToList(query['course']);
-            // updateLastModifed([college, college.getCourse(query['course']['course'])])
+            let course = college.getCourse(query['course']['course']);
+            course.updateRelevantLastModifieds();
             return college.save()
         })
         .then((doc) => {
@@ -36,7 +37,7 @@ router.get('/course', (req, res, next) => {
             if(! course) {
                 return sendEmptyDict();
             }
-            res.append(httpHelpers.HEADER_LAST_MODIFIED, course.lastModified);
+            res.append(httpHelpers.HEADER_LAST_MODIFIED, course.getLastModified());
             res.status(httpHelpers.STATUS_OK).json(course);
         })
         .catch(next);

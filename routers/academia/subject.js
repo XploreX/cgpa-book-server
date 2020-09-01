@@ -1,6 +1,5 @@
 const express = require('express');
 const {College} = require('../../models/index.js');
-const academiaConsts = require('../academia-constants.js');
 const mongoHelpers = require('../../utility/mongo-helpers.js');
 const {sendEmptyList,sendEmptyDict} = require('../../utility/express-helpers.js');
 const httpConsts = require('../../utility/http-helpers.js');

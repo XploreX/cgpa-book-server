@@ -1,6 +1,6 @@
 const express = require('express')
 const {College} = require('../../models/index.js');
-const academiaConsts = require('../academia-constants.js');
+const academiaHelpers = require('../academia-helpers.js');
 const mongoHelpers = require('../../utility/mongo-helpers.js');
 const expressHelpers = require('../../utility/express-helpers.js');
 const httpHelpers = require('../../utility/http-helpers.js');
@@ -20,7 +20,8 @@ router.post('/branch', (req, res, next) => {
                 course = college.getCourse(query['course'])
             }
             course.addToList(branch);
-            // mongoHelpers.updateLastModifed([college, course, course.getBranch(query['branch']['branch'])]);
+            branch = course.getBranch(query['branch']['branch']);
+            branch.updateRelevantLastModifieds();
             return college.save()
         })
         .then((doc) => {
@@ -45,7 +46,7 @@ router.get('/branch', (req, res, next) => {
             if (!branch) {
                 return expressHelpers.sendEmptyDict(res);
             }
-            res.append(httpHelpers.HEADER_LAST_MODIFIED, branch.lastModified);
+            res.append(httpHelpers.HEADER_LAST_MODIFIED, branch.getLastModified());
             res.status(httpHelpers.STATUS_OK).json(branch);
         })
         .catch(next);
