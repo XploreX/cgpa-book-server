@@ -37,6 +37,7 @@ router.get('/course', (req, res, next) => {
             if(! course) {
                 return sendEmptyDict();
             }
+            httpHelpers.handleIfModifiedSince(req,res,course.getLastModified());
             res.append(httpHelpers.HEADER_LAST_MODIFIED, course.getLastModified());
             res.status(httpHelpers.STATUS_OK).json(course);
         })

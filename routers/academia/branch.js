@@ -46,6 +46,7 @@ router.get('/branch', (req, res, next) => {
             if (!branch) {
                 return expressHelpers.sendEmptyDict(res);
             }
+            httpHelpers.handleIfModifiedSince(req,res,branch.getLastModified());
             res.append(httpHelpers.HEADER_LAST_MODIFIED, branch.getLastModified());
             res.status(httpHelpers.STATUS_OK).json(branch);
         })

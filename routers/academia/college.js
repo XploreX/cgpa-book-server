@@ -40,6 +40,7 @@ router.get('/college', (req, res, next) => {
             if (!college) {
                 return sendEmptyDict(res);
             }
+            httpHelpers.handleIfModifiedSince(req,res,college.getLastModified());
             res.append(httpHelpers.HEADER_LAST_MODIFIED, college.getLastModified());
             res.status(httpHelpers.STATUS_OK).json(college);
         })

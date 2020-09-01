@@ -3,6 +3,7 @@ const {College} = require('../../models/index.js');
 const mongoHelpers = require('../../utility/mongo-helpers.js');
 const {sendEmptyList,sendEmptyDict} = require('../../utility/express-helpers.js');
 const httpHelpers = require('../../utility/http-helpers.js');
+const { handleIfModifiedSince } = require('../../utility/http-helpers.js');
 let router = express.Router();
 
 let checkList = ['college','course','branch','semester'];
@@ -54,6 +55,7 @@ router.get('/semester', (req, res, next) => {
             if(!semester) {
                 return sendEmptyDict(res);
             }
+            handleIfModifiedSince(req,res,semester.getLastModified());
             res.append(httpHelpers.HEADER_LAST_MODIFIED, semester.getLastModified());
             res.status(httpHelpers.STATUS_OK).json(semester);
         })
