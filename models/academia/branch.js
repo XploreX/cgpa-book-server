@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
-const semesterSchema = require('./semester.js');
-const {uniqueKeyVal} = require('../../utility/validation-util.js');
-const {getAbbreviation , getTitleForm} = require('../../utility/string-util');
-const mongoHelpers = require('../../utility/mongo-util.js');
-const collegeHelpers = require('./college-helpers.js');
 const Schema = mongoose.Schema;
+
+const __ROOT = require(__dirname + '/../../config.js').__ROOT;
+const utility = require(__ROOT + '/utility');
+const semesterSchema = require('./semester.js');
 
 var branchSchema = new Schema({
     branch : {
@@ -26,12 +25,12 @@ var branchSchema = new Schema({
     }
 });
 
-branchSchema.path('semesters').validate(uniqueKeyVal('semester'),"Semester already exists","Value Error");
+branchSchema.path('semesters').validate(utility.mongoose.validators.uniqueKeyVal('semester'),"Semester already exists","Value Error");
 
 branchSchema.pre('validate',function(next) {
     // this.branch = getTitleForm(this.branch);
     if(!this.abbreviation) {
-        this.abbreviation = getAbbreviation(this.branch);
+        this.abbreviation = utility.string.getAbbreviation(this.branch);
     }
     next();
 })
@@ -63,13 +62,11 @@ branchSchema.methods.semesterID = function(semesterNumber) {
     return -1;
 }
 
-branchSchema.methods.updateAncestorsLastModified = collegeHelpers.updateAncestorsLastModified;
-branchSchema.methods.updateLastModified = collegeHelpers.updateLastModified;
-branchSchema.methods.updateDescendantsLastModified = collegeHelpers.genUpdateDescendantsLastModified('semesters');
-branchSchema.methods.updateRelevantLastModifieds = collegeHelpers.updateRelevantLastModifieds;
-
-
-branchSchema.methods.getLastModified = mongoHelpers.getLastModified;
-branchSchema.methods.getLastListModification = mongoHelpers.getLastListModification;
+branchSchema.methods.updateAncestorsLastModified = utility.mongoose.updateAncestorsLastModified;
+branchSchema.methods.updateLastModified = utility.mongoose.updateLastModified;
+branchSchema.methods.updateDescendantsLastModified = utility.mongoose.genUpdateDescendantsLastModified('semesters');
+branchSchema.methods.updateRelevantLastModifieds = utility.mongoose.updateRelevantLastModifieds;
+branchSchema.methods.getLastModified = utility.mongoose.getLastModified;
+branchSchema.methods.getLastListModification = utility.mongoose.getLastListModification;
 
 module.exports = branchSchema

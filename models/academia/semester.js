@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const __ROOT = require(__dirname + '/../../config.js').__ROOT;
+const utility = require(__ROOT + '/utility');
 const subjectSchema = require('./subject.js');
 const { findNeedle } = require('../../utility/array-util.js');
-const mongoHelpers = require('../../utility/mongo-util.js');
-const collegeHelpers = require('./college-helpers.js');
-const Schema = mongoose.Schema;
 
 var semesterSchema = new Schema({
     semester: {
@@ -58,14 +59,12 @@ semesterSchema.methods.subjectID = function (subjectName) {
     return -1;
 }
 
-semesterSchema.methods.updateAncestorsLastModified = collegeHelpers.updateAncestorsLastModified;
-semesterSchema.methods.updateLastModified = collegeHelpers.updateLastModified;
-semesterSchema.methods.updateDescendantsLastModified = collegeHelpers.genUpdateDescendantsLastModified('subjects');
-semesterSchema.methods.updateRelevantLastModifieds = collegeHelpers.updateRelevantLastModifieds;
-
-
-semesterSchema.methods.getLastModified = mongoHelpers.getLastModified;
-semesterSchema.methods.getLastListModification = mongoHelpers.getLastListModification;
+semesterSchema.methods.updateAncestorsLastModified = utility.mongoose.updateAncestorsLastModified;
+semesterSchema.methods.updateLastModified = utility.mongoose.updateLastModified;
+semesterSchema.methods.updateDescendantsLastModified = utility.mongoose.genUpdateDescendantsLastModified('subjects');
+semesterSchema.methods.updateRelevantLastModifieds = utility.mongoose.updateRelevantLastModifieds;
+semesterSchema.methods.getLastModified = utility.mongoose.getLastModified;
+semesterSchema.methods.getLastListModification = utility.mongoose.getLastListModification;
 
 module.exports = semesterSchema;
 

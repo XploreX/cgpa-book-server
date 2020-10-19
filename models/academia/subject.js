@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const stringHelpers = require('../../utility/string-util.js');
-const mongoHelpers = require('../../utility/mongo-util.js');
-const collegeHelpers = require('./college-helpers.js');
 const Schema = mongoose.Schema;
+
+const __ROOT = require(__dirname + '/../../config.js').__ROOT;
+const utility = require(__ROOT + '/utility');
 
 var subjectSchema = new Schema({
     subject : {
@@ -34,12 +34,10 @@ subjectSchema.pre('save',function(next) {
     next();
 })
 
-subjectSchema.methods.updateAncestorsLastModified = collegeHelpers.updateAncestorsLastModified;
-subjectSchema.methods.updateLastModified = collegeHelpers.updateLastModified;
-subjectSchema.methods.updateDescendantsLastModified = collegeHelpers.genUpdateDescendantsLastModified();
-subjectSchema.methods.updateRelevantLastModifieds = collegeHelpers.updateRelevantLastModified;
-
-
-subjectSchema.methods.getLastModified = mongoHelpers.getLastModified;
+subjectSchema.methods.updateAncestorsLastModified = utility.mongoose.updateAncestorsLastModified;
+subjectSchema.methods.updateLastModified = utility.mongoose.updateLastModified;
+subjectSchema.methods.updateDescendantsLastModified = utility.mongoose.genUpdateDescendantsLastModified();
+subjectSchema.methods.updateRelevantLastModifieds = utility.mongoose.updateRelevantLastModified;
+subjectSchema.methods.getLastModified = utility.mongoose.getLastModified;
 
 module.exports = subjectSchema;

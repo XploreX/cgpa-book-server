@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
-
-const courseSchema = require('./course.js');
-const { getAbbreviation, getTitleForm } = require('../../utility/string-helpers.js');
-const { uniqueKeyVal } = require('../../utility/validation-helpers');
-const {findNeedle} = require('../../utility/array-helpers.js');
-const mongoHelpers = require('../../utility/mongo-helpers.js');
 const Schema = mongoose.Schema;
-const collegeHelpers = require('./college-helpers.js');
+
+const __ROOT = require(__dirname + '/../../config.js').__ROOT;
+const courseSchema = require('./course.js');
+const utility = require(__ROOT+'/utility');
+const {findNeedle} = require('../../utility/array-util.js');
 
 var collegeSchema = new Schema({
     college: {
@@ -30,8 +28,7 @@ var collegeSchema = new Schema({
     }
 });
 
-
-collegeSchema.path('courses').validate(uniqueKeyVal('course'), "Course already exists", "Value Error");
+collegeSchema.path('courses').validate(utility.mongoose.validators.uniqueKeyVal('course'), "Course already exists", "Value Error");
 
 collegeSchema.pre('validate', function (next) {
     // this.college = getTitleForm(this.college);
@@ -73,12 +70,11 @@ collegeSchema.methods.getCourse = function (courseName) {
     return null
 }
 
-collegeSchema.methods.updateAncestorsLastModified = collegeHelpers.updateAncestorsLastModified;
-collegeSchema.methods.updateLastModified = collegeHelpers.updateLastModified;
-collegeSchema.methods.updateDescendantsLastModified = collegeHelpers.genUpdateDescendantsLastModified('courses');
-collegeSchema.methods.updateRelevantLastModifieds = collegeHelpers.updateRelevantLastModifieds;
-
-collegeSchema.methods.getLastModified = mongoHelpers.getLastModified;
-collegeSchema.methods.getLastListModification = mongoHelpers.getLastListModification;
+collegeSchema.methods.updateAncestorsLastModified = utility.mongoose.updateAncestorsLastModified;
+collegeSchema.methods.updateLastModified = utility.mongoose.updateLastModified;
+collegeSchema.methods.updateDescendantsLastModified = utility.mongoose.genUpdateDescendantsLastModified('courses');
+collegeSchema.methods.updateRelevantLastModifieds = utility.mongoose.updateRelevantLastModifieds;
+collegeSchema.methods.getLastModified = utility.mongoose.getLastModified;
+collegeSchema.methods.getLastListModification = utility.mongoose.getLastListModification;
 
 module.exports = collegeSchema;

@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const mongoHelpers = require('../../utility/mongo-helpers.js');
+
+const __ROOT = require(__dirname + '/../../config.js').__ROOT;
+const utility = require(__ROOT + '/utility');
 
 var collegeHeaderSchema = new Schema({
     lastListModification : {
@@ -8,6 +10,6 @@ var collegeHeaderSchema = new Schema({
     }
 })
 
-collegeHeaderSchema.methods.getLastListModification = mongoHelpers.getLastListModification;
+collegeHeaderSchema.methods.getLastListModification = utility.mongoose.getLastListModification;
 
 module.exports = collegeHeaderSchema;
