@@ -28,7 +28,7 @@ var collegeSchema = new Schema({
     }
 });
 
-collegeSchema.path('courses').validate(utility.mongoose.validators.uniqueKeyVal('course'), "Course already exists", "Value Error");
+collegeSchema.path('courses').validate(utility.mongooseUtil.validators.uniqueKeyVal('course'), "Course already exists", "Value Error");
 
 collegeSchema.pre('validate', function (next) {
     // this.college = getTitleForm(this.college);
@@ -70,11 +70,11 @@ collegeSchema.methods.getCourse = function (courseName) {
     return null
 }
 
-collegeSchema.methods.updateAncestorsLastModified = utility.mongoose.updateAncestorsLastModified;
-collegeSchema.methods.updateLastModified = utility.mongoose.updateLastModified;
-collegeSchema.methods.updateDescendantsLastModified = utility.mongoose.genUpdateDescendantsLastModified('courses');
-collegeSchema.methods.updateRelevantLastModifieds = utility.mongoose.updateRelevantLastModifieds;
-collegeSchema.methods.getLastModified = utility.mongoose.getLastModified;
-collegeSchema.methods.getLastListModification = utility.mongoose.getLastListModification;
+collegeSchema.methods.updateAncestorsLastModified = utility.mongooseUtil.updateAncestorsLastModified;
+collegeSchema.methods.updateLastModified = utility.mongooseUtil.updateLastModified;
+collegeSchema.methods.updateDescendantsLastModified = utility.mongooseUtil.genUpdateDescendantsLastModified('courses');
+collegeSchema.methods.updateRelevantLastModifieds = utility.mongooseUtil.updateRelevantLastModifieds;
+collegeSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;
+collegeSchema.methods.getLastListModification = utility.mongooseUtil.getLastListModification;
 
 module.exports = collegeSchema;

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const Schema = mongooseUtil.Schema;
 
 const __ROOT = require(__dirname + '/../../config.js').__ROOT;
 const utility = require(__ROOT + '/utility');
@@ -25,12 +25,12 @@ var branchSchema = new Schema({
     }
 });
 
-branchSchema.path('semesters').validate(utility.mongoose.validators.uniqueKeyVal('semester'),"Semester already exists","Value Error");
+branchSchema.path('semesters').validate(utility.mongooseUtil.validators.uniqueKeyVal('semester'),"Semester already exists","Value Error");
 
 branchSchema.pre('validate',function(next) {
     // this.branch = getTitleForm(this.branch);
     if(!this.abbreviation) {
-        this.abbreviation = utility.string.getAbbreviation(this.branch);
+        this.abbreviation = utility.stringUtil.getAbbreviation(this.branch);
     }
     next();
 })
@@ -62,11 +62,11 @@ branchSchema.methods.semesterID = function(semesterNumber) {
     return -1;
 }
 
-branchSchema.methods.updateAncestorsLastModified = utility.mongoose.updateAncestorsLastModified;
-branchSchema.methods.updateLastModified = utility.mongoose.updateLastModified;
-branchSchema.methods.updateDescendantsLastModified = utility.mongoose.genUpdateDescendantsLastModified('semesters');
-branchSchema.methods.updateRelevantLastModifieds = utility.mongoose.updateRelevantLastModifieds;
-branchSchema.methods.getLastModified = utility.mongoose.getLastModified;
-branchSchema.methods.getLastListModification = utility.mongoose.getLastListModification;
+branchSchema.methods.updateAncestorsLastModified = utility.mongooseUtil.updateAncestorsLastModified;
+branchSchema.methods.updateLastModified = utility.mongooseUtil.updateLastModified;
+branchSchema.methods.updateDescendantsLastModified = utility.mongooseUtil.genUpdateDescendantsLastModified('semesters');
+branchSchema.methods.updateRelevantLastModifieds = utility.mongooseUtil.updateRelevantLastModifieds;
+branchSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;
+branchSchema.methods.getLastListModification = utility.mongooseUtil.getLastListModification;
 
 module.exports = branchSchema

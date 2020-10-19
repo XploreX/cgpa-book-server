@@ -1,16 +1,18 @@
 const express = require('express')
-const {College} = require('../../models/index.js');
+const {StatusCodes} = require('http-status-codes');
+
+const __ROOT = require('/../../config.js');
+const utility = require(__ROOT+'utility');
+const {College} = require(__ROOT+'/models');
 const academiaHelpers = require('../academia-helpers.js');
-const mongoHelpers = require('../../utility/mongo-util.js');
-const expressHelpers = require('../../utility/express-util.js');
-const httpHelpers = require('../../utility/http-util.js');
+
 let router = express.Router();
 
 let checkList = ['college','course','branch'];
 
 router.post('/branch', (req, res, next) => {
     let query = req.post;
-    mongoHelpers.checkQuery(query,checkList);
+    utility.requestUtil.checkQuery(query,checkList);
     let branch = req.query['branch'];
     College.findOne({ college: query['college'] })
         .then((college) => {
@@ -25,30 +27,30 @@ router.post('/branch', (req, res, next) => {
             return college.save()
         })
         .then((doc) => {
-            res.sendStatus(httpHelpers.STATUS_OK);
+            res.sendStatus(StatusCodes.OK);
         })
         .catch(next);
 })
 
 router.get('/branch', (req, res, next) => {
     let query = req.query;
-    mongoHelpers.checkQuery(query,checkList);
+    utility.requestUtil.checkQuery(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             if (!college) {
-                return expressHelpers.sendEmptyDict(res);
+                return utility.expressUtil.sendEmptyDict(res);
             }
             let course = college.getCourse(query['course']);
             if (!course) {
-                return expressHelpers.sendEmptyDict(res);
+                return utility.expressUtil.sendEmptyDict(res);
             }
             let branch = course.getBranch(query['branch']);
             if (!branch) {
-                return expressHelpers.sendEmptyDict(res);
+                return utility.expressUtil.sendEmptyDict(res);
             }
-            httpHelpers.handleIfModifiedSince(req,res,branch.getLastModified());
-            res.append(httpHelpers.HEADER_LAST_MODIFIED, branch.getLastModified());
-            res.status(httpHelpers.STATUS_OK).json(branch);
+            utility.expressUtil.handleIfModifiedSince(req,res,branch.getLastModified());
+            res.append(utility.httpUtil.headers.LAST_MODIFIED, branch.getLastModified());
+            res.status(StatusCodes.OK).json(branch);
         })
         .catch(next);
 })
@@ -56,7 +58,7 @@ router.get('/branch', (req, res, next) => {
 router.get('/branch-list', (req, res, next) => {
     let query = req.query;
     mongoHelpers.addMissingKeysToQuery(query, ['branch']);
-    mongoHelpers.checkQuery(query,checkList);
+    utility.requestUtil.checkQuery(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             if(! college) {
@@ -67,7 +69,7 @@ router.get('/branch-list', (req, res, next) => {
                 return expressHelpers.sendEmptyList(res);
             }
             let branchList = [];
-            httpHelpers.handleIfModifiedSince(req,res,course.getLastListModification());
+            utility.expressUtil.handleIfModifiedSince(req,res,course.getLastListModification());
             for (branch of course.branches) {
                 if (!branch.branch.match(query['branch']))
                     continue;
@@ -77,8 +79,8 @@ router.get('/branch-list', (req, res, next) => {
                 }
                 branchList.push(branchName);
             }
-            res.append(httpHelpers.HEADER_LAST_MODIFIED,course.getLastListModification());
-            res.status(httpHelpers.STATUS_OK).json(branchList);
+            res.append(utility.httpUtil.headers.LAST_MODIFIED,course.getLastListModification());
+            res.status(StatusCodes.OK).json(branchList);
         })
         .catch(next);
 })

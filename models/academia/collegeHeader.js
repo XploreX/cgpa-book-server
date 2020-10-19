@@ -10,6 +10,6 @@ var collegeHeaderSchema = new Schema({
     }
 })
 
-collegeHeaderSchema.methods.getLastListModification = utility.mongoose.getLastListModification;
+collegeHeaderSchema.methods.getLastListModification = utility.mongooseUtil.getLastListModification;
 
 module.exports = collegeHeaderSchema;

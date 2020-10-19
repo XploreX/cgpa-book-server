@@ -16,7 +16,7 @@ for(let fileName of fileNames)
     if(file !== __filename && !isDir)
     {
         fileName = path.parse(fileName).name;
-        mp[fileName] = mongoose.model(utility.string.capitalizeFirstLetter(fileName),require(file));
+        mp[fileName] = mongoose.model(utility.stringUtil.capitalizeFirstLetter(fileName),require(file));
     }
 }
 

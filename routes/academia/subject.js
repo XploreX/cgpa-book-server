@@ -1,37 +1,38 @@
 const express = require('express');
-const {College} = require('../../models/index.js');
-const mongoHelpers = require('../../utility/mongo-util.js');
-const {sendEmptyList,sendEmptyDict} = require('../../utility/express-util.js');
-const httpConsts = require('../../utility/http-util.js');
+const {StatusCodes} = require('http-status-codes');
+
+const __ROOT = require('/../../config.js');
+const utility = require(__ROOT+'utility');
+const {College} = require(__ROOT+'/models');
 let router = express.Router();
 
 let checkList = ['college','course','branch','semester','subject'];
 
 router.get('/subject', (req, res, next) => {
     let query = req.query;
-    mongoHelpers.checkQuery(query,checkList);
+    utility.mongooseUtil.checkQuery(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             if(!college) {
-                return sendEmptyDict(res);
+                return utility.expressUtil.sendEmptyDict(res);
             }
             let course = college.getCourse(query['course']);
             if(!course) {
-                return sendEmptyDict(res);
+                return utility.expressUtil.sendEmptyDict(res);
             }
             let branch = course.getBranch(query['branch']);
             if(!branch) {
-                return sendEmptyDict(res);
+                return utility.expressUtil.sendEmptyDict(res);
             }
             let semester = branch.getSemester(query['semester']);
             if(!semester) {
-                return sendEmptyDict(res);
+                return utility.expressUtil.sendEmptyDict(res);
             }
             let subject = semester.getSubject(query['subject']);
             if(!subject) {
-                return sendEmptyDict(res);
+                return utility.expressUtil.sendEmptyDict(res);
             }
-            res.status(httpConsts.STATUS_OK).json(subject);
+            res.status(StatusCodes.OK).json(subject);
         })
         .catch(next);
 })

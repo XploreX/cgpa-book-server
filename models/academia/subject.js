@@ -34,10 +34,10 @@ subjectSchema.pre('save',function(next) {
     next();
 })
 
-subjectSchema.methods.updateAncestorsLastModified = utility.mongoose.updateAncestorsLastModified;
-subjectSchema.methods.updateLastModified = utility.mongoose.updateLastModified;
-subjectSchema.methods.updateDescendantsLastModified = utility.mongoose.genUpdateDescendantsLastModified();
-subjectSchema.methods.updateRelevantLastModifieds = utility.mongoose.updateRelevantLastModified;
-subjectSchema.methods.getLastModified = utility.mongoose.getLastModified;
+subjectSchema.methods.updateAncestorsLastModified = utility.mongooseUtil.updateAncestorsLastModified;
+subjectSchema.methods.updateLastModified = utility.mongooseUtil.updateLastModified;
+subjectSchema.methods.updateDescendantsLastModified = utility.mongooseUtil.genUpdateDescendantsLastModified();
+subjectSchema.methods.updateRelevantLastModifieds = utility.mongooseUtil.updateRelevantLastModified;
+subjectSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;
 
 module.exports = subjectSchema;

@@ -59,12 +59,12 @@ semesterSchema.methods.subjectID = function (subjectName) {
     return -1;
 }
 
-semesterSchema.methods.updateAncestorsLastModified = utility.mongoose.updateAncestorsLastModified;
-semesterSchema.methods.updateLastModified = utility.mongoose.updateLastModified;
-semesterSchema.methods.updateDescendantsLastModified = utility.mongoose.genUpdateDescendantsLastModified('subjects');
-semesterSchema.methods.updateRelevantLastModifieds = utility.mongoose.updateRelevantLastModifieds;
-semesterSchema.methods.getLastModified = utility.mongoose.getLastModified;
-semesterSchema.methods.getLastListModification = utility.mongoose.getLastListModification;
+semesterSchema.methods.updateAncestorsLastModified = utility.mongooseUtil.updateAncestorsLastModified;
+semesterSchema.methods.updateLastModified = utility.mongooseUtil.updateLastModified;
+semesterSchema.methods.updateDescendantsLastModified = utility.mongooseUtil.genUpdateDescendantsLastModified('subjects');
+semesterSchema.methods.updateRelevantLastModifieds = utility.mongooseUtil.updateRelevantLastModifieds;
+semesterSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;
+semesterSchema.methods.getLastListModification = utility.mongooseUtil.getLastListModification;
 
 module.exports = semesterSchema;
 

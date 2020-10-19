@@ -1,18 +1,17 @@
 const express = require('express');
-const { College, CollegeHeader } = require('../../models/index.js');
-const academiaHelpers = require('../academia-helpers.js');
-const { updateLastModifed } = require('../../utility/mongo-util');
-const { checkExistance, checkQuery, addMissingKeysToQuery } = require('../../utility/mongo-util');
-const { sendEmptyDict, sendEmptyList } = require('../../utility/express-util');
-const httpHelpers = require('../../utility/http-util.js');
+const {StatusCodes} = require('http-status-codes');
 
+const __ROOT = require('/../../config.js');
+const utility = require(__ROOT+'utility');
+const {College,CollegeHeader} = require(__ROOT+'/models');
+const academiaHelpers = require('../academia-helpers.js');
 let router = express.Router();
 
 let checkList = ['college'];
 
 router.post('/college', (req, res, next) => {
     const query = req.body;
-    checkQuery(query, checkList);
+    utility.requestUtil.checkQuery(query, checkList);
     college = new College(query['college']);
     college.updateRelevantLastModifieds();
     college.save()
@@ -27,36 +26,36 @@ router.post('/college', (req, res, next) => {
             return head.save()
         })
         .then((head) => {
-            res.sendStatus(httpHelpers.STATUS_OK);
+            res.sendStatus(StatusCodes.OK);
         })
         .catch(next);
 })
 
 router.get('/college', (req, res, next) => {
     let query = req.query;
-    checkQuery(query, checkList);
+    utility.requestUtil.checkQuery(query, checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             if (!college) {
                 return sendEmptyDict(res);
             }
-            httpHelpers.handleIfModifiedSince(req,res,college.getLastModified());
-            res.append(httpHelpers.HEADER_LAST_MODIFIED, college.getLastModified());
-            res.status(httpHelpers.STATUS_OK).json(college);
+            utility.expressUtil.handleIfModifiedSince(req,res,college.getLastModified());
+            res.append(utility.httpUtil.headers.LAST_MODIFIED, college.getLastModified());
+            res.status(StatusCodes.OK).json(college);
         })
         .catch(next);
 })
 
 router.get('/college-list', (req, res, next) => {
     let query = req.query;
-    addMissingKeysToQuery(query, ['college', 'course', 'branch']);
-    checkQuery(query, checkList);
+    utility.requestUtil.addMissingKeysToQuery(query, ['college', 'course', 'branch']);
+    utility.requestUtil.checkQuery(query, checkList);
     let collegeList = [];
     CollegeHeader.findOne()
         .then((head) => {
             if(head) {
-                httpHelpers.handleIfModifiedSince(req,res,head.getLastListModification());
-                res.append(httpHelpers.HEADER_LAST_MODIFIED,head.getLastListModification());
+                utility.expressUtil.handleIfModifiedSince(req,res,head.getLastListModification());
+                res.append(utility.headers.LAST_MODIFIED,head.getLastListModification());
             }
             return College.find({ college: query['college'] });
         })
@@ -78,7 +77,7 @@ router.get('/college-list', (req, res, next) => {
                 }
                 collegeList.push(collegeName);
             }
-            return res.status(httpHelpers.STATUS_OK).json(collegeList);
+            return res.status(StatusCodes.OK).json(collegeList);
         })
         .catch(next);
 })

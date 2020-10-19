@@ -28,7 +28,7 @@ var courseSchema = new Schema({
     }
 });
 
-courseSchema.path('branches').validate(utility.mongoose.validators.uniqueKeyVal('branch'), "Branch already exists", "Value Error");
+courseSchema.path('branches').validate(utility.mongooseUtil.validators.uniqueKeyVal('branch'), "Branch already exists", "Value Error");
 
 courseSchema.pre('validate', function (next) {
     // this.course = stringHelpers.getTitleForm(this.course);
@@ -67,11 +67,11 @@ courseSchema.methods.branchID = function (branchName) {
     return -1;
 }
 
-courseSchema.methods.updateAncestorsLastModified = utility.mongoose.updateAncestorsLastModified;
-courseSchema.methods.updateLastModified = utility.mongoose.updateLastModified;
-courseSchema.methods.updateDescendantsLastModified = utility.mongoose.genUpdateDescendantsLastModified('branches');
-courseSchema.methods.updateRelevantLastModifieds = utility.mongoose.updateRelevantLastModifieds;
-courseSchema.methods.getLastModified = utility.mongoose.getLastModified;
-courseSchema.methods.getLastListModification = utility.mongoose.getLastListModification;
+courseSchema.methods.updateAncestorsLastModified = utility.mongooseUtil.updateAncestorsLastModified;
+courseSchema.methods.updateLastModified = utility.mongooseUtil.updateLastModified;
+courseSchema.methods.updateDescendantsLastModified = utility.mongooseUtil.genUpdateDescendantsLastModified('branches');
+courseSchema.methods.updateRelevantLastModifieds = utility.mongooseUtil.updateRelevantLastModifieds;
+courseSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;
+courseSchema.methods.getLastListModification = utility.mongooseUtil.getLastListModification;
 
 module.exports = courseSchema;
