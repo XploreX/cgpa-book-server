@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const stringHelpers = require('../../utility/string-helpers.js');
-const mongoHelpers = require('../../utility/mongo-helpers.js');
+const stringHelpers = require('../../utility/string-util.js');
+const mongoHelpers = require('../../utility/mongo-util.js');
 const collegeHelpers = require('./college-helpers.js');
 const Schema = mongoose.Schema;
 

@@ -1,8 +1,8 @@
 const express = require('express');
 const { College, Course } = require('../models/index.js');
 const courseSchema = require('../models/college/course.js');
-const { prepareQuery } = require('../utility/dictionary-helpers');
-const { updateLastModifed } = require('../utility/mongo-helpers');
+const { prepareQuery } = require('../utility/dictionary-util');
+const { updateLastModifed } = require('../utility/mongo-util');
 const {checkExistance} = require('../utility/error-handlers');
 
 const collegeRouter = require('./academia/college.js');
@@ -10,6 +10,7 @@ const courseRouter = require('./academia/course.js');
 const branchRouter = require('./academia/branch.js');
 const semesterRouter = require('./academia/semester.js');
 const subjectRouter = require('./academia/subject.js');
+
 var router = express.Router();
 
 router.use((req,res,next) => {

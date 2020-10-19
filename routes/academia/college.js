@@ -1,10 +1,10 @@
 const express = require('express');
 const { College, CollegeHeader } = require('../../models/index.js');
 const academiaHelpers = require('../academia-helpers.js');
-const { updateLastModifed } = require('../../utility/mongo-helpers');
-const { checkExistance, checkQuery, addMissingKeysToQuery } = require('../../utility/mongo-helpers');
-const { sendEmptyDict, sendEmptyList } = require('../../utility/express-helpers');
-const httpHelpers = require('../../utility/http-helpers.js');
+const { updateLastModifed } = require('../../utility/mongo-util');
+const { checkExistance, checkQuery, addMissingKeysToQuery } = require('../../utility/mongo-util');
+const { sendEmptyDict, sendEmptyList } = require('../../utility/express-util');
+const httpHelpers = require('../../utility/http-util.js');
 
 let router = express.Router();
 

@@ -3,7 +3,7 @@ const path = require('path');
 const glob = require('glob');
 const {model} = require('mongoose');
 const {basicErrorHandler} = require('../utility/error-handlers.js');
-const {capitalizeFirstLetter} = require('../utility/string-helpers');
+const {capitalizeFirstLetter} = require('../utility/string-util');
 
 let jsFilePattern = /\.js$/; //Not getting used at the moment , can be useful later on
 let helperFilePattern = /.*helper.*/i;

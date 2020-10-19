@@ -1,5 +1,5 @@
 const { MongoError } = require("mongodb");
-const httpHelpers = require('../utility/http-helpers.js');
+const httpHelpers = require('../utility/http-util.js');
 
 function notFoundHandler(req, res, next) {
     err = new Error("Content not found");

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const courseSchema = require('./course.js');
 const { getAbbreviation, getTitleForm } = require('../../utility/string-helpers.js');
 const { uniqueKeyVal } = require('../../utility/validation-helpers');

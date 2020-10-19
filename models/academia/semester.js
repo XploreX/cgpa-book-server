@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const subjectSchema = require('./subject.js');
-const { findNeedle } = require('../../utility/array-helpers.js');
-const mongoHelpers = require('../../utility/mongo-helpers.js');
+const { findNeedle } = require('../../utility/array-util.js');
+const mongoHelpers = require('../../utility/mongo-util.js');
 const collegeHelpers = require('./college-helpers.js');
 const Schema = mongoose.Schema;
 

@@ -1,4 +1,4 @@
-const {STATUS_OK} = require('./http-helpers.js');
+const {STATUS_OK} = require('./http-util.js');
 
 function sendEmptyDict(res) {
     return res.status(STATUS_OK).json({});

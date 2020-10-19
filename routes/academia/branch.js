@@ -1,9 +1,9 @@
 const express = require('express')
 const {College} = require('../../models/index.js');
 const academiaHelpers = require('../academia-helpers.js');
-const mongoHelpers = require('../../utility/mongo-helpers.js');
-const expressHelpers = require('../../utility/express-helpers.js');
-const httpHelpers = require('../../utility/http-helpers.js');
+const mongoHelpers = require('../../utility/mongo-util.js');
+const expressHelpers = require('../../utility/express-util.js');
+const httpHelpers = require('../../utility/http-util.js');
 let router = express.Router();
 
 let checkList = ['college','course','branch'];

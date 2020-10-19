@@ -1,8 +1,8 @@
 const express = require('express');
 const {College} = require('../../models/index.js');
-const mongoHelpers = require('../../utility/mongo-helpers.js');
-const {sendEmptyList,sendEmptyDict} = require('../../utility/express-helpers.js');
-const httpConsts = require('../../utility/http-helpers.js');
+const mongoHelpers = require('../../utility/mongo-util.js');
+const {sendEmptyList,sendEmptyDict} = require('../../utility/express-util.js');
+const httpConsts = require('../../utility/http-util.js');
 let router = express.Router();
 
 let checkList = ['college','course','branch','semester','subject'];

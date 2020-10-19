@@ -1,5 +1,7 @@
-const app = require('./index.js');
 const mongoose = require('mongoose');
+
+const __ROOT = './';
+const app = require('./index.js');
 const { basicErrorHandler } = require('./utility/error-handlers.js');
 
 

@@ -1,4 +1,4 @@
-const academiaHelpers = require('../routers/academia-helpers.js');
+const academiaHelpers = require('../routes/academia-helpers.js');
 
 function updateLastModifed(arr) {
     let current = new Date();

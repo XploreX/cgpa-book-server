@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const semesterSchema = require('./semester.js');
-const {uniqueKeyVal} = require('../../utility/validation-helpers.js');
-const {getAbbreviation , getTitleForm} = require('../../utility/string-helpers');
-const mongoHelpers = require('../../utility/mongo-helpers.js');
+const {uniqueKeyVal} = require('../../utility/validation-util.js');
+const {getAbbreviation , getTitleForm} = require('../../utility/string-util');
+const mongoHelpers = require('../../utility/mongo-util.js');
 const collegeHelpers = require('./college-helpers.js');
 const Schema = mongoose.Schema;
 
