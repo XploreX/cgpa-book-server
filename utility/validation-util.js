@@ -1,4 +1,3 @@
-
 function uniqueKeyVal(key) {
     return function uniqueKeyValHelper(arr) {
         let last = arr[arr.length - 1];
