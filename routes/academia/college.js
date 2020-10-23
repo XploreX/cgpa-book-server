@@ -3,7 +3,7 @@ const {StatusCodes} = require('http-status-codes');
 
 const ROOT = require(__dirname + '/../../config.js').ROOT;
 const utility = require(ROOT+'/utility');
-const {College,CollegeHeader} = require(ROOT+'/models');
+const {College,CollegeHeader} = require(ROOT+'/models').academia;
 const academiaHelpers = require('../academia-helpers.js');
 let router = express.Router();
 

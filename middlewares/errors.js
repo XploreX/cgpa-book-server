@@ -37,7 +37,7 @@ function genericErrorHandler(err, req, res, next) {
             next(err);
         }
     }
-    if(err.status === httpHelpers.STATUS_NOT_MODIFIED)
+    if(err.status === StatusCodes.NOT_MODIFIED)
         return;
     res.status(err.status).json({
         type: err.type,
