@@ -1,4 +1,4 @@
-const stopwords = require('./stopwords.js');
+const sw = require('stopword');
 
 function getAbbreviation(str) {
     let line = str.split(' ');

@@ -33,7 +33,7 @@ collegeSchema.path('courses').validate(utility.mongooseUtil.validators.uniqueKey
 collegeSchema.pre('validate', function (next) {
     // this.college = getTitleForm(this.college);
     if (!this.abbreviation) {
-        this.abbreviation = getAbbreviation(this.college);
+        this.abbreviation = utility.stringUtil.getAbbreviation(this.college);
     }
     next();
 })
