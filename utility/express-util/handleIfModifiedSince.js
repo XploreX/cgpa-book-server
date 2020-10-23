@@ -15,3 +15,5 @@ function handleIfModifiedSince(req,res,lastModified) {
         }
     }
 }
+
+module.exports = handleIfModifiedSince;

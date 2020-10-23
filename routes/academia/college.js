@@ -55,12 +55,12 @@ router.get('/college-list', (req, res, next) => {
         .then((head) => {
             if(head) {
                 utility.expressUtil.handleIfModifiedSince(req,res,head.getLastListModification());
-                res.append(utility.headers.LAST_MODIFIED,head.getLastListModification());
+                res.append(utility.httpUtil.headers.LAST_MODIFIED,head.getLastListModification());
             }
             return College.find({ college: query['college'] });
         })
         .then((colleges) => {
-            console.log(req.get(httpHelpers.HEADER_IF_MODIFIED_SINCE));
+            console.log(req.get(utility.httpUtil.headers.IF_MODIFIED_SINCE));
             for (college of colleges) {
                 let course = college.getCourse(query['course']);
                 if (course || (''.match(query['course']))) {
