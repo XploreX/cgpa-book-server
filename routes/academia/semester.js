@@ -11,10 +11,10 @@ let checkList = ['college','course','branch','semester'];
 
 router.post('/semester', (req, res, next) => {
     let query = req.body;
-    utility.mongooseUtil.checkQuery(query,checkList);
+    utility.requestUtil.checkQuery(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
-            utility.mongooseUtil.checkExistance(college,'college');
+            utility.mongooseUtil.checkExistence(college,'college');
             let course = college.getCourse(query['course']);
             if (!course) {
                 college.addToList({ 'course': query['course'] });

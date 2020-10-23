@@ -1,4 +1,4 @@
-function checkExistance(obj,key) {
+function checkExistence(obj,key) {
     if(! obj) {
         let err= new Error(key + " not found");
         err.name = 'ValueError';
@@ -6,4 +6,4 @@ function checkExistance(obj,key) {
     }
 }
 
-module.exports = checkExistance;
+module.exports = checkExistence;

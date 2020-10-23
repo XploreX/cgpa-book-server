@@ -14,7 +14,7 @@ router.post('/course', (req, res, next) => {
     utility.requestUtil.checkQuery(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
-            utility.mongooseUtil.checkExistance(college, 'college');
+            utility.mongooseUtil.checkExistence(college, 'college');
             college.addToList(query['course']);
             let course = college.getCourse(query['course']['course']);
             course.updateRelevantLastModifieds();
