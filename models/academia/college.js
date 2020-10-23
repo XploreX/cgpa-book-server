@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const __ROOT = require(__dirname + '/../../config.js').__ROOT;
+const ROOT = require(__dirname + '/../../config.js').ROOT;
 const courseSchema = require('./course.js');
-const utility = require(__ROOT+'/utility');
+const utility = require(ROOT+'/utility');
 const {findNeedle} = require('../../utility/array-util.js');
 
 var collegeSchema = new Schema({

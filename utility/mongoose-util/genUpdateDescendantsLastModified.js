@@ -9,4 +9,4 @@ function genUpdateDescendantsLastModified(key) {
     }
 }
 
-module.exports = getUpdateDescendantsLastModified;
+module.exports = genUpdateDescendantsLastModified;

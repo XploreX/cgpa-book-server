@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const Schema = mongooseUtil.Schema;
+const Schema = mongoose.Schema;
 
-const __ROOT = require(__dirname + '/../../config.js').__ROOT;
-const utility = require(__ROOT + '/utility');
+const ROOT = require(__dirname + '/../../config.js').ROOT;
+const utility = require(ROOT + '/utility');
 const semesterSchema = require('./semester.js');
 
 var branchSchema = new Schema({

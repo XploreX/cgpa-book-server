@@ -12,3 +12,5 @@ var metricSchema = new Schema({
     },
     grades : [gradeSchema]
 });
+
+module.exports = metricSchema;

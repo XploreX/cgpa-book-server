@@ -29,4 +29,5 @@ function addModelsToExports(dir) {
         }
     }
 }
-addModelsToExports(__dirname);
+// addModelsToExports(__dirname);
+module.exports = 'temp';

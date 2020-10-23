@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-const __ROOT = require(__dirname + '/../../config.js').__ROOT;
-const utility = require(__ROOT + '/utility');
+const ROOT = require(__dirname + '/../../config.js').ROOT;
+const utility = require(ROOT + '/utility');
 const branchSchema = require('./branch.js');
-const {findNeedle} = require('../../utility/array-helpers.js');
+const {findNeedle} = require(__dirname + '/../../utility/array-util.js');
 
 const Schema = mongoose.Schema;
 

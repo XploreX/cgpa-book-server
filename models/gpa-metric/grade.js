@@ -14,4 +14,6 @@ var gradeSchema = new Schema({
     lastModified : {
         type : Date
     }
-})
+});
+
+module.exports = gradeSchema;

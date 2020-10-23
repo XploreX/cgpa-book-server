@@ -1,4 +1,3 @@
-const path = require('path');
 const ROOT = require(__dirname + '/../../config.js').ROOT;
 const customRequireDirectoryModels = require(ROOT + '/utility/customRequireDirectoryModels.js');
 

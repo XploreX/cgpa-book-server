@@ -1,7 +1,7 @@
 const express = require('express');
 
-const __ROOT = require(__dirname + '/../config.js');
-const { College, Course } = require(__ROOT+'/models/index.js');
+const ROOT = require(__dirname + '/../config.js').ROOT;
+const { College, Course } = require(ROOT+'/models').academia;
 
 const collegeRouter = require('./academia/college.js');
 const courseRouter = require('./academia/course.js');

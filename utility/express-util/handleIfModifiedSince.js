@@ -2,8 +2,8 @@ const path = require('path');
 
 const {StatusCodes} = require('http-status-codes');
 
-const __ROOT = require(__dirname+'/../../config.js');
-const http = require(path.join(__ROOT,'utility/http'));
+const ROOT = require(__dirname+'/../../config.js').ROOT;
+const http = require(path.join(ROOT,'utility/http-util'));
 
 function handleIfModifiedSince(req,res,lastModified) {
     if(req.get(http.headers.IF_MODIFIED_SINCE)) {

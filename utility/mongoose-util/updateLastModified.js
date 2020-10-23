@@ -9,4 +9,4 @@ function updateLastModified() {
     this.lastModified = new Date();
 }
 
-module.exports = updateLastModifed;
+module.exports = updateLastModified;

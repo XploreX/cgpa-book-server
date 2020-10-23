@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(morgan('combined'));
 
-app.use('/academia', require('./routers/academia.js'));
+app.use('/academia', require('./routes/academia.js'));
 // app.use('/users',require('./routers/uses.js'))
 
 app.get('/', (req, res) => {
