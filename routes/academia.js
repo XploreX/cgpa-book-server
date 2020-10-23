@@ -1,9 +1,7 @@
 const express = require('express');
-const { College, Course } = require('../models/index.js');
-const courseSchema = require('../models/college/course.js');
-const { prepareQuery } = require('../utility/dictionary-util');
-const { updateLastModifed } = require('../utility/mongo-util');
-const {checkExistance} = require('../utility/error-handlers');
+
+const __ROOT = require(__dirname + '/../config.js');
+const { College, Course } = require(__ROOT+'/models/index.js');
 
 const collegeRouter = require('./academia/college.js');
 const courseRouter = require('./academia/course.js');
@@ -34,11 +32,11 @@ router.get('/*', (req, res, next) => {
     if ('semester' in query) {
         query['semester'] = Number(query['semester']);
     }
-    prepareQuery(query, flags);
+    utility.requestUtil.prepareQuery(query, flags);
     next();
 })
 
-router.post('/*',(req,res,next) => {
+/* router.post('/*',(req,res,next) => {
     let query = req.body;
     let flags = '';
     if('ignorecase' in query) {
@@ -50,7 +48,7 @@ router.post('/*',(req,res,next) => {
         }
     }
     next();
-})
+}) */
 
 router.use(collegeRouter);
 router.use(courseRouter);
