@@ -38,7 +38,7 @@ router.post('/semester', (req, res, next) => {
 
 router.get('/semester', (req, res, next) => {
     let query = req.query;
-    utility.mongooseUtil.checkQuery(query,checkList);
+    utility.requestUtil.checkQuery(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             if(!college) {
@@ -56,7 +56,7 @@ router.get('/semester', (req, res, next) => {
             if(!semester) {
                 return utility.expressUtil.sendEmptyDict(res);
             }
-            handleIfModifiedSince(req,res,semester.getLastModified());
+            utility.expressUtil.handleIfModifiedSince(req,res,semester.getLastModified());
             res.append(utility.httpUtil.headers.LAST_MODIFIED, semester.getLastModified());
             res.status(StatusCodes.OK).json(semester);
         })
@@ -65,22 +65,22 @@ router.get('/semester', (req, res, next) => {
 
 router.get('/semester-list', (req, res, next) => {
     let query = req.query;
-    utility.mongooseUtil.addMissingKeysToQuery(query,['semester']);
-    utility.mongooseUtil.checkQuery(query,checkList);
+    utility.requestUtil.addMissingKeysToQuery(query,['semester']);
+    utility.requestUtil.checkQuery(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             if(!college) {
-                return sendEmptyList(res);
+                return utility.expressUtil.sendEmptyList(res);
             }
             let course = college.getCourse(query['course']);
             if(!course) {
-                return sendEmptyList(res);
+                return utility.expressUtil.sendEmptyList(res);
             }
             let branch = course.getBranch(query['branch']);
             if(!branch) {
-                return sendEmptyList(res);
+                return utility.expressUtil.sendEmptyList(res);
             }
-            httpHelpers.handleIfModifiedSince(req,res,branch.getLastListModification());
+            utility.expressUtil.handleIfModifiedSince(req,res,branch.getLastListModification());
             let semesterList = [];
             for (semester of branch.semesters) {
                 semesterList.push(semester.semester);

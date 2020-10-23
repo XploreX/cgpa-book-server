@@ -3,7 +3,7 @@ const {StatusCodes} = require('http-status-codes');
 
 const ROOT = require(__dirname + '/../../config.js').ROOT;
 const utility = require(ROOT+'/utility');
-const {College} = require(ROOT+'/models');
+const {College} = require(ROOT+'/models').academia;
 const academiaHelpers = require('../academia-helpers.js');
 let router = express.Router();
 
@@ -39,7 +39,7 @@ router.get('/course', (req, res, next) => {
                 return sendEmptyDict();
             }
             utility.expressUtil.handleIfModifiedSince(req,res,course.getLastModified());
-            res.append(httpHelpers.HEADER_LAST_MODIFIED, course.getLastModified());
+            res.append(utility.httpUtil.headers.LAST_MODIFIED, course.getLastModified());
             res.status(StatusCodes.OK).json(course);
         })
         .catch(next);
@@ -54,7 +54,7 @@ router.get('/course-list', (req, res, next) => {
     College.findOne({ college: query['college'] })
         .then((college) => {
             if (!college) {
-                return sendEmptyList(res);
+                return utility.expressUtil.sendEmptyList(res);
             }
             utility.expressUtil.handleIfModifiedSince(req,res,college.getLastListModification());
             for (course of college.courses) {
@@ -68,7 +68,7 @@ router.get('/course-list', (req, res, next) => {
                     courseName += " (" + course.abbreviation + ")";
                 courseList.push(courseName);
             }
-            res.append(httpHelpers.HEADER_LAST_MODIFIED,college.getLastListModification());
+            res.append(utility.httpUtil.headers.LAST_MODIFIED,college.getLastListModification());
             res.status(StatusCodes.OK).json(courseList);
         })
         .catch(next)

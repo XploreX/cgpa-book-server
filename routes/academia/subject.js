@@ -3,14 +3,14 @@ const {StatusCodes} = require('http-status-codes');
 
 const ROOT = require(__dirname + '/../../config.js').ROOT;
 const utility = require(ROOT+'/utility');
-const {College} = require(ROOT+'/models');
+const {College} = require(ROOT+'/models').academia;
 let router = express.Router();
 
 let checkList = ['college','course','branch','semester','subject'];
 
 router.get('/subject', (req, res, next) => {
     let query = req.query;
-    utility.mongooseUtil.checkQuery(query,checkList);
+    utility.requestUtil.checkQuery(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             if(!college) {

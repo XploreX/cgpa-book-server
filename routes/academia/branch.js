@@ -3,7 +3,7 @@ const {StatusCodes} = require('http-status-codes');
 
 const ROOT = require(__dirname + '/../../config.js').ROOT;
 const utility = require(ROOT+'/utility');
-const {College} = require(ROOT+'/models');
+const {College} = require(ROOT+'/models').academia;
 const academiaHelpers = require('../academia-helpers.js');
 
 let router = express.Router();
@@ -57,16 +57,16 @@ router.get('/branch', (req, res, next) => {
 
 router.get('/branch-list', (req, res, next) => {
     let query = req.query;
-    mongoHelpers.addMissingKeysToQuery(query, ['branch']);
+    utility.requestUtil.addMissingKeysToQuery(query, ['branch']);
     utility.requestUtil.checkQuery(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             if(! college) {
-                return expressHelpers.sendEmptyList(res);
+                return utility.expressUtil.sendEmptyList(res);
             }
             let course = college.getCourse(query['course']);
             if(! course) {
-                return expressHelpers.sendEmptyList(res);
+                return utility.expressUtil.sendEmptyList(res);
             }
             let branchList = [];
             utility.expressUtil.handleIfModifiedSince(req,res,course.getLastListModification());

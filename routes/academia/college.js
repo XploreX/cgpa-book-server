@@ -60,7 +60,7 @@ router.get('/college-list', (req, res, next) => {
             return College.find({ college: query['college'] });
         })
         .then((colleges) => {
-            console.log(req.get(utility.httpUtil.headers.IF_MODIFIED_SINCE));
+            // console.log(req.get(utility.httpUtil.headers.IF_MODIFIED_SINCE));
             for (college of colleges) {
                 let course = college.getCourse(query['course']);
                 if (course || (''.match(query['course']))) {
