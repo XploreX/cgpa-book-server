@@ -85,6 +85,7 @@ router.get('/semester-list', (req, res, next) => {
             for (semester of branch.semesters) {
                 semesterList.push(semester.semester);
             }
+            semesterList.sort();
             res.append(utility.httpUtil.headers.LAST_MODIFIED,branch.getLastListModification());
             res.status(StatusCodes.OK).json(semesterList);
         })
