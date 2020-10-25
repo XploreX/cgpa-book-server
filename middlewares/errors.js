@@ -9,7 +9,7 @@ function notFoundHandler(req, res, next) {
 
 function logErrors(err, req, res, next) {
     if('status' in err) {
-        if(err.status === httpHelpers.STATUS_NOT_MODIFIED)
+        if(err.status === StatusCodes.NOT_MODIFIED)
             return next(err);
     }
     console.log(err);
