@@ -21,7 +21,8 @@ var subjectSchema = new Schema({
         required : true
     },
     lastModified : {
-        type : Date
+        type : Date,
+        default : Date.now
     }
 });
 

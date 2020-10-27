@@ -6,7 +6,7 @@ const utility = require(ROOT + '/utility');
 
 var collegeHeaderSchema = new Schema({
     lastListModification : {
-        type : Date
+        type : Date,
     }
 })
 

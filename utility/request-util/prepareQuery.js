@@ -1,4 +1,4 @@
-function prepareQuery(data) {
+function prepareQuery(query) {
   let flags = "";
   if ("ignorecase" in query) {
     if (query["ignorecase"].toLowerCase() == "true") {
@@ -11,14 +11,14 @@ function prepareQuery(data) {
   if ("semester" in query) {
     query["semester"] = Number(query["semester"]);
   }
-  for (key in data) {
+  for (key in query) {
     // console.log(key);
-    if (typeof data[key] === "string") {
+    if (typeof query[key] === "string") {
       // console.log(key + " is string");
-      data[key] = data[key].replace("(", "\\(");
-      data[key] = data[key].replace(")", "\\)");
-      data[key] = new RegExp(data[key], flags);
-      // console.log(data[key]);
+      query[key] = query[key].replace("(", "\\(");
+      query[key] = query[key].replace(")", "\\)");
+      query[key] = new RegExp(query[key], flags);
+      // console.log(query[key]);
     }
   }
 }

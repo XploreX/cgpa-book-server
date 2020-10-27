@@ -18,10 +18,11 @@ var branchSchema = new Schema({
     },
     semesters : [semesterSchema],
     lastModified : {
-        type : Date
+        type : Date,
     },
     lastListModification : {
-        type : Date
+        type : Date,
+        default : Date.now
     }
 });
 

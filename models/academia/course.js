@@ -24,7 +24,8 @@ var courseSchema = new Schema({
         type: Date
     },
     lastListModification: {
-        type: Date
+        type: Date,
+        default : Date.now
     }
 });
 
