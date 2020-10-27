@@ -10,7 +10,7 @@ let checkList = ['college','course','branch','semester','subject'];
 
 router.get('/subject', (req, res, next) => {
     let query = req.query;
-    utility.requestUtil.checkQuery(query,checkList);
+    utility.requestUtil.ensureCertainFields(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             if(!college) {

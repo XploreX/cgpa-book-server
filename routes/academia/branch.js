@@ -4,7 +4,6 @@ const {StatusCodes} = require('http-status-codes');
 const ROOT = require(__dirname + '/../../config.js').ROOT;
 const utility = require(ROOT+'/utility');
 const {College} = require(ROOT+'/models').academia;
-const academiaHelpers = require('../academia-helpers.js');
 
 let router = express.Router();
 
@@ -12,7 +11,7 @@ let checkList = ['college','course','branch'];
 
 router.post('/branch', (req, res, next) => {
     let query = req.post;
-    utility.requestUtil.checkQuery(query,checkList);
+    utility.requestUtil.ensureCertainFields(query,checkList);
     let branch = req.query['branch'];
     College.findOne({ college: query['college'] })
         .then((college) => {
@@ -34,7 +33,7 @@ router.post('/branch', (req, res, next) => {
 
 router.get('/branch', (req, res, next) => {
     let query = req.query;
-    utility.requestUtil.checkQuery(query,checkList);
+    utility.requestUtil.ensureCertainFields(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             if (!college) {
@@ -58,7 +57,7 @@ router.get('/branch', (req, res, next) => {
 router.get('/branch-list', (req, res, next) => {
     let query = req.query;
     utility.requestUtil.addMissingKeysToQuery(query, ['branch']);
-    utility.requestUtil.checkQuery(query,checkList);
+    utility.requestUtil.ensureCertainFields(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             if(! college) {

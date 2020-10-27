@@ -11,7 +11,7 @@ let checkList = ['college','course','branch','semester'];
 
 router.post('/semester', (req, res, next) => {
     let query = req.body;
-    utility.requestUtil.checkQuery(query,checkList);
+    utility.requestUtil.ensureCertainFields(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             utility.mongooseUtil.checkExistence(college,'college');
@@ -38,7 +38,7 @@ router.post('/semester', (req, res, next) => {
 
 router.get('/semester', (req, res, next) => {
     let query = req.query;
-    utility.requestUtil.checkQuery(query,checkList);
+    utility.requestUtil.ensureCertainFields(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             if(!college) {
@@ -66,7 +66,7 @@ router.get('/semester', (req, res, next) => {
 router.get('/semester-list', (req, res, next) => {
     let query = req.query;
     utility.requestUtil.addMissingKeysToQuery(query,['semester']);
-    utility.requestUtil.checkQuery(query,checkList);
+    utility.requestUtil.ensureCertainFields(query,checkList);
     College.findOne({ college: query['college'] })
         .then((college) => {
             if(!college) {

@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const errors = require('./middlewares/errors');
+const errorMiddlewares = require('./middlewares/error');
 var app = express();
 
 app.use(express.json());
@@ -14,7 +14,7 @@ app.use((req,res,next) => {
     next();
 });
 
-app.use('/academia', require('./routes/academia.js'));
+app.use('/academia', require('./routes/academia'));
 // app.use('/users',require('./routers/uses.js'))
 
 app.get('/', (req, res) => {
@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 })
 
 
-app.use(errors.notFoundHandler);
-app.use(errors.logErrors);
-app.use(errors.genericErrorHandler);
+app.use(errorMiddlewares.notFoundHandler);
+app.use(errorMiddlewares.logErrors);
+app.use(errorMiddlewares.genericErrorHandler);
 module.exports = app;
