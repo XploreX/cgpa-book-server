@@ -12,6 +12,7 @@ router.get('/subject', (req, res, next) => {
     let query = req.query;
     utility.requestUtil.ensureCertainFields(query,checkList);
     College.findOne({ college: query['college'] })
+    .exec()
         .then((college) => {
             if(!college) {
                 return utility.expressUtil.sendEmptyDict(res);

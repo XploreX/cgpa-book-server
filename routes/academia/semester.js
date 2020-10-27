@@ -13,6 +13,7 @@ router.post('/semester', (req, res, next) => {
     let query = req.body;
     utility.requestUtil.ensureCertainFields(query,checkList);
     College.findOne({ college: query['college'] })
+    .exec()
         .then((college) => {
             utility.mongooseUtil.checkExistence(college,'college');
             let course = college.getCourse(query['course']);
@@ -40,6 +41,7 @@ router.get('/semester', (req, res, next) => {
     let query = req.query;
     utility.requestUtil.ensureCertainFields(query,checkList);
     College.findOne({ college: query['college'] })
+    .exec()
         .then((college) => {
             if(!college) {
                 return utility.expressUtil.sendEmptyDict(res);
@@ -68,6 +70,7 @@ router.get('/semester-list', (req, res, next) => {
     utility.requestUtil.addMissingKeysToQuery(query,['semester']);
     utility.requestUtil.ensureCertainFields(query,checkList);
     College.findOne({ college: query['college'] })
+    .exec()
         .then((college) => {
             if(!college) {
                 return utility.expressUtil.sendEmptyList(res);
