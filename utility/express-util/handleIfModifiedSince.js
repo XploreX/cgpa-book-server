@@ -2,7 +2,7 @@ const path = require('path');
 
 const {StatusCodes} = require('http-status-codes');
 
-const ROOT = require(__dirname+'/../../config.js').ROOT;
+const ROOT = require(__dirname+'/../../config').ROOT;
 const http = require(path.join(ROOT,'utility/http-util'));
 const CustomError = require(ROOT + '/CustomError');
 

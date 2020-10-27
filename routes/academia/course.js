@@ -1,7 +1,7 @@
 const express = require('express');
 const {StatusCodes} = require('http-status-codes');
 
-const ROOT = require(__dirname + '/../../config.js').ROOT;
+const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT+'/utility');
 const {College} = require(ROOT+'/models').academia;
 let router = express.Router();
