@@ -25,7 +25,7 @@ var collegeSchema = new Schema({
     },
     lastListModification: {
         type: Date,
-        deafult : Date.now
+        default : Date.now
     }
 });
 
