@@ -13,6 +13,9 @@ router.get("/gpa-data", authenticateUser, (req, res, next) => {
     .select("-_id -__v")
     .exec()
     .then((user) => {
+      if(user === null) {
+        user = {};
+      }
       res.status(StatusCodes.OK).json(user);
     })
     .catch(next);
@@ -28,6 +31,7 @@ router.post("/gpa-data", authenticateUser, (req, res, next) => {
     else {
       user.overwrite(req.body);
     }
+    user.markModified('semesters');
     return user.save();
   })
   .then((doc) => {
