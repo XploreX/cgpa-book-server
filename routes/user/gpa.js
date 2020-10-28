@@ -4,11 +4,13 @@ const { StatusCodes } = require("http-status-codes");
 const ROOT = require(__dirname + "/../../config").ROOT;
 const authenticateUser = require(ROOT + "/middlewares/authenticateUser");
 const { User } = require(ROOT + "/models/user");
+const utility = require(ROOT + '/utility');
 
 let router = express.Router();
 
 router.get("/gpa-data", authenticateUser, (req, res, next) => {
   User.findOne({ email: req.user.email })
+    .select("-_id -__v")
     .exec()
     .then((user) => {
       res.status(StatusCodes.OK).json(user);
@@ -29,7 +31,7 @@ router.post("/gpa-data", authenticateUser, (req, res, next) => {
     return user.save();
   })
   .then((doc) => {
-    res.sendStatus(StatusCodes.OK);
+    res.status(StatusCodes.OK).send(utility.response.getSucessResponse());
   })
   .catch(next);
 });
