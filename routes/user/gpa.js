@@ -31,7 +31,7 @@ router.post("/gpa-data", authenticateUser, (req, res, next) => {
     return user.save();
   })
   .then((doc) => {
-    res.status(StatusCodes.OK).send(utility.response.getSucessResponse());
+    res.status(StatusCodes.OK).send(utility.response.getSuccessResponse());
   })
   .catch(next);
 });
