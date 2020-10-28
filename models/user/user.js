@@ -23,6 +23,12 @@ let userSchema = new Schema({
         trim : true,
         minlength : 1
     },
+    branch : {
+        type : 'String',
+        required : true,
+        trim : true,
+        minLength : 1
+    },
     semesters : {}
 });
 
