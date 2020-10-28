@@ -21,6 +21,7 @@ app.get('/', (req, res) => {
     res.status(200).send('Okaeri');
 })
 
+app.use('/user',require('./routes/user'));
 
 app.use(errorMiddlewares.notFoundHandler);
 app.use(errorMiddlewares.logErrors);

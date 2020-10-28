@@ -1,0 +1,37 @@
+const express = require("express");
+const { StatusCodes } = require("http-status-codes");
+
+const ROOT = require(__dirname + "/../../config").ROOT;
+const authenticateUser = require(ROOT + "/middlewares/authenticateUser");
+const { User } = require(ROOT + "/models/user");
+
+let router = express.Router();
+
+router.get("/gpa-data", authenticateUser, (req, res, next) => {
+  User.findOne({ email: req.user.email })
+    .exec()
+    .then((user) => {
+      res.status(StatusCodes.OK).json(user);
+    })
+    .catch(next);
+});
+router.post("/gpa-data", authenticateUser, (req, res, next) => {
+  req.body.email = req.user.email;
+  User.findOne({email : req.user.email})
+  .exec()
+  .then((user)=>{
+    if(user === null) {
+      user = new User(req.body);
+    }
+    else {
+      user.overwrite(req.body);
+    }
+    return user.save();
+  })
+  .then((doc) => {
+    res.sendStatus(StatusCodes.OK);
+  })
+  .catch(next);
+});
+
+module.exports = router;
