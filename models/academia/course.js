@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-const ROOT = require(__dirname + '/../../config.js').ROOT;
+const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT + '/utility');
-const branchSchema = require('./branch.js');
-const {findNeedle} = require(__dirname + '/../../utility/array-util.js');
+const branchSchema = require('./branch');
+const {findNeedle} = require(__dirname + '/../../utility/array-util');
 
 const Schema = mongoose.Schema;
 
@@ -24,7 +24,8 @@ var courseSchema = new Schema({
         type: Date
     },
     lastListModification: {
-        type: Date
+        type: Date,
+        default : Date.now
     }
 });
 

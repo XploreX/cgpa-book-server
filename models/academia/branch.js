@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ROOT = require(__dirname + '/../../config.js').ROOT;
+const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT + '/utility');
-const semesterSchema = require('./semester.js');
+const semesterSchema = require('./semester');
 
 var branchSchema = new Schema({
     branch : {
@@ -18,10 +18,11 @@ var branchSchema = new Schema({
     },
     semesters : [semesterSchema],
     lastModified : {
-        type : Date
+        type : Date,
     },
     lastListModification : {
-        type : Date
+        type : Date,
+        default : Date.now
     }
 });
 

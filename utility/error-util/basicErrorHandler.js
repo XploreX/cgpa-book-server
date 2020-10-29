@@ -9,7 +9,4 @@ function basicErrorHandler(err, message = null) {
 }
 
 
-
-module.exports = {
-    basicErrorHandler : basicErrorHandler,
-}
+module.exports = basicErrorHandler;

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ROOT = require(__dirname + '/../../config.js').ROOT;
+const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT + '/utility');
 
 var subjectSchema = new Schema({
@@ -21,7 +21,8 @@ var subjectSchema = new Schema({
         required : true
     },
     lastModified : {
-        type : Date
+        type : Date,
+        default : Date.now
     }
 });
 

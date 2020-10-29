@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const app = require('./index.js');
-const { basicErrorHandler } = require('./utility/error-handlers.js');
+const app = require('./index');
+const { basicErrorHandler } = require('./utility/error-util');
 
 
 const PORT = process.env.PORT || 3000;

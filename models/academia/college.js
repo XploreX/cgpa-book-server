@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ROOT = require(__dirname + '/../../config.js').ROOT;
-const courseSchema = require('./course.js');
+const ROOT = require(__dirname + '/../../config').ROOT;
+const courseSchema = require('./course');
 const utility = require(ROOT+'/utility');
-const {findNeedle} = require('../../utility/array-util.js');
+const {findNeedle} = require('../../utility/array-util');
 
 var collegeSchema = new Schema({
     college: {
@@ -24,7 +24,8 @@ var collegeSchema = new Schema({
         type: Date
     },
     lastListModification: {
-        type: Date
+        type: Date,
+        default : Date.now
     }
 });
 

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ROOT = require(__dirname + '/../../config.js').ROOT;
+const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT + '/utility');
 const subjectSchema = require('./subject.js');
 const { findNeedle } = require('../../utility/array-util.js');
@@ -19,7 +19,8 @@ var semesterSchema = new Schema({
         type: Date,
     },
     lastListModification: {
-        type: Date
+        type: Date,
+        default : Date.now
     }
 });
 

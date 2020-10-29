@@ -1,12 +1,15 @@
-const fs = require("fs");
 const path = require("path");
+const fs = require("fs");
 
-const mongoose = require('mongoose');
+const express = require("express");
 
-function customRequireDirectoryModels(dir, pascalCase = false,) {
-  let mp = {};
+function customRequireDirectoryRoutes(dir, pascalCase = false, router = null) {
+  if (router === null) {
+    router = express.Router();
+  }
   let fileNames = fs.readdirSync(dir);
   let indexFile = path.join(dir, "index.js");
+
   for (fileName of fileNames) {
     let file = path.join(dir, fileName);
     let isDir = fs.lstatSync(file).isDirectory();
@@ -26,14 +29,12 @@ function customRequireDirectoryModels(dir, pascalCase = false,) {
     } else {
       fileName = path.parse(fileName).name; //get fileName without extension
     }
-    if (pascalCase) {
-      fileName = fileName[0].toUpperCase() + fileName.slice(1);
-    }
+    if (pascalCase) fileName = fileName[0] + fileName.slice(1);
     if (file !== indexFile) {
-      mp[fileName] = mongoose.model(fileName,require(file));
+      router.use("/", require(file));
     }
   }
-  return mp;
+  return router;
 }
 
-module.exports = customRequireDirectoryModels;
+module.exports = customRequireDirectoryRoutes;
