@@ -1,5 +1,5 @@
 const express = require('express');
-const morgan = require('morgan');
+const morganBody = require('morgan-body');
 const errorMiddlewares = require('./middlewares/error');
 var app = express();
 
@@ -7,11 +7,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(morgan('combined'));
 
-app.use((req,res,next) => {
+/* app.use((req,res,next) => {
     console.log("req.params =",req.params);
     console.log("req.headers =",req.headers);
     console.log("req.body =",req.body);
     next();
+}); */
+
+morganBody(app,{
+    logAllReqHeader : true
 });
 
 app.use('/academia', require('./routes/academia'));

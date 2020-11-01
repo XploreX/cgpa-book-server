@@ -1,11 +1,12 @@
 function uniqueKeyVal(key) {
     return function uniqueKeyValHelper(arr) {
-        let last = arr[arr.length - 1];
-        for (let i = 0; i < arr.length - 1; ++i) {
-            if (arr[i][key] === last[key]) {
-                return false;
+        for (let i = 0; i < arr.length; ++i) {
+            for(let j=i+1;j<arr.length;++j) {
+                if(arr[i].key === arr[j].key)
+                    return false;
             }
         }
+        return true;
     }
 }
 

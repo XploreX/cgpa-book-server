@@ -17,13 +17,12 @@ var branchSchema = new Schema({
         minlength : 1
     },
     semesters : [semesterSchema],
-    lastModified : {
-        type : Date,
-    },
     lastListModification : {
         type : Date,
         default : Date.now
     }
+},{
+    timestamps : true
 });
 
 branchSchema.path('semesters').validate(utility.mongooseUtil.validators.uniqueKeyVal('semester'),"Semester already exists","Value Error");
@@ -34,11 +33,9 @@ branchSchema.pre('validate',function(next) {
         this.abbreviation = utility.stringUtil.getAbbreviation(this.branch);
     }
     next();
-})
+});
 
-branchSchema.pre('save',function(next) {
-    next();
-})
+
 
 branchSchema.methods.addToList = function (semester) {
     this.semesters.push(semester);
@@ -46,12 +43,7 @@ branchSchema.methods.addToList = function (semester) {
 }
 
 branchSchema.methods.getSemester = function(semesterNumber) {
-    for(let semester of this.semesters ) {
-        if(semester.semester == semesterNumber) {
-            return semester;
-        }
-    }
-    return null;
+    return utility.arrayUtil.findNeedle(this.semesters,semesterNumber,'semester');
 }
 
 branchSchema.methods.semesterID = function(semesterNumber) {
@@ -63,10 +55,6 @@ branchSchema.methods.semesterID = function(semesterNumber) {
     return -1;
 }
 
-branchSchema.methods.updateAncestorsLastModified = utility.mongooseUtil.updateAncestorsLastModified;
-branchSchema.methods.updateLastModified = utility.mongooseUtil.updateLastModified;
-branchSchema.methods.updateDescendantsLastModified = utility.mongooseUtil.genUpdateDescendantsLastModified('semesters');
-branchSchema.methods.updateRelevantLastModifieds = utility.mongooseUtil.updateRelevantLastModifieds;
 branchSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;
 branchSchema.methods.getLastListModification = utility.mongooseUtil.getLastListModification;
 

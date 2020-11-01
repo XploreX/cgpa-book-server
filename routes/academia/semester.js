@@ -12,6 +12,7 @@ let checkList = ["college", "course", "branch", "semester"];
 router.post("/semester", (req, res, next) => {
   let query = req.body;
   utility.requestUtil.ensureCertainFields(query, checkList);
+  College.updateOne({college : query['college'], 'courses.course' : {'$ne' : query['course']}},{$push : {courses :{ course : query['course']} }})
   College.findOne({ college: query["college"] })
     .exec()
     .then((college) => {
