@@ -30,6 +30,8 @@ let userSchema = new Schema({
         type : 'Number'
     },
     semesters : {}
+},{
+    timestamps : true
 });
 
 module.exports = userSchema;

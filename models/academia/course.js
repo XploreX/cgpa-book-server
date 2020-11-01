@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT + '/utility');
 const branchSchema = require('./branch');
-const {findNeedle} = require(__dirname + '/../../utility/array-util');
 
 const Schema = mongoose.Schema;
 
@@ -20,25 +19,16 @@ var courseSchema = new Schema({
         trim: true,
         minlength: 1
     },
-    lastModified: {
-        type: Date
-    },
     lastListModification: {
         type: Date,
         default : Date.now
     }
+},{
+    timestamps : true
 });
 
 courseSchema.path('branches').validate(utility.mongooseUtil.validators.uniqueKeyVal('branch'), "Branch already exists", "Value Error");
 
-courseSchema.pre('validate', function (next) {
-    // this.course = stringHelpers.getTitleForm(this.course);
-    next();
-})
-
-courseSchema.pre('save',function(next) {
-    next();
-})
 
 courseSchema.methods.addToList = function (branch) {
     this.branches.push(branch);
@@ -54,7 +44,7 @@ courseSchema.methods.getBranch = function (branchName) {
         }
     }
     else {
-        return findNeedle(this.branches,branchName,true,'branch');
+        return utility.arrayUtil.findNeedle(this.branches,branchName,'branch',true);
     }
     return null;
 }
@@ -68,10 +58,6 @@ courseSchema.methods.branchID = function (branchName) {
     return -1;
 }
 
-courseSchema.methods.updateAncestorsLastModified = utility.mongooseUtil.updateAncestorsLastModified;
-courseSchema.methods.updateLastModified = utility.mongooseUtil.updateLastModified;
-courseSchema.methods.updateDescendantsLastModified = utility.mongooseUtil.genUpdateDescendantsLastModified('branches');
-courseSchema.methods.updateRelevantLastModifieds = utility.mongooseUtil.updateRelevantLastModifieds;
 courseSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;
 courseSchema.methods.getLastListModification = utility.mongooseUtil.getLastListModification;
 

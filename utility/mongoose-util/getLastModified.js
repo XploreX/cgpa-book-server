@@ -1,5 +1,5 @@
 function getLastModified() {
-    return this.lastModified.toUTCString();
+    return this.createdAt.toUTCString();
 }
 
 module.exports = getLastModified;
