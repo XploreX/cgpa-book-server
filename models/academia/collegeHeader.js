@@ -5,17 +5,25 @@ const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT + '/utility');
 
 var collegeHeaderSchema = new Schema({
-    lastListModification : {
-        type : Date,
-        required : true
+    lastListModification: {
+        type: Date,
+        default: Date.now,
+        required: true
     }
-},{
-    timestamps : true
+}, {
+    timestamps: true
 })
 
-collegeHeaderSchema.methods.getLastListModification = utility.mongooseUtil.getLastListModification;
-collegeHeaderSchema.statics.updateLastListModification = function (){
-    this.find()
+collegeHeaderSchema.statics.getLastListModification = function () {
+    return this.find().exec()
+        .then((doc) => {
+            if(doc) 
+                return doc.lastListModification.toUTCString();
+            else return Date.now();
+        })
+};
+collegeHeaderSchema.statics.updateLastListModification = function () {
+    return this.updateOne({}, { $set: { lastListModification: Date.now() } }, { upsert: true }).exec();
 }
 
 module.exports = collegeHeaderSchema;

@@ -61,6 +61,6 @@ semesterSchema.methods.subjectID = function (subjectName) {
 };
 
 semesterSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;
-semesterSchema.methods.getLastListModification =  utility.mongooseUtil.getLastListModification;
+semesterSchema.methods.getLastListModification = utility.mongooseUtil.getLastListModification;
 
 module.exports = semesterSchema;

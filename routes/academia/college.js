@@ -12,20 +12,12 @@ router.post("/college", (req, res, next) => {
   const query = req.body;
   utility.requestUtil.ensureCertainFields(query, checkList);
   college = new College(query["college"]);
-  college.updateRelevantLastModifieds();
   college
     .save()
     .then((doc) => {
-      return CollegeHeader.findOne().exec();
+      return CollegeHeader.updateLastListModification();
     })
-    .then((head) => {
-      if (!head) {
-        head = new CollegeHeader();
-      }
-      head.lastListModification = new Date();
-      return head.save();
-    })
-    .then((head) => {
+    .then(() => {
       res.sendStatus(StatusCodes.OK);
     })
     .catch(next);
@@ -38,7 +30,7 @@ router.get("/college", (req, res, next) => {
     .exec()
     .then((college) => {
       if (!college) {
-        return sendEmptyDict(res);
+        return utility.responseUtil.sendEmptyDict(res);
       }
       utility.expressUtil.handleIfModifiedSince(
         req,
@@ -63,18 +55,18 @@ router.get("/college-list", (req, res, next) => {
   ]);
   utility.requestUtil.ensureCertainFields(query, checkList);
   let collegeList = [];
-  CollegeHeader.findOne()
+  CollegeHeader.getLastListModification()
     .exec()
-    .then((head) => {
-      if (head) {
+    .then((lastListModification) => {
+      if (lastListModification) {
         utility.expressUtil.handleIfModifiedSince(
           req,
           res,
-          head.getLastListModification()
+          lastListModification
         );
         res.append(
           utility.httpUtil.headers.LAST_MODIFIED,
-          head.getLastListModification()
+          lastListModification()
         );
       }
       return College.find({ college: query["college"] }).exec();
