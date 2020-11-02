@@ -12,28 +12,76 @@ let checkList = ["college", "course", "branch", "semester"];
 router.post("/semester", (req, res, next) => {
   let query = req.body;
   utility.requestUtil.ensureCertainFields(query, checkList);
-  College.updateOne({college : query['college'], 'courses.course' : {'$ne' : query['course']}},{$push : {courses :{ course : query['course']} }})
-  College.findOne({ college: query["college"] })
+  College.updateOne(
+    {
+      college: query['college'],
+      'courses.course': { '$ne': query['course'] }
+    },
+    {
+      $push: { courses: { course: query['course'] } }
+    })
     .exec()
+    .then(() => {
+      return College.updateOne(
+        {
+          college: query['college'],
+          'courses': {
+            $elemMatch: {
+              course: query['course'],
+              'branches.branch': { $ne: query['branch'] }
+            }
+          }
+        },
+        {
+          $push: { 'courses.$.branches': { branch: query['branch'] } }
+        }
+      )
+        .exec();
+    })
+    .then(() => {
+      return College.updateOne(
+        {
+          college: query['college'],
+          courses: {
+            $elemMatch: {
+              course : query['course'],
+              'branches' : {
+                $elemMatch : {
+                  'branch' : query['branch'],
+                  'semesters.semester' : {$ne : query['semester']['semester']}
+                }
+              }
+            }
+          }
+        },
+        {
+          $push : {'courses.$[i].branches.$[j].semesters' : query['semester']}
+        },{
+          arrayFilters : [
+            {'i.course' : query['course']},
+            {'j.branch' : query['branch']}
+          ]
+        })
+        .exec();
+    })
+    .then((queryRes) => {
+      console.log(queryRes);
+      return queryRes
+      /* return College.findOne({ college: query["college"] })
+        .exec() */
+    })
     .then((college) => {
-      utility.mongooseUtil.checkExistence(college, "college");
+      /* utility.errorUtil.ensureExistence(college, "college");
       let course = college.getCourse(query["course"]);
-      if (!course) {
-        college.addToList({ course: query["course"] });
-        course = college.getCourse(query["course"]);
-      }
       let branch = course.getBranch(query["branch"]);
-      if (!branch) {
-        course.addToList({ branch: query["branch"] });
-        branch = course.getBranch(query["branch"]);
-      }
       branch.addToList(query["semester"]);
       let semester = branch.getSemester(query["semester"]["semester"]);
-      semester.updateRelevantLastModifieds();
-      return college.save();
+      return college.save(); */
+      return college;
     })
     .then((doc) => {
-      res.sendStatus(StatusCodes.OK);
+      // res.sendStatus(StatusCodes.OK);
+      res.status(StatusCodes.OK).json(doc);
     })
     .catch(next);
 });

@@ -23,7 +23,6 @@ router.post("/branch", (req, res, next) => {
       }
       course.addToList(branch);
       branch = course.getBranch(query["branch"]["branch"]);
-      branch.updateRelevantLastModifieds();
       return college.save();
     })
     .then((doc) => {
@@ -39,15 +38,15 @@ router.get("/branch", (req, res, next) => {
     .exec()
     .then((college) => {
       if (!college) {
-        return utility.expressUtil.sendEmptyDict(res);
+        return utility.responseUtil.sendEmptyDict(res);
       }
       let course = college.getCourse(query["course"]);
       if (!course) {
-        return utility.expressUtil.sendEmptyDict(res);
+        return utility.responseUtil.sendEmptyDict(res);
       }
       let branch = course.getBranch(query["branch"]);
       if (!branch) {
-        return utility.expressUtil.sendEmptyDict(res);
+        return utility.eresponseUtilsendEmptyDict(res);
       }
       utility.expressUtil.handleIfModifiedSince(
         req,
@@ -71,11 +70,11 @@ router.get("/branch-list", (req, res, next) => {
     .exec()
     .then((college) => {
       if (!college) {
-        return utility.expressUtil.sendEmptyList(res);
+        return utility.responseUtil.sendEmptyList(res);
       }
       let course = college.getCourse(query["course"]);
       if (!course) {
-        return utility.expressUtil.sendEmptyList(res);
+        return utility.responseUtil.sendEmptyList(res);
       }
       let branchList = [];
       utility.expressUtil.handleIfModifiedSince(

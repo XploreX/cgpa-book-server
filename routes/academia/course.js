@@ -14,10 +14,9 @@ router.post("/course", (req, res, next) => {
   College.findOne({ college: query["college"] })
     .exec()
     .then((college) => {
-      utility.mongooseUtil.checkExistence(college, "college");
+      utility.errorUtil.ensureExistence(college, "college");
       college.addToList(query["course"]);
       let course = college.getCourse(query["course"]["course"]);
-      course.updateRelevantLastModifieds();
       return college.save();
     })
     .then((doc) => {
@@ -33,11 +32,11 @@ router.get("/course", (req, res, next) => {
     .exec()
     .then((college) => {
       if (!college) {
-        return sendEmptyDict(res);
+        return utility.responseUtil.sendEmptyDict(res);
       }
       let course = college.getCourse(query["course"]);
       if (!course) {
-        return sendEmptyDict();
+        return utility.responseUtil.sendEmptyDict(res);
       }
       utility.expressUtil.handleIfModifiedSince(
         req,
@@ -70,6 +69,10 @@ router.get("/course-list", (req, res, next) => {
         res,
         college.getLastListModification()
       );
+      res.append(
+        utility.httpUtil.headers.LAST_MODIFIED,
+        college.getLastListModification()
+      );
       for (course of college.courses) {
         if (!course.course.match(query["course"])) continue;
         let branch = course.getBranch(query["branch"]);
@@ -78,10 +81,6 @@ router.get("/course-list", (req, res, next) => {
         if (course.abbreviation) courseName += " (" + course.abbreviation + ")";
         courseList.push(courseName);
       }
-      res.append(
-        utility.httpUtil.headers.LAST_MODIFIED,
-        college.getLastListModification()
-      );
       res.status(StatusCodes.OK).json(courseList);
     })
     .catch(next);
