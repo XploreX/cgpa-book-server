@@ -4,7 +4,8 @@ const { StatusCodes } = require("http-status-codes");
 const ROOT = require(__dirname + "/../../config").ROOT;
 const utility = require(ROOT + "/utility");
 const { College } = require(ROOT + "/models").academia;
-
+const academiaServices = require(ROOT + '/services/academia');
+const CustomError = require(ROOT + '/CustomError');
 let router = express.Router();
 
 let checkList = ["college", "course", "branch", "semester"];
@@ -12,81 +13,37 @@ let checkList = ["college", "course", "branch", "semester"];
 router.post("/semester", (req, res, next) => {
   let query = req.body;
   utility.requestUtil.ensureCertainFields(query, checkList);
-  College.updateOne(
-    {
-      college: query['college'],
-      'courses.course': { '$ne': query['course'] }
-    },
-    {
-      $push: { courses: { course: query['course'] } }
-    })
-    .exec()
+  academiaServices.fillMissingData(query)
     .then(() => {
-      return College.updateOne(
-        {
-          college: query['college'],
-          'courses': {
-            $elemMatch: {
-              course: query['course'],
-              'branches.branch': { $ne: query['branch'] }
-            }
-          }
-        },
-        {
-          $push: {
-            'courses.$.branches': {
-              branch: query['branch'],
-              abbreviation : utility.stringUtil.getAbbreviation(query['branch'])
-            }
-          }
-        }
-      )
-        .exec();
-    })
-    .then(() => {
-      return College.updateOne(
-        {
-          college: query['college'],
-          courses: {
-            $elemMatch: {
-              course: query['course'],
-              'branches': {
-                $elemMatch: {
-                  'branch': query['branch'],
-                  'semesters.semester': { $ne: query['semester']['semester'] }
-                }
+      return College.updateOne({
+        college: query['college'],
+        courses: {
+          $elemMatch: {
+            course: query['course'],
+            branches: {
+              $elemMatch: {
+                branch: query['branch'],
+                'semesters.semester': { $ne: query['semester']['semester'] }
               }
             }
           }
-        },
-        {
-          $push: { 'courses.$[i].branches.$[j].semesters': query['semester'] }
-        }, {
-        arrayFilters: [
-          { 'i.course': query['course'] },
-          { 'j.branch': query['branch'] }
-        ]
+        }
+      }, {
+        $push: { 'courses.$[i].branches.$[j].semesters': query['semester'] }
       })
         .exec();
     })
     .then((queryRes) => {
-      console.log(queryRes);
-      return queryRes
-      /* return College.findOne({ college: query["college"] })
-        .exec() */
+      if(queryRes.n === 0)
+        throw new CustomError("college not found",StatusCodes.BAD_REQUEST);
+      if(queryRes.nModified === 0) {
+        throw new CustomError("given data already exists",StatusCodes.BAD_REQUEST);
+      } 
+      return Promise.resolve(true);
     })
-    .then((college) => {
-      /* utility.errorUtil.ensureExistence(college, "college");
-      let course = college.getCourse(query["course"]);
-      let branch = course.getBranch(query["branch"]);
-      branch.addToList(query["semester"]);
-      let semester = branch.getSemester(query["semester"]["semester"]);
-      return college.save(); */
-      return college;
-    })
-    .then((doc) => {
+    .then(() => {
       // res.sendStatus(StatusCodes.OK);
-      res.status(StatusCodes.OK).json(doc);
+      res.sendStatus(StatusCodes.OK);
     })
     .catch(next);
 });
