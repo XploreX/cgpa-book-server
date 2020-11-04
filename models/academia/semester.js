@@ -15,13 +15,18 @@ var semesterSchema = new Schema(
       type: Number,
     },
     subjects: [subjectSchema],
+    createdAt: {
+      type: 'Date',
+      default: Date.now
+    },
+    updatedAt: {
+      type: 'Date',
+      default: Date.now
+    },
     lastListModification: {
       type: Date,
       default: Date.now,
     },
-  },
-  {
-    timestamps: true,
   }
 );
 

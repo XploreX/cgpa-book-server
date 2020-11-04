@@ -19,12 +19,18 @@ var courseSchema = new Schema({
         trim: true,
         minlength: 1
     },
+    createdAt: {
+        type: 'Date',
+        default: Date.now
+    },
+    updatedAt: {
+        type: 'Date',
+        default: Date.now
+    },
     lastListModification: {
         type: Date,
-        default : Date.now
+        default: Date.now
     }
-},{
-    timestamps : true
 });
 
 courseSchema.path('branches').validate(utility.mongooseUtil.validators.uniqueKeyVal('branch'), "Branch already exists", "Value Error");
@@ -44,7 +50,7 @@ courseSchema.methods.getBranch = function (branchName) {
         }
     }
     else {
-        return utility.arrayUtil.findNeedle(this.branches,branchName,'branch',true);
+        return utility.arrayUtil.findNeedle(this.branches, branchName, 'branch', true);
     }
     return null;
 }

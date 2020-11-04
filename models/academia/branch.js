@@ -17,24 +17,29 @@ var branchSchema = new Schema({
         minlength : 1
     },
     semesters : [semesterSchema],
+    createdAt : {
+        type : 'Date',
+        default : Date.now
+    },
+    updatedAt : {
+        type : 'Date',
+        default: Date.now
+    },
     lastListModification : {
         type : Date,
         default : Date.now
     }
-},{
-    timestamps : true
 });
 
 branchSchema.path('semesters').validate(utility.mongooseUtil.validators.uniqueKeyVal('semester'),"Semester already exists","Value Error");
 
-branchSchema.pre('validate',function(next) {
+/* branchSchema.pre('validate',function(next) {
     // this.branch = getTitleForm(this.branch);
     if(!this.abbreviation) {
         this.abbreviation = utility.stringUtil.getAbbreviation(this.branch);
     }
     next();
-});
-
+}); */
 
 
 branchSchema.methods.addToList = function (semester) {
