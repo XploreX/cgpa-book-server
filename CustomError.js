@@ -29,6 +29,5 @@ class CustomError extends Error {
     }
   }
   
-  new CustomError();
   module.exports = CustomError;
   

@@ -4,6 +4,9 @@ const { StatusCodes } = require("http-status-codes");
 const ROOT = require(__dirname + "/../../config").ROOT;
 const utility = require(ROOT + "/utility");
 const { College } = require(ROOT + "/models").academia;
+const academiaServices = require(ROOT + '/services/academia');
+const CustomError = requrie(ROOT + '/CustomError');
+
 let router = express.Router();
 
 let checkList = ["college", "course"];
@@ -11,13 +14,23 @@ let checkList = ["college", "course"];
 router.post("/course", (req, res, next) => {
   let query = req.body;
   utility.requestUtil.ensureCertainFields(query, checkList);
-  College.findOne({ college: query["college"] })
-    .exec()
-    .then((college) => {
-      utility.errorUtil.ensureExistence(college, "college");
-      college.addToList(query["course"]);
-      let course = college.getCourse(query["course"]["course"]);
-      return college.save();
+  academiaServices.fillMissingData(query)
+    .then(() => {
+      return College.updateOne({
+        college: query['college'],
+        'courses.course': { $ne: query['course']['course'] }
+      }, {
+        $push: { courses: query['course'] }
+      })
+        .exec();
+    })
+    .then((queryRes) => {
+      if (queryRes.n === 0)
+        throw new CustomError("college not found", StatusCodes.BAD_REQUEST);
+      if (queryRes.nModified === 0) {
+        throw new CustomError("given data already exists", StatusCodes.BAD_REQUEST);
+      }
+      return Promise.resolve(true);
     })
     .then((doc) => {
       res.sendStatus(StatusCodes.OK);
