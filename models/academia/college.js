@@ -20,14 +20,19 @@ var collegeSchema = new Schema(
             minlength: 1,
         },
         courses: [courseSchema],
+        createdAt : {
+            type : 'Date',
+            default : Date.now
+        },
+        updatedAt : {
+            type : 'Date',
+            default : Date.now
+        },
         lastListModification: {
             type: Date,
             default: Date.now,
         },
     },
-    {
-        timestamps: true,
-    }
 );
 
 collegeSchema

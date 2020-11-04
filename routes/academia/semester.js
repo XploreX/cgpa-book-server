@@ -33,7 +33,12 @@ router.post("/semester", (req, res, next) => {
           }
         },
         {
-          $push: { 'courses.$.branches': { branch: query['branch'] } }
+          $push: {
+            'courses.$.branches': {
+              branch: query['branch'],
+              abbreviation : utility.stringUtil.getAbbreviation(query['branch'])
+            }
+          }
         }
       )
         .exec();
@@ -44,24 +49,24 @@ router.post("/semester", (req, res, next) => {
           college: query['college'],
           courses: {
             $elemMatch: {
-              course : query['course'],
-              'branches' : {
-                $elemMatch : {
-                  'branch' : query['branch'],
-                  'semesters.semester' : {$ne : query['semester']['semester']}
+              course: query['course'],
+              'branches': {
+                $elemMatch: {
+                  'branch': query['branch'],
+                  'semesters.semester': { $ne: query['semester']['semester'] }
                 }
               }
             }
           }
         },
         {
-          $push : {'courses.$[i].branches.$[j].semesters' : query['semester']}
-        },{
-          arrayFilters : [
-            {'i.course' : query['course']},
-            {'j.branch' : query['branch']}
-          ]
-        })
+          $push: { 'courses.$[i].branches.$[j].semesters': query['semester'] }
+        }, {
+        arrayFilters: [
+          { 'i.course': query['course'] },
+          { 'j.branch': query['branch'] }
+        ]
+      })
         .exec();
     })
     .then((queryRes) => {

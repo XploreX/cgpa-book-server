@@ -24,22 +24,7 @@ var subjectSchema = new Schema({
   timestamps : true
 });
 
-subjectSchema.pre("validate", function (next) {
-  // this.subject = stringHelpers.getTitleForm(this.subject);
-  next();
-});
 
-subjectSchema.pre("save", function (next) {
-  next();
-});
-
-subjectSchema.methods.updateAncestorsLastModified =
-  utility.mongooseUtil.updateAncestorsLastModified;
-subjectSchema.methods.updateLastModified =
-  utility.mongooseUtil.updateLastModified;
-subjectSchema.methods.updateDescendantsLastModified = utility.mongooseUtil.genUpdateDescendantsLastModified();
-subjectSchema.methods.updateRelevantLastModifieds =
-  utility.mongooseUtil.updateRelevantLastModified;
 subjectSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;
 
 module.exports = subjectSchema;
