@@ -7,6 +7,7 @@ const { College } = require(ROOT + "/models").academia;
 const academiaServices = require(ROOT + '/services/academia');
 const CustomError = require(ROOT + '/CustomError');
 let router = express.Router();
+const academiaFields = require(ROOT + '/fields/academia');
 
 let checkList = ["college", "course", "branch", "semester"];
 
@@ -31,7 +32,7 @@ router.post("/semester", (req, res, next) => {
         }
       }, {
         $push: { 'courses.$[i].branches.$[j].semesters': query['semester'] },
-        $currentDate : academiaServices.getDateUpdateDict('i','j')
+        $currentDate : {...academiaServices.getDateUpdateDict('i','j'),...{['courses.$[i].branches.$[j].'+academiaFields.TS_LAST_LIST_MODIFICATION] : true}}
       },{
         arrayFilters : [
           {'i.course' : query['course']},

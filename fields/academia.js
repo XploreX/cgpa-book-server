@@ -5,5 +5,6 @@ module.exports = Object.freeze({
     COURSE : 'course',
     BRANCH : 'branch',
     SEMESTER : 'semester',
-    SUBJECT : 'subject'
+    SUBJECT : 'subject',
+    TS_LAST_LIST_MODIFICATION : 'lastListModification'
 });

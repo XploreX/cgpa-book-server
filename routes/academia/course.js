@@ -7,6 +7,7 @@ const utility = require(ROOT + "/utility");
 const { College } = require(ROOT + "/models").academia;
 const academiaServices = require(ROOT + '/services/academia');
 const CustomError = require(ROOT + '/CustomError');
+const academiaFields = require(ROOT + '/fields/academia');
 
 let router = express.Router();
 
@@ -22,7 +23,7 @@ router.post("/course", (req, res, next) => {
         'courses.course': { $ne: query['course']['course'] }
       }, {
         $push: { courses: query['course'] },
-        $currentDate : academiaServices.getDateUpdateDict()
+        $currentDate : {...academiaServices.getDateUpdateDict(),...{[academiaFields.TS_LAST_LIST_MODIFICATION] : true}}
       })
         .exec();
     })
