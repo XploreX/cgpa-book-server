@@ -1,5 +1,6 @@
 const express = require("express");
 const { StatusCodes } = require("http-status-codes");
+const academia = require("../../fields/academia");
 
 const ROOT = require(__dirname + "/../../config").ROOT;
 const utility = require(ROOT + "/utility");
@@ -20,18 +21,12 @@ router.post("/course", (req, res, next) => {
         college: query['college'],
         'courses.course': { $ne: query['course']['course'] }
       }, {
-        $push: { courses: query['course'] }
+        $push: { courses: query['course'] },
+        $currentDate : academiaServices.getDateUpdateDict()
       })
         .exec();
     })
-    .then((queryRes) => {
-      if (queryRes.n === 0)
-        throw new CustomError("college not found", StatusCodes.BAD_REQUEST);
-      if (queryRes.nModified === 0) {
-        throw new CustomError("given data already exists", StatusCodes.BAD_REQUEST);
-      }
-      return Promise.resolve(true);
-    })
+    .then(academiaServices.checkDataFill)
     .then((doc) => {
       res.sendStatus(StatusCodes.OK);
     })

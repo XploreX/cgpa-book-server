@@ -29,18 +29,12 @@ router.post("/semester", (req, res, next) => {
           }
         }
       }, {
-        $push: { 'courses.$[i].branches.$[j].semesters': query['semester'] }
+        $push: { 'courses.$[i].branches.$[j].semesters': query['semester'] },
+        $currentDate : academiaServices.getDateUpdateDict()
       })
         .exec();
     })
-    .then((queryRes) => {
-      if(queryRes.n === 0)
-        throw new CustomError("college not found",StatusCodes.BAD_REQUEST);
-      if(queryRes.nModified === 0) {
-        throw new CustomError("given data already exists",StatusCodes.BAD_REQUEST);
-      } 
-      return Promise.resolve(true);
-    })
+    .then(academiaServices.checkDataFill)
     .then(() => {
       // res.sendStatus(StatusCodes.OK);
       res.sendStatus(StatusCodes.OK);
