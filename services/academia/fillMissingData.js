@@ -3,11 +3,10 @@ const { College } = require(ROOT + '/models/academia');
 const CustomError = require(ROOT + '/CustomError');
 const getDateUpdateDict = require(ROOT + '/services/academia/getDateUpdateDict');
 const utility = require(ROOT + '/utility');
+const academiaFields = require(ROOT + '/fields/academia');
 
 function fillMissingData(query) {
     if (typeof query['college'] !== 'string')
-        return Promise.resolve(true);
-    if (typeof query['course'] !== 'string')
         return Promise.resolve(true);
     let allGood = 1;
     return College.findOne({
@@ -21,14 +20,16 @@ function fillMissingData(query) {
             return doc;
         })
         .then(() => {
-            return College.updateOne(
+            if (typeof query['course'] !== 'string')
+                return Promise.resolve(true);
+            else return College.updateOne(
                 {
                     college: query['college'],
                     'courses.course': { '$ne': query['course'] }
                 },
                 {
                     $push: { courses: { course: query['course'] } },
-                    $currentDate: getDateUpdateDict()
+                    $currentDate: { ...getDateUpdateDict(), ...{ [academiaFields.TS_LAST_LIST_MODIFICATION]: true } }
 
                 })
                 .exec()
@@ -55,7 +56,7 @@ function fillMissingData(query) {
                             abbreviation: utility.stringUtil.getAbbreviation(query['branch'])
                         }
                     },
-                    $currentDate: getDateUpdateDict('i'),
+                    $currentDate: { ...getDateUpdateDict('i'), ...{ ['courses.$[i].' + academiaFields.TS_LAST_LIST_MODIFICATION]: true } },
 
                 }, {
                 arrayFilters: [
@@ -84,7 +85,8 @@ function fillMissingData(query) {
                     }
                 },
                 {
-                    $push: { 'courses.$[i].branches.$[j].semesters': { semester: query['semester'] } }
+                    $push: { 'courses.$[i].branches.$[j].semesters': { semester: query['semester'] } },
+                    $currentDate: { ...getDateUpdateDict('i', 'j'), ...{ ['courses.$[i].branches.$[j].' + academiaFields.TS_LAST_LIST_MODIFICATION]: true } }
                 }, {
                 arrayFilters: [
                     { 'i.course': query['course'] },

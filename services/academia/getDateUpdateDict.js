@@ -13,8 +13,5 @@ function getDateUpdateDict(i,j) {
     }
     return d;
 }
-console.log(getDateUpdateDict());
-console.log(getDateUpdateDict('i'));
-console.log(getDateUpdateDict('i','j'));
 
 module.exports = getDateUpdateDict;
