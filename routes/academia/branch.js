@@ -25,8 +25,12 @@ router.post("/branch", (req, res, next) => {
           }
         }
       }, {
-        $push: { 'courses.$.branches': query['branch'] },
-        $currentDate : academiaServices.getdateUpdateDict()
+        $push: { 'courses.$[i].branches': query['branch'] },
+        $currentDate : academiaServices.getdateUpdateDict('i')
+      },{
+        arrayFilters : [
+          {'i.course' : query['course']}
+        ]
       })
         .exec();
     })

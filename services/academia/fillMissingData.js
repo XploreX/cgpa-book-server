@@ -1,6 +1,7 @@
 const ROOT = require(__dirname + '/config/app.js').ROOT;
 const { College } = require(ROOT + '/Models/academia');
 const CustomError = require(ROOT + '/CustomError');
+const getDataUpdateDict = require(ROOT + '/services/academia/getDataUpdateDict');
 
 function fillData(query) {
     if (typeof query['college'] !== 'string')
@@ -25,35 +26,43 @@ function fillData(query) {
                     'courses.course': { '$ne': query['course'] }
                 },
                 {
-                    $push: { courses: { course: query['course'] } }
+                    $push: { courses: { course: query['course'] } },
+                    $currentDate: getDataUpdateDict()
+
                 })
-            .exec()
-            .then((queryRes) => {
-                if (typeof query['branch'] !== 'string') {
-                    allGood = 0;
-                    return Promise.resolve(queryRes);
-                }
-                return College.updateOne(
-                    {
-                        college: query['college'],
-                        'courses': {
-                            $elemMatch: {
-                                course: query['course'],
-                                'branches.branch': { $ne: query['branch'] }
-                            }
-                        }
-                    },
-                    {
-                        $push: {
-                            'courses.$.branches': {
-                                branch: query['branch'],
-                                abbreviation: utility.stringUtil.getAbbreviation(query['branch'])
-                            }
-                        }
+                .exec()
+                .then((queryRes) => {
+                    if (typeof query['branch'] !== 'string') {
+                        allGood = 0;
+                        return Promise.resolve(queryRes);
                     }
-                )
-                    .exec();
-            })
+                    return College.updateOne(
+                        {
+                            college: query['college'],
+                            'courses': {
+                                $elemMatch: {
+                                    course: query['course'],
+                                    'branches.branch': { $ne: query['branch'] }
+                                }
+                            }
+                        },
+                        {
+                            $push: {
+                                'courses.$[i].branches': {
+                                    branch: query['branch'],
+                                    abbreviation: utility.stringUtil.getAbbreviation(query['branch'])
+                                }
+                            },
+                            $currentData: getDataUpdateDict('i'),
+
+                        }, {
+                        arrayFilters: [
+                            { 'i.course': query['course'] }
+                        ],
+                    }
+                    )
+                        .exec();
+                })
         })
         .then((queryRes) => {
             if (!allGood || (typeof query['semester'] !== 'string' && typeof query['semester'] !== 'number'))
