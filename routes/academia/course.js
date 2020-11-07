@@ -6,7 +6,7 @@ const ROOT = require(__dirname + "/../../config").ROOT;
 const utility = require(ROOT + "/utility");
 const { College } = require(ROOT + "/models").academia;
 const academiaServices = require(ROOT + '/services/academia');
-const CustomError = requrie(ROOT + '/CustomError');
+const CustomError = require(ROOT + '/CustomError');
 
 let router = express.Router();
 

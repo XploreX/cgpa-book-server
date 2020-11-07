@@ -14,7 +14,8 @@ router.post("/semester", (req, res, next) => {
   let query = req.body;
   utility.requestUtil.ensureCertainFields(query, checkList);
   academiaServices.fillMissingData(query)
-    .then(() => {
+    .then((queryRes) => {
+      console.log('queryRes from fillMissingData :',queryRes);
       return College.updateOne({
         college: query['college'],
         courses: {
