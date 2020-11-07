@@ -30,7 +30,12 @@ router.post("/semester", (req, res, next) => {
         }
       }, {
         $push: { 'courses.$[i].branches.$[j].semesters': query['semester'] },
-        $currentDate : academiaServices.getDateUpdateDict()
+        $currentDate : academiaServices.getDateUpdateDict('i','j')
+      },{
+        arrayFilters : [
+          {'i.course' : query['course']},
+          {'j.branch' : query['branch']}
+        ]
       })
         .exec();
     })
