@@ -7,6 +7,7 @@ function customRequireDirectoryModels(dir, pascalCase = false,) {
   let mp = {};
   let fileNames = fs.readdirSync(dir);
   let indexFile = path.join(dir, "index.js");
+  const DONT_REQUIRE_FILENAMES = ['field-consts'];
   for (fileName of fileNames) {
     let file = path.join(dir, fileName);
     let isDir = fs.lstatSync(file).isDirectory();
@@ -29,7 +30,7 @@ function customRequireDirectoryModels(dir, pascalCase = false,) {
     if (pascalCase) {
       fileName = fileName[0].toUpperCase() + fileName.slice(1);
     }
-    if (file !== indexFile) {
+    if (file !== indexFile || DONT_REQUIRE_FILENAMES.indexOf(fileName) !== -1) {
       mp[fileName] = mongoose.model(fileName,require(file));
     }
   }

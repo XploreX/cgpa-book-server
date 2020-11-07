@@ -25,19 +25,13 @@ router.post("/branch", (req, res, next) => {
           }
         }
       }, {
-        $push: { 'courses.$.branches': query['branch'] }
+        $push: { 'courses.$.branches': query['branch'] },
+        $currentDate : academiaServices.getdateUpdateDict()
       })
         .exec();
     })
-    .then((queryRes) => {
-      if (queryRes.n === 0)
-        throw new CustomError("college not found", StatusCodes.BAD_REQUEST);
-      if (queryRes.nModified === 0) {
-        throw new CustomError("given data already exists", StatusCodes.BAD_REQUEST);
-      }
-      return Promise.resolve(true);
-    })
-    .then((doc) => {
+    .then(academiaServices.checkDataFill)
+    .then(() => {
       res.sendStatus(StatusCodes.OK);
     })
     .catch(next);
