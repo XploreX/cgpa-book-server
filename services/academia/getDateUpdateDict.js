@@ -1,4 +1,4 @@
-const ROOT = require(__dirname + '/../../config/app').ROOT;
+const ROOT = require(__dirname + '/../../config').ROOT;
 const academiaFields = require(ROOT + '/fields/academia');
 
 function getDateUpdateDict(i,j) {
@@ -13,5 +13,8 @@ function getDateUpdateDict(i,j) {
     }
     return d;
 }
+console.log(getDateUpdateDict());
+console.log(getDateUpdateDict('i'));
+console.log(getDateUpdateDict('i','j'));
 
 module.exports = getDateUpdateDict;
