@@ -12,7 +12,7 @@ console.log(DB_CONNECTION_STRING);
 console.log("starting server");
 
 mongoose.Promise = global.Promise;
-mongoose.connect(DB_CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true ,useCreateIndex : true})
+mongoose.connect(DB_CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true ,useCreateIndex : true , autoIndex : false})
     .catch((err) => {
         basicErrorHandler(err,"Connection to mongo database failed");
     });
