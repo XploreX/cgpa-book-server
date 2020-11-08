@@ -13,6 +13,7 @@ var collegeSchema = new Schema(
             trim: true,
             minlength: 1,
             unique: true,
+            index : true
         },
         abbreviation: {
             type: String,
