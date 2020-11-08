@@ -13,7 +13,8 @@ function handleIfModifiedSince(req,res,lastModified) {
             let err=new CustomError(null,StatusCodes.NOT_MODIFIED);
             return Promise.reject(err);
         }
-        return Promise.resolve(lastModified);
+        else 
+            return Promise.resolve(lastModified);
     }
 }
 
