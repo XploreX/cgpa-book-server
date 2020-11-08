@@ -87,7 +87,7 @@ router.get("/college-list", (req, res, next) => {
         }
         collegeList.push(collegeName);
       }
-      return res.status(StatusCodes.OK).json(collegeList);
+      return res.status(200).json(collegeList) && console.log(res)
     })
     .catch(next);
 });
