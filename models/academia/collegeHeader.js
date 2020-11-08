@@ -22,7 +22,7 @@ collegeHeaderSchema.statics.getLastListModification = function () {
                 // console.log(doc);
                 return doc.lastListModification.toUTCString();
             }
-            else return Date.now();
+            else return Date.now().toUTCString();
         })
 };
 collegeHeaderSchema.statics.updateLastListModification = function () {

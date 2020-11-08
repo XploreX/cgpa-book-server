@@ -100,7 +100,7 @@ router.get("/branch-list", (req, res, next) => {
         }
         branchList.push(branchName);
       }
-      res.append(
+      res.set(
         utility.httpUtil.headers.LAST_MODIFIED,
         course.getLastListModification()
       );
