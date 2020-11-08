@@ -8,10 +8,17 @@ const CustomError = require(ROOT + '/CustomError');
 
 function handleIfModifiedSince(req,res,lastModified) {
     if(req.get(http.headers.IF_MODIFIED_SINCE)) {
+        console.log(req.get(http.headers.IF_MODIFIED_SINCE))
+        console.log(lastModified)
         if(req.get(http.headers.IF_MODIFIED_SINCE) === lastModified) {
+            console.log("sending 304")
             res.sendStatus(StatusCodes.NOT_MODIFIED);
             let err=new CustomError(null,StatusCodes.NOT_MODIFIED);
-            throw err;
+            return Promise.reject(err);
+        }
+        else {
+            console.log("sending resolve")
+            return Promise.resolve(lastModified);
         }
     }
 }
