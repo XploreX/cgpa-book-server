@@ -112,7 +112,7 @@ router.get("/semester-list", (req, res, next) => {
         semesterList.push(semester.semester);
       }
       semesterList.sort();
-      res.append(
+      res.set(
         utility.httpUtil.headers.LAST_MODIFIED,
         branch.getLastListModification()
       );

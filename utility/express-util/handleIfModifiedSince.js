@@ -7,16 +7,13 @@ const http = require(path.join(ROOT,'utility/http-util'));
 const CustomError = require(ROOT + '/CustomError');
 
 function handleIfModifiedSince(req,res,lastModified) {
-    let lastModified_date = Date.parse(lastModified);
+    lastModified = Date.parse(lastModified);
     if(req.get(http.headers.IF_MODIFIED_SINCE)) {
         let ifModifiedSince = Date.parse(req.get(http.headers.IF_MODIFIED_SINCE));
-        if(ifModifiedSince >= lastModified_date) {
+        if(ifModifiedSince >= lastModified) {
             res.sendStatus(StatusCodes.NOT_MODIFIED);
             let err=new CustomError(null,StatusCodes.NOT_MODIFIED);
-            return Promise.reject(err);
-        }
-        else {
-            return Promise.resolve(lastModified);
+            throw err;
         }
     }
 }
