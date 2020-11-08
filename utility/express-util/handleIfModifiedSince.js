@@ -11,8 +11,10 @@ function handleIfModifiedSince(req,res,lastModified) {
         if(req.get(http.headers.IF_MODIFIED_SINCE) === lastModified) {
             res.sendStatus(StatusCodes.NOT_MODIFIED);
             let err=new CustomError(null,StatusCodes.NOT_MODIFIED);
-            throw err;
+            return Promise.reject(err);
         }
+        else 
+            return Promise.resolve(lastModified);
     }
 }
 

@@ -57,18 +57,19 @@ router.get("/college-list", (req, res, next) => {
   let collegeList = [];
   CollegeHeader.getLastListModification()
     .then((lastListModification) => {
-      if (lastListModification) {
-        utility.expressUtil.handleIfModifiedSince(
-          req,
-          res,
-          lastListModification
-        );
-        console.log("should not be here");
-        res.append(
-          utility.httpUtil.headers.LAST_MODIFIED,
-          lastListModification
-        );
-      }
+      return utility.expressUtil.handleIfModifiedSince(
+        req,
+        res,
+        lastListModification
+      );
+    })
+    .then((lastListModification) => {
+      console.log("should not be here");
+      res.append(
+        utility.httpUtil.headers.LAST_MODIFIED,
+        lastListModification
+      );
+
       return College.find({ college: query["college"] }).exec();
     })
     .then((colleges) => {
