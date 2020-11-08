@@ -64,7 +64,7 @@ router.get("/college-list", (req, res, next) => {
       );
     })
     .then((lastListModification) => {
-      // console.log("should not be here");
+      console.log("should not be here");
       res.append(
         utility.httpUtil.headers.LAST_MODIFIED,
         lastListModification
