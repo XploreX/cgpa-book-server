@@ -6,13 +6,16 @@ const utility = require(ROOT + "/utility");
 const CustomError = require(ROOT + "/CustomError");
 
 function notFoundHandler(req, res, next) {
-  err = new CustomError("Content not found",404);
+  err = new CustomError("Content not found", 404);
   return next(err);
 }
 
 function logErrors(err, req, res, next) {
   if ("statusCode" in err) {
-    if (err.statusCode === StatusCodes.NOT_MODIFIED) return next(err);
+    if (err.statusCode === StatusCodes.NOT_MODIFIED) {
+      console.log("yeah here", err);
+      return next(err);
+    }
   }
   console.log(err);
   return next(err);
