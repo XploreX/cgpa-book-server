@@ -78,7 +78,7 @@ router.get("/course-list", (req, res, next) => {
         res,
         college.getLastListModification()
       );
-      res.append(
+      res.set(
         utility.httpUtil.headers.LAST_MODIFIED,
         college.getLastListModification()
       );

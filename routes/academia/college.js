@@ -57,18 +57,15 @@ router.get("/college-list", (req, res, next) => {
   let collegeList = [];
   CollegeHeader.getLastListModification()
     .then((lastListModification) => {
-      return utility.expressUtil.handleIfModifiedSince(
+      utility.expressUtil.handleIfModifiedSince(
         req,
         res,
         lastListModification
       );
-    })
-    .then((lastListModification) => {
-      res.append(
+      res.set(
         utility.httpUtil.headers.LAST_MODIFIED,
         lastListModification
       );
-
       return College.find({ college: query["college"] }).exec();
     })
     .then((colleges) => {
