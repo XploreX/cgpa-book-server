@@ -56,7 +56,6 @@ router.get("/college-list", (req, res, next) => {
   utility.requestUtil.ensureCertainFields(query, checkList);
   let collegeList = [];
   CollegeHeader.getLastListModification()
-    .exec()
     .then((lastListModification) => {
       if (lastListModification) {
         utility.expressUtil.handleIfModifiedSince(
@@ -66,7 +65,7 @@ router.get("/college-list", (req, res, next) => {
         );
         res.append(
           utility.httpUtil.headers.LAST_MODIFIED,
-          lastListModification()
+          lastListModification
         );
       }
       return College.find({ college: query["college"] }).exec();

@@ -15,10 +15,13 @@ var collegeHeaderSchema = new Schema({
 })
 
 collegeHeaderSchema.statics.getLastListModification = function () {
-    return this.find().exec()
+    return this.findOne().exec()
         .then((doc) => {
             if(doc) 
+            {
+                // console.log(doc);
                 return doc.lastListModification.toUTCString();
+            }
             else return Date.now();
         })
 };
