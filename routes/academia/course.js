@@ -71,7 +71,7 @@ router.get("/course-list", (req, res, next) => {
     .exec()
     .then((college) => {
       if (!college) {
-        return utility.expressUtil.sendEmptyList(res);
+        return utility.responseUtil.sendEmptyList(res);
       }
       utility.expressUtil.handleIfModifiedSince(
         req,
