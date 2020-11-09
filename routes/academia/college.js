@@ -66,16 +66,11 @@ router.get("/college-list", (req, res, next) => {
         utility.httpUtil.headers.LAST_MODIFIED,
         lastListModification
       );
-      return College.find({ college: query["college"] }).exec();
+      return College.find({ college: query["college"] }).select('college abbreviation').exec();
     })
     .then((colleges) => {
       for (college of colleges) {
-        let course = college.getCourse(query["course"]);
-        if (course || "".match(query["course"])) {
-          let branch = null;
-          if (course) branch = course.getBranch(query["branch"]);
-          if (!branch && !"".match(query["branch"])) continue;
-        } else continue;
+        // console.log(college);
         collegeName = college.college;
         if (college["abbreviation"]) {
           collegeName += " ( " + college.abbreviation + " ) ";
