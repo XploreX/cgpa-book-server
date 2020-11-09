@@ -91,15 +91,15 @@ router.get("/semester-list", (req, res, next) => {
     .exec()
     .then((college) => {
       if (!college) {
-        return utility.expressUtil.sendEmptyList(res);
+        return utility.responseUtil.sendEmptyList(res);
       }
       let course = college.getCourse(query["course"]);
       if (!course) {
-        return utility.expressUtil.sendEmptyList(res);
+        return utility.responseUtil.sendEmptyList(res);
       }
       let branch = course.getBranch(query["branch"]);
       if (!branch) {
-        return utility.expressUtil.sendEmptyList(res);
+        return utility.responseUtil.sendEmptyList(res);
       }
       utility.expressUtil.handleIfModifiedSince(
         req,
