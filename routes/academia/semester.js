@@ -74,7 +74,7 @@ router.get("/semester", (req, res, next) => {
         res,
         semester.getLastModified()
       );
-      res.append(
+      res.set(
         utility.httpUtil.headers.LAST_MODIFIED,
         semester.getLastModified()
       );
