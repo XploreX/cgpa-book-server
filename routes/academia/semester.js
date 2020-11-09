@@ -16,7 +16,6 @@ router.post("/semester", (req, res, next) => {
   utility.requestUtil.ensureCertainFields(query, checkList);
   academiaServices.fillMissingData(query)
     .then((queryRes) => {
-      console.log('queryRes from fillMissingData :',queryRes);
       return College.updateOne({
         college: query['college'],
         courses: {
@@ -56,19 +55,19 @@ router.get("/semester", (req, res, next) => {
     .exec()
     .then((college) => {
       if (!college) {
-        return utility.expressUtil.sendEmptyDict(res);
+        return utility.responseUtil.sendEmptyDict(res);
       }
       let course = college.getCourse(query["course"]);
       if (!course) {
-        return utility.expressUtil.sendEmptyDict(res);
+        return utility.responseUtil.sendEmptyDict(res);
       }
       let branch = course.getBranch(query["branch"]);
       if (!branch) {
-        return utility.expressUtil.sendEmptyDict(res);
+        return utility.responseUtil.sendEmptyDict(res);
       }
       let semester = branch.getSemester(query["semester"]);
       if (!semester) {
-        return utility.expressUtil.sendEmptyDict(res);
+        return utility.responseUtil.sendEmptyDict(res);
       }
       utility.expressUtil.handleIfModifiedSince(
         req,
