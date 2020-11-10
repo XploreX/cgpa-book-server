@@ -5,8 +5,16 @@ import requests
 from multiprocessing import Process
 from time import sleep
 from datetime import timedelta,datetime
+import random
+import argparse
+# Parser configs                                                                                                                                                                              
+parser = argparse.ArgumentParser(description='used for testing cpga-book-server api')
+parser.add_argument('-p', help='port to run server on(default:3000)')
+parser.add_argument('-v', help='to show server logs or not', action="store_true")
+args = parser.parse_args()
 
-url = os.environ.get("URL") if(os.environ.get("URL")!=None) else 'http://localhost:3000/'
+PORT=int(args.p) if(args.p) else 3000
+url= os.environ.get("URL") if(os.environ.get("URL")!=None) else f'http://localhost:{PORT}/'
 #url='http://api-rhapsody.herokuapp.com/'
 
 class bcolors:
@@ -43,14 +51,16 @@ def start_node_server(process):
       if('MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017' in output):
         print_color(bcolors.FAIL,'enable mongodb service')
         break
-      print(output)
+      if(args.v):
+        print(output)
 
 def test_url_get_list(path,params):
+  success=True
   testurl=urljoin(url,path)
   sleeptime=0.5
 
   print_color(bcolors.HEADER,f'testing url {testurl}')
-  print_color(bcolors.HEADER,f'testing without if-modified-since')
+  print_color(bcolors.HEADER,f'testing without if-modified-since\n')
 
   r=requests.get(testurl,params=params)
   college_list=[]
@@ -60,8 +70,10 @@ def test_url_get_list(path,params):
     college_list=[i.strip().strip("\"''").strip() for i in r.text.strip('][').split(",")]
   else:
     print_color(bcolors.FAIL,f'Failed {r.status_code}')
+    success=False
+  print_seperator('-')
 
-  print_color(bcolors.HEADER,f'testing with future if-modified-since')
+  print_color(bcolors.HEADER,f'testing with future if-modified-since\n')
   header={'If-modified-since':(datetime.now()+timedelta(hours=25)).isoformat()}
   
   r=requests.get(testurl,headers=header,params=params)
@@ -70,9 +82,11 @@ def test_url_get_list(path,params):
     print_color(bcolors.OKGREEN,f'Success {r.status_code}')
   else:
     print_color(bcolors.FAIL,f'Failed {r.status_code}')
+    success=False
+  print_seperator('-')
 
   header={'If-modified-since':(datetime.fromtimestamp(0)).isoformat()}
-  print_color(bcolors.HEADER,f'testing with past if-modified-since')
+  print_color(bcolors.HEADER,f'testing with past if-modified-since\n')
 
   r=requests.get(testurl,headers=header,params=params)
   sleep(sleeptime)
@@ -80,23 +94,36 @@ def test_url_get_list(path,params):
     print_color(bcolors.OKGREEN,f'Success {r.status_code}')
   else:
     print_color(bcolors.FAIL,f'Failed {r.status_code}')
+    success=False
+  print_seperator('-')
 
-  return college_list
+  return college_list,success
+
+def print_seperator(sep):
+  if(sep=='*'):
+    print("\n"*2+sep*80 +"\n"*2)
+  elif(sep=='-'):
+    print("\n"+sep*40 +"\n")
 
 try:
-  process=sp.Popen('npm start'.split(),stderr=sp.STDOUT,stdout=sp.PIPE)
+  myenv=os.environ.copy()
+  myenv["PORT"]=str(PORT)
+  process=sp.Popen('npm start'.split(),env=myenv,stderr=sp.STDOUT,stdout=sp.PIPE)
   node=Process(target=start_node_server,args=(process,))
   node.start()
   sleep(5)
+  keys=['college','course','branch','semester']
+  paths=[
+      '/academia/college-list',
+      '/academia/course-list',
+      '/academia/branch-list',
+      '/academia/semester-list'
+      ]
   params={}
-  out_list=test_url_get_list('/academia/college-list',params)
-  params["college"]=out_list[0].split("(")[0].strip()
-  out_list=test_url_get_list('/academia/course-list',params)
-  params["course"]=out_list[0].split("(")[0].strip()
-  out_list=test_url_get_list('/academia/branch-list',params)
-  params["branch"]=out_list[0].split("(")[0].strip()
-  out_list=test_url_get_list('/academia/semester-list',params)
-  params["semester"]=out_list[0].split("(")[0].strip()
+  for i in range(len(keys)):
+    out_list,res=test_url_get_list(paths[i],params)
+    params[keys[i]]=out_list[random.randint(0,len(out_list)-1)].split("(")[0].strip()
+    print_seperator('*')
 
 except KeyboardInterrupt:
   pass
