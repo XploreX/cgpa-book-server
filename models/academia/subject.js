@@ -19,9 +19,7 @@ var subjectSchema = new Schema({
   credits: {
     type: Number,
     required: true,
-  },
-},{
-  timestamps : true
+  }
 });
 
 
