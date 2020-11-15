@@ -110,7 +110,9 @@ router.get("/semester-list", (req, res, next) => {
       for (semester of branch.semesters) {
         semesterList.push(semester.semester);
       }
-      semesterList.sort();
+      semesterList.sort((a,b)=>{
+        return a-b;
+      });
       res.set(
         utility.httpUtil.headers.LAST_MODIFIED,
         branch.getLastListModification()
