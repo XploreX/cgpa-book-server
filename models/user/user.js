@@ -14,17 +14,14 @@ let userSchema = new Schema({
     college : {
         type : 'String',
         trim : true,
-        minlength : 1
     },
     course : {
         type : 'String',
         trim : true,
-        minlength : 1
     },
     branch : {
         type : 'String',
         trim : true,
-        minLength : 1
     },
     unlocked : {
         type : 'Number'
