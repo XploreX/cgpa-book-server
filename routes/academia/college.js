@@ -1,85 +1,84 @@
-const express = require("express");
-const { StatusCodes } = require("http-status-codes");
+const express = require('express');
+const {StatusCodes} = require('http-status-codes');
 
-const ROOT = require(__dirname + "/../../config").ROOT;
-const utility = require(ROOT + "/utility");
-const { College, CollegeHeader } = require(ROOT + "/models").academia;
-let router = express.Router();
+const ROOT = require(__dirname + '/../../config').ROOT;
+const utility = require(ROOT + '/utility');
+const {College, CollegeHeader} = require(ROOT + '/models').academia;
 
-let checkList = ["college"];
+// eslint-disable-next-line new-cap
+const router = express.Router();
 
-router.post("/college", (req, res, next) => {
+const checkList = ['college'];
+
+router.post('/college', (req, res, next) => {
   const query = req.body;
   utility.requestUtil.ensureCertainFields(query, checkList);
-  college = new College(query["college"]);
+  college = new College(query['college']);
   college
-    .save()
-    .then((doc) => {
-      return CollegeHeader.updateLastListModification();
-    })
-    .then(() => {
-      res.sendStatus(StatusCodes.OK);
-    })
-    .catch(next);
+      .save()
+      .then((doc) => {
+        return CollegeHeader.updateLastListModification();
+      })
+      .then(() => {
+        res.sendStatus(StatusCodes.OK);
+      })
+      .catch(next);
 });
 
-router.get("/college", (req, res, next) => {
-  let query = req.query;
+router.get('/college', (req, res, next) => {
+  const query = req.query;
   utility.requestUtil.ensureCertainFields(query, checkList);
-  College.findOne({ college: query["college"] })
-    .exec()
-    .then((college) => {
-      if (!college) {
-        return utility.responseUtil.sendEmptyDict(res);
-      }
-      utility.expressUtil.handleIfModifiedSince(
-        req,
-        res,
-        college.getLastModified()
-      );
-      res.append(
-        utility.httpUtil.headers.LAST_MODIFIED,
-        college.getLastModified()
-      );
-      res.status(StatusCodes.OK).json(college);
-    })
-    .catch(next);
+  College.findOne({college: query['college']})
+      .exec()
+      .then((college) => {
+        if (!college) {
+          return utility.responseUtil.sendEmptyDict(res);
+        }
+        utility.expressUtil.handleIfModifiedSince(
+            req,
+            res,
+            college.getLastModified(),
+        );
+        res.append(
+            utility.httpUtil.headers.LAST_MODIFIED,
+            college.getLastModified(),
+        );
+        res.status(StatusCodes.OK).json(college);
+      })
+      .catch(next);
 });
 
-router.get("/college-list", (req, res, next) => {
-  let query = req.query;
+router.get('/college-list', (req, res, next) => {
+  const query = req.query;
   utility.requestUtil.addMissingKeysToQuery(query, [
-    "college",
-    "course",
-    "branch",
+    'college',
+    'course',
+    'branch',
   ]);
   utility.requestUtil.ensureCertainFields(query, checkList);
-  let collegeList = [];
+  const collegeList = [];
   CollegeHeader.getLastListModification()
-    .then((lastListModification) => {
-      utility.expressUtil.handleIfModifiedSince(
-        req,
-        res,
-        lastListModification
-      );
-      res.set(
-        utility.httpUtil.headers.LAST_MODIFIED,
-        lastListModification
-      );
-      return College.find({ college: query["college"] }).select('college abbreviation').exec();
-    })
-    .then((colleges) => {
-      for (college of colleges) {
+      .then((lastListModification) => {
+        utility.expressUtil.handleIfModifiedSince(req,
+            res,
+            lastListModification);
+        res.set(utility.httpUtil.headers.LAST_MODIFIED, lastListModification);
+        return College.find({college: query['college']})
+            .select('college abbreviation')
+            .exec();
+      })
+      .then((colleges) => {
+        for (college of colleges) {
         // console.log(college);
-        collegeName = college.college;
-        if (college["abbreviation"]) {
-          collegeName += " ( " + college.abbreviation + " ) ";
+          collegeName = college.college;
+          if (college['abbreviation']) {
+            collegeName += ' ( ' + college.abbreviation + ' ) ';
+          }
+          collegeList.push(collegeName);
         }
-        collegeList.push(collegeName);
-      }
-      return res.status(StatusCodes.OK).json(collegeList)
-    })
-    .catch(next);
+        return res.status(StatusCodes.OK).json(collegeList);
+      })
+      .catch(next);
 });
 
 module.exports = router;
