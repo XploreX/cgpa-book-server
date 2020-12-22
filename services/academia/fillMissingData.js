@@ -9,7 +9,7 @@ const academiaFields = require(ROOT + '/fields/academia');
 /**
  *
  * @param {Object} query Given query to insert in database
- * @returns
+ * @return {Object} - result of the final update query
  */
 function fillMissingData(query) {
   if (typeof query['college'] !== 'string') {
