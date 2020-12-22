@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/parth-07/cgpa_book#readme",
   "dependencies": {
+    "eslint": "^7.16.0",
     "express": "^4.17.1",
     "glob": "^7.1.6",
     "google-auth-library": "^6.1.3",
