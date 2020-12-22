@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ROOT = require(__dirname + "/../../config").ROOT;
-const utility = require(ROOT + "/utility");
+const ROOT = require(__dirname + '/../../config').ROOT;
+const utility = require(ROOT + '/utility');
 
-var subjectSchema = new Schema({
+const subjectSchema = new Schema({
   subject: {
     type: String,
     required: true,
@@ -19,7 +19,7 @@ var subjectSchema = new Schema({
   credits: {
     type: Number,
     required: true,
-  }
+  },
 });
 
 

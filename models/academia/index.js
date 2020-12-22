@@ -1,5 +1,5 @@
-const path = require('path');
 const ROOT = require(__dirname + '/../../config').ROOT;
-const customRequireDirectoryModels = require(ROOT + '/utility/customRequireDirectoryModels');
+const customRequireDirectoryModels = require(ROOT +
+  '/utility/customRequireDirectoryModels');
 
-module.exports = customRequireDirectoryModels(__dirname,true);
+module.exports = customRequireDirectoryModels(__dirname, true);

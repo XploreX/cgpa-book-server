@@ -1,63 +1,66 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ROOT = require(__dirname + "/../../config").ROOT;
-const utility = require(ROOT + "/utility");
-const subjectSchema = require("./subject.js");
+const ROOT = require(__dirname + '/../../config').ROOT;
+const utility = require(ROOT + '/utility');
+const subjectSchema = require('./subject.js');
 
-var semesterSchema = new Schema(
-  {
-    semester: {
-      type: Number,
-      required: true,
-    },
-    creditsTotal: {
-      type: Number,
-    },
-    subjects: [subjectSchema],
-    createdAt: {
-      type: 'Date',
-      default: Date.now
-    },
-    updatedAt: {
-      type: 'Date',
-      default: Date.now
-    },
-    lastListModification: {
-      type: Date,
-      default: Date.now,
-    },
-  }
-);
+const semesterSchema = new Schema({
+  semester: {
+    type: Number,
+    required: true,
+  },
+  creditsTotal: {
+    type: Number,
+  },
+  subjects: [subjectSchema],
+  createdAt: {
+    type: 'Date',
+    default: Date.now,
+  },
+  updatedAt: {
+    type: 'Date',
+    default: Date.now,
+  },
+  lastListModification: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
-semesterSchema.pre("save", function (next) {
+semesterSchema.pre('save', function(next) {
   this.creditsTotal = 0;
-  for (let subject of this.subjects) {
+  for (const subject of this.subjects) {
     this.creditsTotal += subject.credits;
   }
   next();
 });
 
-semesterSchema.methods.addToList = function (subject) {
+semesterSchema.methods.addToList = function(subject) {
   this.subjects.push(subject);
   this.lastListModification = new Date();
 };
 
-semesterSchema.methods.getSubject = function (subjectName) {
+semesterSchema.methods.getSubject = function(subjectName) {
   if (subjectName instanceof RegExp) {
-    for (let subject of this.subjects) {
+    for (const subject of this.subjects) {
       if (subject.subject.match(subjectName)) {
         return subject;
       }
     }
   } else {
-    return utility.arrayUtil.findNeedle(this.subjects, subjectName, true, "subject");
+    return utility.arrayUtil.findNeedle(
+        this.subjects,
+        subjectName,
+        true,
+        'subject',
+    );
   }
   return null;
 };
 
-semesterSchema.methods.subjectID = function (subjectName) {
-  for (let subject of this.subjects) {
+semesterSchema.methods.subjectID = function(subjectName) {
+  for (const subject of this.subjects) {
     if (subject.subject.match(subjectName)) {
       return subject._id;
     }
@@ -66,6 +69,7 @@ semesterSchema.methods.subjectID = function (subjectName) {
 };
 
 semesterSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;
-semesterSchema.methods.getLastListModification = utility.mongooseUtil.getLastListModification;
+semesterSchema.methods.getLastListModification =
+  utility.mongooseUtil.getLastListModification;
 
 module.exports = semesterSchema;
