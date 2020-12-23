@@ -26,14 +26,18 @@ router.post('/semester', (req, res, next) => {
                   branches: {
                     $elemMatch: {
                       'branch': query['branch'],
-                      'semesters.semester': {$ne: query['semester']['semester']},
+                      'semesters.semester': {
+                        $ne: query['semester']['semester'],
+                      },
                     },
                   },
                 },
               },
             },
             {
-              $push: {'courses.$[i].branches.$[j].semesters': query['semester']},
+              $push: {
+                'courses.$[i].branches.$[j].semesters': query['semester'],
+              },
               $currentDate: {
                 ...academiaServices.getDateUpdateDict('i', 'j'),
                 ...{

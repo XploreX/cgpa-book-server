@@ -22,6 +22,7 @@ const subjectSchema = new Schema({
   },
 });
 
-subjectSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;
+subjectSchema.methods.getLastModified =
+  utility.mongooseUtil.getLastModified;
 
 module.exports = subjectSchema;

@@ -82,7 +82,8 @@ collegeSchema.methods.getCourse = function(courseName) {
   return null;
 };
 
-collegeSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;
+collegeSchema.methods.getLastModified =
+  utility.mongooseUtil.getLastModified;
 collegeSchema.methods.getLastListModification =
   utility.mongooseUtil.getLastListModification;
 

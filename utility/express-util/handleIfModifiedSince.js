@@ -16,7 +16,9 @@ const CustomError = require(ROOT + '/CustomError');
 function handleIfModifiedSince(req, res, lastModified) {
   lastModified = Date.parse(lastModified);
   if (req.get(http.headers.IF_MODIFIED_SINCE)) {
-    const ifModifiedSince = Date.parse(req.get(http.headers.IF_MODIFIED_SINCE));
+    const ifModifiedSince = Date.parse(
+        req.get(http.headers.IF_MODIFIED_SINCE),
+    );
     if (ifModifiedSince >= lastModified) {
       res.sendStatus(StatusCodes.NOT_MODIFIED);
       const err = new CustomError(null, StatusCodes.NOT_MODIFIED);

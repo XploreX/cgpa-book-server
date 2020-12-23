@@ -39,7 +39,9 @@ function fillMissingData(query) {
                 $push: {courses: {course: query['course']}},
                 $currentDate: {
                   ...getDateUpdateDict(),
-                  ...{[academiaFields.TS_LAST_LIST_MODIFICATION]: true},
+                  ...{
+                    [academiaFields.TS_LAST_LIST_MODIFICATION]: true,
+                  },
                 },
               },
           ).exec();
@@ -64,7 +66,9 @@ function fillMissingData(query) {
               $push: {
                 'courses.$[i].branches': {
                   branch: query['branch'],
-                  abbreviation: utility.stringUtil.getAbbreviation(query['branch']),
+                  abbreviation: utility.stringUtil.getAbbreviation(
+                      query['branch'],
+                  ),
                 },
               },
               $currentDate: {
@@ -97,7 +101,9 @@ function fillMissingData(query) {
                   branches: {
                     $elemMatch: {
                       'branch': query['branch'],
-                      'semesters.semester': {$ne: query['semester']},
+                      'semesters.semester': {
+                        $ne: query['semester'],
+                      },
                     },
                   },
                 },

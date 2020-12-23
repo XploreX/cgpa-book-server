@@ -10,7 +10,11 @@ const express = require('express');
  * @param {Router} router
  * @return {Object}
  */
-function customRequireDirectoryRoutes(dir, pascalCase = false, router = null) {
+function customRequireDirectoryRoutes(
+    dir,
+    pascalCase = false,
+    router = null,
+) {
   if (router === null) {
     // eslint-disable-next-line new-cap
     router = express.Router();
