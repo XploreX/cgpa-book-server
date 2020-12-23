@@ -5,33 +5,39 @@ const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT + '/utility');
 const semesterSchema = require('./semester');
 
-var branchSchema = new Schema({
-    branch : {
-        type : String,
-        trim : true,
-        minlength : 1,
-    },
-    abbreviation : {
-        type : String,
-        trim : true ,
-        minlength : 1
-    },
-    semesters : [semesterSchema],
-    createdAt : {
-        type : 'Date',
-        default : Date.now
-    },
-    updatedAt : {
-        type : 'Date',
-        default: Date.now
-    },
-    lastListModification : {
-        type : Date,
-        default : Date.now
-    }
+const branchSchema = new Schema({
+  branch: {
+    type: String,
+    trim: true,
+    minlength: 1,
+  },
+  abbreviation: {
+    type: String,
+    trim: true,
+    minlength: 1,
+  },
+  semesters: [semesterSchema],
+  createdAt: {
+    type: 'Date',
+    default: Date.now,
+  },
+  updatedAt: {
+    type: 'Date',
+    default: Date.now,
+  },
+  lastListModification: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-branchSchema.path('semesters').validate(utility.mongooseUtil.validators.uniqueKeyVal('semester'),"Semester already exists","Value Error");
+branchSchema
+    .path('semesters')
+    .validate(
+        utility.mongooseUtil.validators.uniqueKeyVal('semester'),
+        'Semester already exists',
+        'Value Error',
+    );
 
 /* branchSchema.pre('validate',function(next) {
     // this.branch = getTitleForm(this.branch);
@@ -41,26 +47,30 @@ branchSchema.path('semesters').validate(utility.mongooseUtil.validators.uniqueKe
     next();
 }); */
 
-
-branchSchema.methods.addToList = function (semester) {
-    this.semesters.push(semester);
-    this.lastListModification = new Date();
-}
+branchSchema.methods.addToList = function(semester) {
+  this.semesters.push(semester);
+  this.lastListModification = new Date();
+};
 
 branchSchema.methods.getSemester = function(semesterNumber) {
-    return utility.arrayUtil.findNeedle(this.semesters,semesterNumber,'semester');
-}
+  return utility.arrayUtil.findNeedle(
+      this.semesters,
+      semesterNumber,
+      'semester',
+  );
+};
 
 branchSchema.methods.semesterID = function(semesterNumber) {
-    for(let semester of this.semesters) {
-        if(semester.semester == semesterNumber) {
-            return semester._id;
-        }
+  for (const semester of this.semesters) {
+    if (semester.semester == semesterNumber) {
+      return semester._id;
     }
-    return -1;
-}
+  }
+  return -1;
+};
 
 branchSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;
-branchSchema.methods.getLastListModification = utility.mongooseUtil.getLastListModification;
+branchSchema.methods.getLastListModification =
+  utility.mongooseUtil.getLastListModification;
 
-module.exports = branchSchema
+module.exports = branchSchema;

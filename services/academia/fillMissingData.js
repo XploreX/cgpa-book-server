@@ -64,8 +64,7 @@ function fillMissingData(query) {
               $push: {
                 'courses.$[i].branches': {
                   branch: query['branch'],
-                  abbreviation:
-              utility.stringUtil.getAbbreviation(query['branch']),
+                  abbreviation: utility.stringUtil.getAbbreviation(query['branch']),
                 },
               },
               $currentDate: {

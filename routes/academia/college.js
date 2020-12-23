@@ -59,9 +59,7 @@ router.get('/college-list', (req, res, next) => {
   const collegeList = [];
   CollegeHeader.getLastListModification()
       .then((lastListModification) => {
-        utility.expressUtil.handleIfModifiedSince(req,
-            res,
-            lastListModification);
+        utility.expressUtil.handleIfModifiedSince(req, res, lastListModification);
         res.set(utility.httpUtil.headers.LAST_MODIFIED, lastListModification);
         return College.find({college: query['college']})
             .select('college abbreviation')
