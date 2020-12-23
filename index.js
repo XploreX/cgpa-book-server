@@ -1,10 +1,10 @@
 const express = require('express');
 const morganBody = require('morgan-body');
 const errorMiddlewares = require('./middlewares/error');
-var app = express();
+const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 app.disable('etag');
 // app.use(morgan('combined'));
 
@@ -15,18 +15,18 @@ app.disable('etag');
     next();
 }); */
 
-morganBody(app,{
-    logAllReqHeader : true
+morganBody(app, {
+  logAllReqHeader: true,
 });
 
 app.use('/academia', require('./routes/academia'));
 // app.use('/users',require('./routers/uses.js'))
 
 app.get('/', (req, res) => {
-    res.status(200).send('Okaeri');
-})
+  res.status(200).send('Okaeri');
+});
 
-app.use('/user',require('./routes/user'));
+app.use('/user', require('./routes/user'));
 
 app.use(errorMiddlewares.notFoundHandler);
 app.use(errorMiddlewares.logErrors);
