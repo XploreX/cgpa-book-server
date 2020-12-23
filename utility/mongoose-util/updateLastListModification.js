@@ -1,8 +1,13 @@
+/**
+ *
+ * @param {Array} arr
+ *
+ */
 function updateLastListModification(arr) {
-    let current = new Date();
-    for(let item of arr) {
-        item.lastListModification = current;
-    }
+  const current = new Date();
+  for (const item of arr) {
+    item.lastListModification = current;
+  }
 }
 
 module.exports = updateLastListModification;
