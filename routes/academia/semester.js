@@ -4,8 +4,9 @@ const {StatusCodes} = require('http-status-codes');
 const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT + '/utility');
 const {College} = require(ROOT + '/models').academia;
-const academiaServices = require(ROOT + '/services/academia');
+const academiaService = require(ROOT + '/services/academia');
 const CustomError = require(ROOT + '/CustomError');
+// eslint-disable-next-line new-cap
 const router = express.Router();
 const academiaFields = require(ROOT + '/fields/academia');
 
@@ -14,7 +15,7 @@ const checkList = ['college', 'course', 'branch', 'semester'];
 router.post('/semester', (req, res, next) => {
   const query = req.body;
   utility.requestUtil.ensureCertainFields(query, checkList);
-  academiaServices
+  academiaService
       .fillMissingData(query)
       .then((queryRes) => {
         return College.updateOne(
@@ -39,7 +40,7 @@ router.post('/semester', (req, res, next) => {
                 'courses.$[i].branches.$[j].semesters': query['semester'],
               },
               $currentDate: {
-                ...academiaServices.getDateUpdateDict('i', 'j'),
+                ...academiaService.getDateUpdateDict('i', 'j'),
                 ...{
                   ['courses.$[i].branches.$[j].' +
               academiaFields.TS_LAST_LIST_MODIFICATION]: true,
@@ -54,7 +55,7 @@ router.post('/semester', (req, res, next) => {
             },
         ).exec();
       })
-      .then(academiaServices.checkDataFill)
+      .then(academiaService.checkDataFill)
       .then(() => {
       // res.sendStatus(StatusCodes.OK);
         res.sendStatus(StatusCodes.OK);
@@ -65,24 +66,34 @@ router.post('/semester', (req, res, next) => {
 router.get('/semester', (req, res, next) => {
   const query = req.query;
   utility.requestUtil.ensureCertainFields(query, checkList);
-  College.findOne({college: query['college']})
+  College.findOne(academiaService.getDataFindQuery(query), {
+    courses: {
+      $elemMatch: {
+        course: query['course'],
+        branches: {
+          $elemMatch: {
+            branch: query['branch'],
+            semesters: {
+              $elemMatch: {
+                semester: query['semester'],
+              },
+            },
+          },
+        },
+      },
+    },
+  })
       .exec()
       .then((college) => {
         if (!college) {
           return utility.responseUtil.sendEmptyDict(res);
         }
-        const course = college.getCourse(query['course']);
-        if (!course) {
-          return utility.responseUtil.sendEmptyDict(res);
-        }
+        const course = college.courses[0];
+
         const branch = course.getBranch(query['branch']);
-        if (!branch) {
-          return utility.responseUtil.sendEmptyDict(res);
-        }
+
         const semester = branch.getSemester(query['semester']);
-        if (!semester) {
-          return utility.responseUtil.sendEmptyDict(res);
-        }
+
         utility.expressUtil.handleIfModifiedSince(
             req,
             res,

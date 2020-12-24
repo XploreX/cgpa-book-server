@@ -42,24 +42,35 @@ router.post('/course', (req, res, next) => {
 router.get('/course', (req, res, next) => {
   const query = req.query;
   utility.requestUtil.ensureCertainFields(query, checkList);
-  College.findOne({college: query['college']})
+  College.findOne(
+      academiaServices.getDataFindQuery(query),
+      {
+        courses: {
+          $elemMatch: {
+            course: query['course'],
+            branches: {
+              $elemMatch: {
+                branch: query['branch'] || /.*/,
+              },
+            },
+          },
+        },
+      },
+  )
       .exec()
       .then((college) => {
         if (!college) {
           return utility.responseUtil.sendEmptyDict(res);
         }
-        const course = college.getCourse(query['course']);
-        if (!course) {
-          return utility.responseUtil.sendEmptyDict(res);
-        }
+        const course = college.courses[0];
         utility.expressUtil.handleIfModifiedSince(
             req,
             res,
-            course.getLastModified(),
+            course[academiaFields.TS_UPDATED_AT],
         );
         res.append(
             utility.httpUtil.headers.LAST_MODIFIED,
-            course.getLastModified(),
+            course[academiaFields.TS_UPDATED_AT],
         );
         res.status(StatusCodes.OK).json(course);
       })

@@ -53,20 +53,30 @@ router.post('/branch', (req, res, next) => {
 router.get('/branch', (req, res, next) => {
   const query = req.query;
   utility.requestUtil.ensureCertainFields(query, checkList);
-  College.findOne({college: query['college']})
+  College.findOne(
+      academiaServices.getDataFindQuery(query),
+      {
+        'courses': {
+          $elemMatch: {
+            course: query['course'],
+            branches: {
+              $elemMatch: {
+                branch: query['branch'],
+              },
+            },
+          },
+        },
+      },
+  )
       .exec()
       .then((college) => {
         if (!college) {
           return utility.responseUtil.sendEmptyDict(res);
         }
-        const course = college.getCourse(query['course']);
-        if (!course) {
-          return utility.responseUtil.sendEmptyDict(res);
-        }
+        console.log(college);
+        const course = college.courses[0];
         const branch = course.getBranch(query['branch']);
-        if (!branch) {
-          return utility.eresponseUtilsendEmptyDict(res);
-        }
+
         utility.expressUtil.handleIfModifiedSince(
             req,
             res,

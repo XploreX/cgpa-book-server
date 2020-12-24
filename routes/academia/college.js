@@ -4,6 +4,7 @@ const {StatusCodes} = require('http-status-codes');
 const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT + '/utility');
 const {College, CollegeHeader} = require(ROOT + '/models').academia;
+const academiaService = require(ROOT + '/services/academia');
 
 // eslint-disable-next-line new-cap
 const router = express.Router();
@@ -28,7 +29,7 @@ router.post('/college', (req, res, next) => {
 router.get('/college', (req, res, next) => {
   const query = req.query;
   utility.requestUtil.ensureCertainFields(query, checkList);
-  College.findOne({college: query['college']})
+  College.findOne(academiaService.getDataFindQuery(query))
       .exec()
       .then((college) => {
         if (!college) {
