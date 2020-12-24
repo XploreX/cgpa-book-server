@@ -21,7 +21,24 @@ Easy to use API to retrieve information about courses, semesters, subjects and g
 #### API base url: [https://api-rhapsody.herokuapp.com](https://api-rhapsody.herokuapp.com)
 
 - All the criteria conditions have to be passed as url query parameter
+- Data is said to satisfy given criteria conditions if:
+  - Values in query parameter is substring of the values in said data's parameters , for example , if query parameters are ,
+    ```
+    college: collegeName,
+    course: courseName,
+    branch: branchName
+    ```
+    And request is made to retrieve all information of a college, then information of first college that will satisfy all
+    the criterias will be returned.   
+    A college will be said to satisfy all these queries if , college name contains a substring `collegeName` **and** college contains
+    any course such that 
+      - course name have a substring `courseName` 
+      - course have any branch that have a substring `branchName`
+    
+   - Value in query parameter matches value in said data's parameter exactly in case of numerical values (semester parameter)
+  
 - All APIs support conditional requests containing `If-Modified-Since` header 
+  
  <br /> 
  <br />
  
@@ -48,3 +65,5 @@ Optional criterias:
 - course
 - branch
 - semester
+
+Information of first college which satisfy all the given criterias is returned .
