@@ -21,22 +21,21 @@ Easy to use API to retrieve information about courses, semesters, subjects and g
 #### API base url: [https://api-rhapsody.herokuapp.com](https://api-rhapsody.herokuapp.com)
 
 - All the criteria conditions have to be passed as url query parameter
-- Data is said to satisfy given criteria conditions if:
+- Data is said to satisfy given query parameters conditions if:
   - Values in query parameter is substring of the values in said data's parameters , for example , if query parameters are ,
     ```
     college: collegeName,
     course: courseName,
     branch: branchName
     ```
-    And request is made to retrieve all information of a college, then information of first college that will satisfy all
-    the criterias will be returned.   
-    A college will be said to satisfy all these queries if , college name contains a substring `collegeName` **and** college contains
-    any course such that 
+    And request is made to retrieve all information of a college, then information of first college that will satisfy **all
+    query parameters** will be returned.   
+    A college will be said to satisfy all these query parameters if , college name contains a substring `collegeName` **and**
+    college contains any course such that 
       - course name have a substring `courseName` 
       - course have any branch that have a substring `branchName`
-    
    - Value in query parameter matches value in said data's parameter exactly in case of numerical values (semester parameter)
-  
+- `ignorecase: true` query parameter can be added in the request to make all searches(college, course, branch, subject) case insensitive  
 - All APIs support conditional requests containing `If-Modified-Since` header 
   
  <br /> 
@@ -67,3 +66,17 @@ Optional criterias:
 - semester
 
 Information of first college which satisfy all the given criterias is returned .
+
+For examples , 
+Sample Request: 
+```
+https://api-rhapsody.herokuapp.com/academia/college?college=university school of &course=bachelor&branch=computer&ignorecase=true
+```
+
+Query parameters passed in this request are:
+```
+college: university school of 
+course: bachelor
+branch: computer
+ignorecase: true
+```
