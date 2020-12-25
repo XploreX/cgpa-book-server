@@ -1,5 +1,6 @@
 const express = require('express');
-const StatusCodes = {require('http-status-codes')};
+const {auth} = require('google-auth-library');
+const {StatusCodes} = require('http-status-codes');
 
 const config = require(__dirname + '/../../config');
 const utility = require(config.ROOT + '/utility');
@@ -17,9 +18,17 @@ router.get('/*', (req, res, next) => {
 });
 
 router.post('/*', (req, res, next) => {
-  const credentials=req.get('Authorization').split()[1];
+  let authorizationHeader = req.get('Authorization');
+  let credentials = '';
+  if (authorizationHeader) {
+    authorizationHeader = authorizationHeader.split(' ');
+    credentials = authorizationHeader[1] || '';
+  }
   if (credentials !== config.API_SECRET) {
-    throw new CustomError("Incorrect or missing credentials",StatusCodes.UNAUTHORIZED);
+    throw new CustomError(
+        'Incorrect or missing credentials',
+        StatusCodes.UNAUTHORIZED,
+    );
   }
   next();
 });
