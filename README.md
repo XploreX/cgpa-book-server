@@ -20,6 +20,7 @@ Easy to use API to retrieve information about courses, semesters, subjects and g
 ### Documentation
 #### API base url: [https://api-rhapsody.herokuapp.com](https://api-rhapsody.herokuapp.com)
 
+- Response from the API will always be in `json` format.
 - All the criteria conditions have to be passed as url query parameter
 - Data is said to satisfy given query parameters conditions if:
   - Values in query parameter is substring of the values in said data's parameters , for example , if query parameters are ,
@@ -43,12 +44,12 @@ Easy to use API to retrieve information about courses, semesters, subjects and g
  
 | Request Method| API endpoint                  | Brief description                                                                                                                 |
 |---------------|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-|`GET`          |[/academia/college]()          | Get all information(courses, branches, semesters, grading schemas) of first college which satisfy given criterias                 |                
-|`GET`          |[/academia/college-list]()     | Get list of all colleges supported by this api                                                                                    |
-|`GET`          |[/academia/course]()           | Get all information(branches, semesters, grading schemas) of first course which satisfy given criterias                           |                  
-|`GET`          |[/academia/course-list]()      | Get list of all courses of a college                                                                                              |   
-|`GET`          |[/academia/branch]()           | Get all information(semesters, grading schema) of first branch which satisfy given criterias                                      |       
-|`GET`          |[/academia/branch-list]()      | Get list of all branches of first course satisfying given criterias                                                               |   
+|`GET`          |[/academia/college](#/college)          | Get all information(courses, branches, semesters, grading schemas) of first college which satisfy given criterias                 |                
+|`GET`          |[/academia/college-list](#/college-list)     | Get list of all colleges supported by this api                                                                                    |
+|`GET`          |[/academia/course](#/course)           | Get all information(branches, semesters, grading schemas) of first course which satisfy given criterias                           |                  
+|`GET`          |[/academia/course-list](#/course-list)      | Get list of all courses of a college                                                                                              |   
+|`GET`          |[/academia/branch](#/branch)           | Get all information(semesters, grading schema) of first branch which satisfy given criterias                                      |       
+|`GET`          |[/academia/branch-list](#/branch-list)      | Get list of all branches of first course satisfying given criterias                                                               |   
 |`GET`          |[/academia/semester]()         | Get all information(subjects, grading schema) of first semester which satisfy given criterias                                     |        
 |`GET`          |[/academia/semester-list]()    | Get list of semesters of first branch satisfying given criterias                                                                  |   
 |`GET`          |[/academia/subject]()          | Get all information(grading schema) of first subject which satisfy given criterias                                                |   
@@ -57,15 +58,12 @@ Easy to use API to retrieve information about courses, semesters, subjects and g
 
 #### /college `GET`
 
-Required criterias: 
-- college
+| Required url query parameters | Optional url query parameters |
+| ------------------------------| ----------------------------- |
+| college                       | course, branch, ignorecase    |
 
-Optional criterias:
-- course
-- branch
-- semester
 
-Information of first college which satisfy all the given criterias is returned .
+Information of first college which satisfy all the given query parameters is returned .
 
 For examples , 
 Sample Request: 
@@ -80,3 +78,48 @@ course: bachelor
 branch: computer
 ignorecase: true
 ```
+
+ #### /college-list `GET`
+ 
+ Returns list of colleges supported by this API .
+ 
+ #### /course `GET`
+ 
+| Required url query parameters | Optional url query parameters |
+| ------------------------------| ----------------------------- |
+| college, course               |  branch, ignorecase           |
+
+Information of first course which satisfy all the given query parameters is returned.
+
+#### /course-list `GET`
+
+| Required url query parameters | Optional url query parameters |
+| ------------------------------| ----------------------------- |
+| college                       |                               |
+
+Returns list of courses of first college which satisfy all the given query parameters.
+
+#### /branch `GET`
+
+| Required url query parameters | Optional url query parameters |
+| ------------------------------| ----------------------------- |
+| college, course, branch       | ignorecase                    |
+
+Returns information of first branch which satisfy all the given query parameters.
+
+#### /branch-list `GET`
+
+| Required url query parameters | Optional url query parameters |
+| ------------------------------| ----------------------------- |
+| college, course               | ignorecase                    |
+
+Returns list of branch of first course which satisfy all the given query parameters.
+
+#### /semester `GET`
+
+#### /semester-list `GETE`
+
+
+### License
+This project is licensed under Apache-2.0 License. See the license [here](/LICENSE)
+ 
