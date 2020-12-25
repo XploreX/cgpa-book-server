@@ -44,12 +44,12 @@ Easy to use API to retrieve information about courses, semesters, subjects and g
  
 | Request Method| API endpoint                  | Brief description                                                                                                                 |
 |---------------|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-|`GET`          |[/academia/college](#/college)          | Get all information(courses, branches, semesters, grading schemas) of first college which satisfy given criterias                 |                
-|`GET`          |[/academia/college-list](#/college-list)     | Get list of all colleges supported by this api                                                                                    |
-|`GET`          |[/academia/course](#/course)           | Get all information(branches, semesters, grading schemas) of first course which satisfy given criterias                           |                  
-|`GET`          |[/academia/course-list](#/course-list)      | Get list of all courses of a college                                                                                              |   
-|`GET`          |[/academia/branch](#/branch)           | Get all information(semesters, grading schema) of first branch which satisfy given criterias                                      |       
-|`GET`          |[/academia/branch-list](#/branch-list)      | Get list of all branches of first course satisfying given criterias                                                               |   
+|`GET`          |[/academia/college](#college-get)          | Get all information(courses, branches, semesters, grading schemas) of first college which satisfy given criterias                 |                
+|`GET`          |[/academia/college-list](#college-list-get)     | Get list of all colleges supported by this api                                                                                    |
+|`GET`          |[/academia/course](#course-get)           | Get all information(branches, semesters, grading schemas) of first course which satisfy given criterias                           |                  
+|`GET`          |[/academia/course-list](#course-list-get)      | Get list of all courses of a college                                                                                              |   
+|`GET`          |[/academia/branch](#branch-get)           | Get all information(semesters, grading schema) of first branch which satisfy given criterias                                      |       
+|`GET`          |[/academia/branch-list](#branch-list-get)      | Get list of all branches of first course satisfying given criterias                                                               |   
 |`GET`          |[/academia/semester]()         | Get all information(subjects, grading schema) of first semester which satisfy given criterias                                     |        
 |`GET`          |[/academia/semester-list]()    | Get list of semesters of first branch satisfying given criterias                                                                  |   
 |`GET`          |[/academia/subject]()          | Get all information(grading schema) of first subject which satisfy given criterias                                                |   
@@ -117,7 +117,7 @@ Returns list of branch of first course which satisfy all the given query paramet
 
 #### /semester `GET`
 
-#### /semester-list `GETE`
+#### /semester-list `GET`
 
 
 ### License
