@@ -3,7 +3,7 @@
 Disclaimer:
 This project is not affiliated with GGSIPU or any other government entity.It is maintained by student volunteers only.
 ```
-Easy to use API to retrieve information about courses, semesters, subjects and grading schema of 120+ GGSIPU (Guru Gobind Singh Indraprastha Public University) colleges .
+Easy to use API to retrieve information about courses, semesters, subjects and grading schema of 120+ GGSIPU (Guru Gobind Singh Indraprastha University) colleges .
 
 ## Table of Contents
 - [Features](#features)
