@@ -9,7 +9,7 @@ Easy to use API to retrieve information about courses, semesters, subjects and g
 - [Features](#features)
 - [Documentation](#documentation)
 - [License](#license)
-
+- [Noticed any bugs or have any suggestions?](#noticed-any-bugs-or-have-any-suggestions)
 
 ### Features
 - Informations like courses in college, branches in some course, semesters in a branch, subjects in some semester,
@@ -117,9 +117,23 @@ Returns list of branch of first course which satisfy all the given query paramet
 
 #### /semester `GET`
 
+| Required url query parameters           | Optional url query parameters |
+| ----------------------------------------| ----------------------------- |
+| college, course, branch, semester       | ignorecase                    |
+
+Returns information of first semester which satisfy all the given query parameters.
+
 #### /semester-list `GET`
 
+| Required url query parameters | Optional url query parameters |
+| ------------------------------| ----------------------------- |
+| college, course, branch       | ignorecase                    |
+
+Returns list of semester of first branch which satisfy all the given query parameters.
+
+### Noticed any bugs or have any suggestions?
+
+Feel free to open up [issue](https://github.com/XploreX/cgpa-book-server/issues) and we will try to work on them
 
 ### License
 This project is licensed under Apache-2.0 License. See the license [here](/LICENSE)
- 
