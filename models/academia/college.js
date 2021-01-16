@@ -34,14 +34,6 @@ const collegeSchema = new Schema({
   },
 });
 
-collegeSchema
-    .path('courses')
-    .validate(
-        utility.mongooseUtil.validators.uniqueKeyVal('course'),
-        'Course already exists',
-        'Value Error',
-    );
-
 collegeSchema.pre('validate', function(next) {
   // this.college = getTitleForm(this.college);
   if (!this.abbreviation) {
@@ -49,20 +41,6 @@ collegeSchema.pre('validate', function(next) {
   }
   next();
 });
-
-collegeSchema.methods.addToList = function(course) {
-  this.courses.push(course);
-  this.lastListModification = new Date();
-};
-
-collegeSchema.methods.courseId = function(courseName) {
-  for (const course of this.courses) {
-    if (course.course.match(courseName)) {
-      return course._id;
-    }
-  }
-  return -1;
-};
 
 collegeSchema.methods.getCourse = function(courseName) {
   if (courseName instanceof RegExp) {

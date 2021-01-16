@@ -31,42 +31,12 @@ const branchSchema = new Schema({
   },
 });
 
-branchSchema
-    .path('semesters')
-    .validate(
-        utility.mongooseUtil.validators.uniqueKeyVal('semester'),
-        'Semester already exists',
-        'Value Error',
-    );
-
-/* branchSchema.pre('validate',function(next) {
-    // this.branch = getTitleForm(this.branch);
-    if(!this.abbreviation) {
-        this.abbreviation = utility.stringUtil.getAbbreviation(this.branch);
-    }
-    next();
-}); */
-
-branchSchema.methods.addToList = function(semester) {
-  this.semesters.push(semester);
-  this.lastListModification = new Date();
-};
-
 branchSchema.methods.getSemester = function(semesterNumber) {
   return utility.arrayUtil.findNeedle(
       this.semesters,
       semesterNumber,
       'semester',
   );
-};
-
-branchSchema.methods.semesterID = function(semesterNumber) {
-  for (const semester of this.semesters) {
-    if (semester.semester == semesterNumber) {
-      return semester._id;
-    }
-  }
-  return -1;
 };
 
 branchSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;

@@ -33,19 +33,6 @@ const courseSchema = new Schema({
   },
 });
 
-courseSchema
-    .path('branches')
-    .validate(
-        utility.mongooseUtil.validators.uniqueKeyVal('branch'),
-        'Branch already exists',
-        'Value Error',
-    );
-
-courseSchema.methods.addToList = function(branch) {
-  this.branches.push(branch);
-  this.lastListModification = new Date();
-};
-
 courseSchema.methods.getBranch = function(branchName) {
   if (branchName instanceof RegExp) {
     for (const branch of this.branches) {
@@ -62,15 +49,6 @@ courseSchema.methods.getBranch = function(branchName) {
     );
   }
   return null;
-};
-
-courseSchema.methods.branchID = function(branchName) {
-  for (const branch of this.branches) {
-    if (branch.branch.match(branchName)) {
-      return branch._id;
-    }
-  }
-  return -1;
 };
 
 courseSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;

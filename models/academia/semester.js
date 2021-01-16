@@ -7,7 +7,7 @@ const subjectSchema = require('./subject.js');
 
 const semesterSchema = new Schema({
   semester: {
-    type: Number,
+    type: String,
     required: true,
   },
   creditsTotal: {
@@ -36,10 +36,6 @@ semesterSchema.pre('save', function(next) {
   next();
 });
 
-semesterSchema.methods.addToList = function(subject) {
-  this.subjects.push(subject);
-  this.lastListModification = new Date();
-};
 
 semesterSchema.methods.getSubject = function(subjectName) {
   if (subjectName instanceof RegExp) {
@@ -57,15 +53,6 @@ semesterSchema.methods.getSubject = function(subjectName) {
     );
   }
   return null;
-};
-
-semesterSchema.methods.subjectID = function(subjectName) {
-  for (const subject of this.subjects) {
-    if (subject.subject.match(subjectName)) {
-      return subject._id;
-    }
-  }
-  return -1;
 };
 
 semesterSchema.methods.getLastModified =
