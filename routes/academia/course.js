@@ -33,7 +33,7 @@ router.post('/course', (req, res, next) => {
         ).exec();
       })
       .then(academiaServices.checkDataFill)
-      .then((doc) => {
+      .then(() => {
         res.sendStatus(StatusCodes.OK);
       })
       .catch(next);
@@ -44,25 +44,13 @@ router.get('/course', (req, res, next) => {
   utility.requestUtil.ensureCertainFields(query, checkList);
   College.findOne(
       academiaServices.getDataFindQuery(query),
-      {
-        courses: {
-          $elemMatch: {
-            course: query['course'],
-            branches: {
-              $elemMatch: {
-                branch: query['branch'] || /.*/,
-              },
-            },
-          },
-        },
-      },
   )
       .exec()
       .then((college) => {
         if (!college) {
           return utility.responseUtil.sendEmptyDict(res);
         }
-        const course = college.courses[0];
+        const course = college.getCourse(query['course']);
         utility.expressUtil.handleIfModifiedSince(
             req,
             res,

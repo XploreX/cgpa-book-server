@@ -5,7 +5,6 @@ const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT + '/utility');
 const {College} = require(ROOT + '/models').academia;
 const academiaService = require(ROOT + '/services/academia');
-const CustomError = require(ROOT + '/CustomError');
 // eslint-disable-next-line new-cap
 const router = express.Router();
 const academiaFields = require(ROOT + '/fields/academia');
@@ -66,32 +65,14 @@ router.post('/semester', (req, res, next) => {
 router.get('/semester', (req, res, next) => {
   const query = req.query;
   utility.requestUtil.ensureCertainFields(query, checkList);
-  College.findOne(academiaService.getDataFindQuery(query), {
-    courses: {
-      $elemMatch: {
-        course: query['course'],
-        branches: {
-          $elemMatch: {
-            branch: query['branch'],
-            semesters: {
-              $elemMatch: {
-                semester: query['semester'],
-              },
-            },
-          },
-        },
-      },
-    },
-  })
+  College.findOne(academiaService.getDataFindQuery(query))
       .exec()
       .then((college) => {
         if (!college) {
           return utility.responseUtil.sendEmptyDict(res);
         }
-        const course = college.courses[0];
-
+        const course = college.getCourse(query['course']);
         const branch = course.getBranch(query['branch']);
-
         const semester = branch.getSemester(query['semester']);
 
         utility.expressUtil.handleIfModifiedSince(
@@ -131,17 +112,23 @@ router.get('/semester-list', (req, res, next) => {
             res,
             branch.getLastListModification(),
         );
-        const semesterList = [];
-        for (semester of branch.semesters) {
-          semesterList.push(semester.semester);
-        }
-        semesterList.sort((a, b) => {
-          return a - b;
-        });
         res.set(
             utility.httpUtil.headers.LAST_MODIFIED,
             branch.getLastListModification(),
         );
+        const semesterList = [];
+        for (semester of branch.semesters) {
+          semesterList.push(semester.semester);
+        }
+        semesterList.sort((a, b)=>{
+          if (!isNaN(a) && !isNaN(b)) {
+            return Number(a)-Number(b);
+          } else if (!isNaN(a)) {
+            return -1;
+          } else {
+            return 1;
+          }
+        });
         res.status(StatusCodes.OK).json(semesterList);
       })
       .catch(next);
