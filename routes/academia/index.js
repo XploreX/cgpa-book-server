@@ -1,5 +1,4 @@
 const express = require('express');
-const {auth} = require('google-auth-library');
 const {StatusCodes} = require('http-status-codes');
 
 const config = require(__dirname + '/../../config');

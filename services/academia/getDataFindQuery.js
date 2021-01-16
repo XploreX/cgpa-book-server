@@ -4,22 +4,38 @@
  * @param {Object} query
  * @return {Object}
  */
-function getFindQuery(query) {
-  const matchEverything = /.*/;
-  return {
-    college: query['college'] || matchEverything,
-    courses: {
+function getDataFindQuery(query) {
+  const queryDict = {};
+  if (query['college']) {
+    queryDict['college'] = query['college'];
+  }
+
+  if (query['course']) {
+    queryDict['courses'] = {
       $elemMatch: {
-        course: query['course'] || matchEverything,
-        branches: {
-          $elemMatch: {
-            branch: query['branch'] || matchEverything,
-          },
-        },
+        course: query['course'],
       },
-    },
-  };
+    };
+  }
+
+  if (query['branch']) {
+    queryDict['courses']['$elemMatch']['branches'] = {
+      $elemMatch: {
+        branch: query['branch'],
+      },
+    };
+  }
+
+  if (query['semester']) {
+    queryDict['courses']['$elemMatch']['branches']['$elemMatch'][
+        'semesters'
+    ] = {
+      $elemMatch: {
+        semester: query['semester'],
+      },
+    };
+  }
+  return queryDict;
 }
 
-module.exports = getFindQuery
-;
+module.exports = getDataFindQuery;

@@ -15,9 +15,6 @@ function prepareQuery(query) {
       query['ignorecase'] = false;
     }
   }
-  if ('semester' in query) {
-    query['semester'] = Number(query['semester']);
-  }
   for (key in query) {
     // console.log(key);
     if (typeof query[key] === 'string') {
