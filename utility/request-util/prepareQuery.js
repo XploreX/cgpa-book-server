@@ -17,7 +17,7 @@ function prepareQuery(query) {
   }
   for (key in query) {
     // console.log(key);
-    if (typeof query[key] === 'string') {
+    if (typeof query[key] === 'string' && key!='semester') {
       // console.log(key + " is string");
       query[key] = query[key].replace('(', '\\(');
       query[key] = query[key].replace(')', '\\)');
