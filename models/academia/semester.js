@@ -10,6 +10,7 @@ const semesterSchema = new Schema({
     type: String,
     required: true,
   },
+  semesterNameHistory: [String],
   creditsTotal: {
     type: Number,
   },

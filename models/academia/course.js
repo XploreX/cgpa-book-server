@@ -13,6 +13,7 @@ const courseSchema = new Schema({
     trim: true,
     minlength: 1,
   },
+  courseNameHistory: [String],
   branches: [branchSchema],
   gpaMetric: {
     type: String,
