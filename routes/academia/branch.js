@@ -54,7 +54,7 @@ router.get('/branch', (req, res, next) => {
   const query = req.query;
   utility.requestUtil.ensureCertainFields(query, checkList);
   College.findOne(
-      academiaServices.getDataFindQuery(query),
+      academiaServices.createFindQuery(query),
   )
       .exec()
       .then((college) => {

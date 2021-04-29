@@ -29,7 +29,7 @@ router.post('/college', (req, res, next) => {
 router.get('/college', (req, res, next) => {
   const query = req.query;
   utility.requestUtil.ensureCertainFields(query, checkList);
-  College.findOne(academiaService.getDataFindQuery(query))
+  College.findOne(academiaService.createFindQuery(query))
       .exec()
       .then((college) => {
         if (!college) {
