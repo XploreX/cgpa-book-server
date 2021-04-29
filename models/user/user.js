@@ -10,17 +10,14 @@ const userSchema = new Schema(
         trim: true,
         minlength: 1,
       },
-      college: {
-        type: 'String',
-        trim: true,
+      collegeId: {
+        type: mongoose.ObjectId,
       },
-      course: {
-        type: 'String',
-        trim: true,
+      courseId: {
+        type: 'Number',
       },
-      branch: {
-        type: 'String',
-        trim: true,
+      branchId: {
+        type: 'Number',
       },
       unlocked: {
         type: 'Number',
