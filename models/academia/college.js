@@ -14,6 +14,7 @@ const collegeSchema = new Schema({
     unique: true,
     index: true,
   },
+  collegeNameHistory: [String],
   abbreviation: {
     type: String,
     trim: true,

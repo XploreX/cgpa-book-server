@@ -11,6 +11,7 @@ const branchSchema = new Schema({
     trim: true,
     minlength: 1,
   },
+  branchNameHistory: [String],
   abbreviation: {
     type: String,
     trim: true,
