@@ -1,4 +1,4 @@
-const ROOT = require(__dirname + '/../config');
+const ROOT = require(__dirname + '/../config').ROOT;
 const academiaFields = require(ROOT + '/fields/academia');
 
 module.exports = Object.freeze({

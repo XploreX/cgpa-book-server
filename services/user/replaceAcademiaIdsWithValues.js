@@ -1,6 +1,6 @@
 const {StatusCodes} = require('http-status-codes');
 
-const ROOT = require(__driname + '/../../config');
+const ROOT = require(__dirname + '/../../config').ROOT;
 const academiaServices = require(ROOT + '/services/academia');
 const {College} = require(ROOT + '/models/academia');
 const CustomError = require(ROOT + '/CustomError');
