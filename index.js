@@ -18,10 +18,14 @@ if (process.env.NODE_ENV == 'development') {
   });
 }
 
-morganBody(app, {
-  logAllReqHeader: true,
-  logResponseBody: false,
-});
+let morganBodyConfig = {};
+if (process.env.NODE_ENV == 'development') {
+  morganBodyConfig = {
+    logAllReqHeader: true,
+    logResponseBody: true,
+  };
+}
+morganBody(app, morganBodyConfig);
 
 app.use('/academia', require('./routes/academia'));
 // app.use('/users',require('./routers/uses.js'))
