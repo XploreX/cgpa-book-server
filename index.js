@@ -8,15 +8,19 @@ app.use(express.urlencoded({extended: true}));
 app.disable('etag');
 // app.use(morgan('combined'));
 
-/* app.use((req,res,next) => {
-    console.log("req.params =",req.params);
-    console.log("req.headers =",req.headers);
-    console.log("req.body =",req.body);
+if (process.env.NODE_ENV == 'development') {
+  app.use((req, res, next) => {
+    console.log('req.query =', req.query);
+    // console.log('req.params =', req.params);
+    // console.log('req.headers =', req.headers);
+    console.log('req.body =', req.body);
     next();
-}); */
+  });
+}
 
 morganBody(app, {
   logAllReqHeader: true,
+  logResponseBody: false,
 });
 
 app.use('/academia', require('./routes/academia'));

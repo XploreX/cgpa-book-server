@@ -85,10 +85,10 @@ const queryFieldMap = Object.freeze({
  */
 function createFindQuery(query) {
   const queryDict = {};
-  const relevantQueryDict = queryDict;
+  let relevantQueryDict = queryDict;
   const criteria = ['college', 'course', 'branch', 'semester', 'subject'];
-  for (const criterion of criteria) {
-    if (criteria != 'college') {
+  for (let criterion of criteria) {
+    if (criterion != 'college') {
       let field = criterion;
       if (field == 'branch') {
         field += 'e';
