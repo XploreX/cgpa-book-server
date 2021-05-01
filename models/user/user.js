@@ -11,7 +11,7 @@ const userSchema = new Schema(
         minlength: 1,
       },
       collegeId: {
-        type: mongoose.ObjectId,
+        type: 'Number',
       },
       courseId: {
         type: 'Number',
