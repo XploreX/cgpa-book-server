@@ -1,7 +1,10 @@
 name: npm linter
 
-on: [push]
-branches: [lint-tester]
+on: 
+  push:
+    branches: 
+      lint-tester
+
 jobs:
   lint:
     runs-on: ubuntu-latest
