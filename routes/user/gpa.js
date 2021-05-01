@@ -15,9 +15,10 @@ router.get('/gpa-data', authenticateUser, (req, res, next) => {
       .exec()
       .then((user) => {
         if (user === null) {
-          user = {};
+          return {};
+        } else {
+          return userServices.replaceAcademiaIdsWithValues(user.toObject());
         }
-        return userServices.replaceAcademiaIdsWithValues(user.toObject());
       })
       .then((user) => {
         res.status(StatusCodes.OK).json(user);
