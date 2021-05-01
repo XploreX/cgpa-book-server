@@ -1,5 +1,4 @@
 const {StatusCodes} = require('http-status-codes');
-
 const ROOT = require(__dirname + '/../../config').ROOT;
 const academiaServices = require(ROOT + '/services/academia');
 const {College} = require(ROOT + '/models/academia');
@@ -14,16 +13,17 @@ const userFields = require(ROOT + '/fields/user');
  */
 function getByIdMethodName(key) {
   key = key.toLowerCase();
-  key = key.slice(0).toUpperCase() + key.slice(1);
+  key = key.slice(0, 1).toUpperCase() + key.slice(1);
   return 'get' + key + 'ById';
 }
 
 /**
  * Replace academia ids info with the corresponding values info.
  * @param {object} user object containing user information
+ * @return {object}
  */
 function replaceAcademiaIdsWithValues(user) {
-  College.findOne(academiaServices.createFindQuery(user))
+  return College.findOne(academiaServices.createFindQuery(user))
       .exec()
       .then((college) => {
         if (!college) {
@@ -33,14 +33,20 @@ function replaceAcademiaIdsWithValues(user) {
           );
         }
 
-        const academiaOrder = ['college', 'course', 'branch', 'semester'];
         const mp = {};
-        mp['college'] = college;
+        const academiaOrder = ['college', 'course', 'branch'];
 
+        // initialize all academia value fields
+        for (const item of academiaOrder) {
+          const key = academiaFields[item.toUpperCase()];
+          user[key] = '';
+        }
+
+        mp['college'] = college;
         for (let i=0; i<academiaOrder.length; ++i) {
           const key = academiaOrder[i];
           const keyIdField = userFields[key.toUpperCase() + '_ID'];
-          if (!keyIdField) {
+          if (!user[keyIdField]) {
             break;
           }
           if (i!=0) {
@@ -48,10 +54,17 @@ function replaceAcademiaIdsWithValues(user) {
             mp[key] = mp[prevKey][getByIdMethodName(key)](user[keyIdField]);
           }
           const value = mp[key][key];
-          key = key.toUpperCase();
-          user[academiaFields[key]] = value;
-          delete user[keyIdField];
+          user[academiaFields[key.toUpperCase()]] = value;
         }
+
+        // clean up
+        for (const item of academiaOrder) {
+          const keyIdField = userFields[item.toUpperCase() + '_ID'];
+          if (keyIdField in user) {
+            delete user[keyIdField];
+          }
+        }
+        return user;
       });
 }
 

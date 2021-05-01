@@ -17,17 +17,21 @@ router.get('/gpa-data', authenticateUser, (req, res, next) => {
         if (user === null) {
           user = {};
         }
-        userServices.replaceAcademiaValuesWithIds(user);
+        return userServices.replaceAcademiaIdsWithValues(user.toObject());
+      })
+      .then((user) => {
         res.status(StatusCodes.OK).json(user);
       })
       .catch(next);
 });
 
 router.post('/gpa-data', authenticateUser, (req, res, next) => {
-  userServices.replaceAcademiaValuesWithIds(req.user);
-  req.body.email = req.user.email;
-  User.findOne({email: req.user.email})
-      .exec()
+  userServices
+      .replaceAcademiaValuesWithIds(req.body)
+      .then(() => {
+        req.body.email = req.user.email;
+        return User.findOne({email: req.user.email}).exec();
+      })
       .then((user) => {
         if (user === null) {
           user = new User(req.body);

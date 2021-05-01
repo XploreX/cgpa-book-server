@@ -1,10 +1,11 @@
 const {StatusCodes} = require('http-status-codes');
-
+const _ = require('lodash');
 const ROOT = require(__dirname + '/../../config').ROOT;
 const {College} = require(ROOT + '/models/academia');
 const academiaServices = require(ROOT + '/services/academia');
 const academiaFields = require(ROOT + '/fields/academia');
 const userFields = require(ROOT + '/fields/user');
+const CustomError = require(ROOT + '/CustomError');
 
 /**
  * Create key denoting possible former name of the
@@ -14,8 +15,8 @@ const userFields = require(ROOT + '/fields/user');
  */
 function possiblyFormerKey(key) {
   key = key.toLowerCase();
-  key = key.slice(0).toUpperCase() + key.slice(1);
-  return 'possibleFormer' + key + 'Name';
+  key = key.substring(0, 1).toUpperCase() + key.substring(1);
+  return 'possiblyFormer' + key + 'Name';
 }
 
 /**
@@ -25,22 +26,24 @@ function possiblyFormerKey(key) {
  */
 function getByFormerMethodName(key) {
   key = key.toLowerCase();
-  key = key.slice(0).toUpperCase() + key.slice(1);
+  key = key.substring(0, 1).toUpperCase() + key.substring(1);
   return 'get' + key + 'ByFormerName';
 }
 
 /**
  * Replace academia values info with the corresponding IDs info.
  * @param {object} user - object containing user information
+ * @return {promise}
  */
 function replaceAcademiaValuesWithIds(user) {
-  critera = ['college', 'course', 'branch', 'seemster'];
+  critera = ['college', 'course', 'branch', 'semster'];
   query = {};
   for (const criterion of critera) {
+    user[criterion] = new RegExp(_.escapeRegExp(user[criterion]), 'i');
     query[possiblyFormerKey(criterion)] = user[criterion];
   }
 
-  College.findOne(academiaServices.createFindQuery(query))
+  return College.findOne(academiaServices.createFindQuery(query))
       .exec()
       .then((college) => {
         if (!college) {
@@ -50,22 +53,38 @@ function replaceAcademiaValuesWithIds(user) {
           );
         }
         const mp = {};
-        const academiaOrder = ['college', 'course', 'branch', 'semester'];
-        mp['college'] = college;
+        const academiaOrder = ['college', 'course', 'branch'];
 
-        for (let i=0; i<academiaOrder.length; ++i) {
-          const key = academiaOrder[i];
-          if (!(key in user)) {
+        // initialize all id fields
+        for (const item of academiaOrder) {
+          const itemIdField = academiaFields[item.toUpperCase() + '_ID'];
+          user[itemIdField] = 0;
+        }
+
+        mp['college'] = college;
+        for (let i = 0; i < academiaOrder.length; ++i) {
+          const key = academiaFields[academiaOrder[i].toUpperCase()];
+          if (!user[key]) {
             break;
           }
           if (i != 0) {
-            const prevKey = academiaOrder[i-1];
+            const prevKey =
+            academiaFields[academiaOrder[i - 1].toUpperCase()];
             mp[key] = mp[prevKey][getByFormerMethodName(key)](user[key]);
           }
-          const idFieldKey = key.toUpperCase() + '_ID';
-          user[userFields[idFieldKey]] = mp[key][academiaFields[idFieldKey]];
-          delete user[key];
+          const keyIdField = key.toUpperCase() + '_ID';
+          user[userFields[keyIdField]] = mp[key][academiaFields[keyIdField]];
         }
+
+        // clean up
+        for (const item of academiaOrder) {
+          const key = academiaFields[item.toUpperCase()];
+          if (key in user) {
+            delete user[key];
+          }
+        }
+
+        return user;
       });
 }
 
