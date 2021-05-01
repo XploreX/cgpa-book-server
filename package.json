@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint .",
-    "fix-lint": "prettier --write . && eslint --fix ."
+    "lint": "eslint \"**/*.js\"",
+    "fix-lint": "prettier --write \"**/*.js\" && eslint --fix \"**/*.js\""
   },
   "repository": {
     "type": "git",
