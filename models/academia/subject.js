@@ -12,6 +12,7 @@ const subjectSchema = new Schema({
     minlength: 1,
   },
   subjectNameHistory: [String],
+  subjectId: Number,
   subjectCode: {
     type: String,
     trim: true,

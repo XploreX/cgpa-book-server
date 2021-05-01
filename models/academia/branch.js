@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const _ = require('lodash');
 
 const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT + '/utility');
@@ -12,6 +13,7 @@ const branchSchema = new Schema({
     minlength: 1,
   },
   branchNameHistory: [String],
+  branchId: 'Number',
   abbreviation: {
     type: String,
     trim: true,
@@ -32,12 +34,24 @@ const branchSchema = new Schema({
   },
 });
 
-branchSchema.methods.getSemester = function(semesterNumber) {
-  return utility.arrayUtil.findNeedle(
-      this.semesters,
-      semesterNumber,
-      'semester',
-  );
+branchSchema.methods.getSemester = function(semesterName) {
+  return _.find(this.semesters, (semester) => {
+    return semester.semester == semesterName;
+  });
+};
+
+branchSchema.methods.getSemesterById = function(semesterId) {
+  return _.find(this.branches, (semester) => {
+    return semester.semesterId == semesterId;
+  });
+};
+
+branchSchema.methods.getSemesterByFormerName = function(semesterName) {
+  return _.find(this.branches, (semester) => {
+    return _.find(semester.semesterNameHistory, (formerSemesterName) => {
+      return formerSemesterName == semesterName;
+    });
+  });
 };
 
 branchSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;

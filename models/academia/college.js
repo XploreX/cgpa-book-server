@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+const _ = require('lodash');
 const ROOT = require(__dirname + '/../../config').ROOT;
 const courseSchema = require('./course');
 const utility = require(ROOT + '/utility');
@@ -45,20 +45,28 @@ collegeSchema.pre('validate', function(next) {
 
 collegeSchema.methods.getCourse = function(courseName) {
   if (courseName instanceof RegExp) {
-    for (const course of this.courses) {
-      if (course.course.match(courseName)) {
-        return course;
-      }
-    }
+    return _.find(this.courses, (course) => {
+      return courseName.test(course.course);
+    });
   } else {
-    return utility.arrayUtil.findNeedle(
-        this.courses,
-        courseName,
-        'course',
-        true,
-    );
+    return _.find(this.courses, (course) => {
+      return course.course == courseName;
+    });
   }
-  return null;
+};
+
+collegeSchema.methods.getCourseById = function(courseId) {
+  return _.find(this.courses, (course)=>{
+    return course.courseId == courseId;
+  });
+};
+
+collegeSchema.methods.getCourseByFormerName = function(courseName) {
+  return _.find(this.courses, (course) => {
+    return _.find(course.courseNameHistory, (formerCourseName) => {
+      return courseName.test(formerCourseName);
+    });
+  });
 };
 
 collegeSchema.methods.getLastModified =

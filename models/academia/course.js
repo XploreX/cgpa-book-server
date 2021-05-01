@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
+const _ = require('lodash');
 
 const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT + '/utility');
 const branchSchema = require('./branch');
-
 const Schema = mongoose.Schema;
 
 const courseSchema = new Schema({
@@ -15,6 +15,7 @@ const courseSchema = new Schema({
   },
   courseNameHistory: [String],
   branches: [branchSchema],
+  courseId: 'Number',
   gpaMetric: {
     type: String,
     trim: true,
@@ -36,20 +37,29 @@ const courseSchema = new Schema({
 
 courseSchema.methods.getBranch = function(branchName) {
   if (branchName instanceof RegExp) {
-    for (const branch of this.branches) {
-      if (branch.branch.match(branchName)) {
-        return branch;
-      }
-    }
+    _.find(this.branches, (branch) => {
+      return branchName.test(branch.branch);
+    });
   } else {
-    return utility.arrayUtil.findNeedle(
-        this.branches,
-        branchName,
-        'branch',
-        true,
-    );
+    return _.find(this.branches, (branch) => {
+      return branch.branch == branchName;
+    });
   }
   return null;
+};
+
+courseSchema.methods.getBranchById = function(branchId) {
+  return _.find(this.branches, (branch) => {
+    return branch.branchId == branchId;
+  });
+};
+
+courseSchema.methods.getBranchByFormerName = function(branchName) {
+  return _.find(this.branches, (branch) => {
+    return _.find(branch.branchNameHistory, (formerBranchName) => {
+      return branchName.test(formerBranchName);
+    });
+  });
 };
 
 courseSchema.methods.getLastModified = utility.mongooseUtil.getLastModified;
