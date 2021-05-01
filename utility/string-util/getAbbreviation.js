@@ -10,7 +10,6 @@ const sw = require('stopword');
 function getAbbreviation(str) {
   let line = str.split(' ');
   line = sw.removeStopwords(line);
-  // console.log(line);
   let s = '';
   ignoreReg = /[&()]+/;
   for (let word of line) {

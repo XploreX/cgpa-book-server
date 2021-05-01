@@ -61,7 +61,6 @@ router.get('/branch', (req, res, next) => {
         if (!college) {
           return utility.responseUtil.sendEmptyDict(res);
         }
-        console.log(college);
         const course = college.getCourse(query['branch']);
         const branch = course.getBranch(query['branch']);
 

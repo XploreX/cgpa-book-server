@@ -12,7 +12,7 @@ app.use((req, res, next) => {
   console.log('req.query =', req.query);
   // console.log('req.params =', req.params);
   // console.log('req.headers =', req.headers);
-  console.log('req.body =', req.body);
+  // console.log('req.body =', req.body);
   next();
 });
 
@@ -26,12 +26,7 @@ app.use('/academia', require('./routes/academia'));
 // app.use('/users',require('./routers/uses.js'))
 
 app.get('/', (req, res) => {
-  const MongoClient = require('mongodb').MongoClient;
-  MongoClient.connect(process.env.DB_CONNECTION_STRING, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-  // res.status(200).send('Okaeri');
+  res.status(200).send('Okaeri');
 });
 
 app.use('/user', require('./routes/user'));

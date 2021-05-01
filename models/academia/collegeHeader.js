@@ -19,7 +19,6 @@ collegeHeaderSchema.statics.getLastListModification = function() {
       .exec()
       .then((doc) => {
         if (doc) {
-        // console.log(doc);
           return doc.lastListModification.toUTCString();
         } else return Date.now().toUTCString();
       });

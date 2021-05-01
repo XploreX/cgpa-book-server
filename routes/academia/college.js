@@ -72,7 +72,6 @@ router.get('/college-list', (req, res, next) => {
       })
       .then((colleges) => {
         for (college of colleges) {
-        // console.log(college);
           collegeName = college.college;
           if (college['abbreviation']) {
             collegeName += ' ( ' + college.abbreviation + ' ) ';

@@ -16,13 +16,10 @@ function prepareQuery(query) {
     }
   }
   for (key in query) {
-    // console.log(key);
     if (typeof query[key] === 'string' && key!='semester') {
-      // console.log(key + " is string");
       query[key] = query[key].replace('(', '\\(');
       query[key] = query[key].replace(')', '\\)');
       query[key] = new RegExp(query[key], flags);
-      // console.log(query[key]);
     }
   }
 }
