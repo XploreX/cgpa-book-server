@@ -8,7 +8,7 @@ const academiaFields = require(ROOT + '/fields/academia');
  * @return {Object} - returns dictionary required by mongo to update
  * timestamp fields
  */
-function getDateUpdateDict(i, j) {
+function createDateUpdateDict(i, j) {
   d = {
     [academiaFields.TS_UPDATED_AT]: true,
   };
@@ -28,4 +28,4 @@ function getDateUpdateDict(i, j) {
   return d;
 }
 
-module.exports = getDateUpdateDict;
+module.exports = createDateUpdateDict;

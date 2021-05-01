@@ -1,8 +1,8 @@
 const ROOT = require(__dirname + '/../../config').ROOT;
 const {College} = require(ROOT + '/models/academia');
 const CustomError = require(ROOT + '/CustomError');
-const getDateUpdateDict = require(ROOT +
-  '/services/academia/getDateUpdateDict');
+const createDateUpdateDict = require(ROOT +
+  '/services/academia/createDateUpdateDict');
 const utility = require(ROOT + '/utility');
 const academiaFields = require(ROOT + '/fields/academia');
 
@@ -38,7 +38,7 @@ function fillMissingData(query) {
               {
                 $push: {courses: {course: query['course']}},
                 $currentDate: {
-                  ...getDateUpdateDict(),
+                  ...createDateUpdateDict(),
                   ...{
                     [academiaFields.TS_LAST_LIST_MODIFICATION]: true,
                   },
@@ -72,7 +72,7 @@ function fillMissingData(query) {
                 },
               },
               $currentDate: {
-                ...getDateUpdateDict('i'),
+                ...createDateUpdateDict('i'),
                 ...{
                   ['courses.$[i].' +
               academiaFields.TS_LAST_LIST_MODIFICATION]: true,
@@ -116,7 +116,7 @@ function fillMissingData(query) {
                 },
               },
               $currentDate: {
-                ...getDateUpdateDict('i', 'j'),
+                ...createDateUpdateDict('i', 'j'),
                 ...{
                   ['courses.$[i].branches.$[j].' +
               academiaFields.TS_LAST_LIST_MODIFICATION]: true,

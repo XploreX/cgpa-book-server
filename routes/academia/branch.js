@@ -31,7 +31,7 @@ router.post('/branch', (req, res, next) => {
             {
               $push: {'courses.$[i].branches': query['branch']},
               $currentDate: {
-                ...academiaServices.getdateUpdateDict('i'),
+                ...academiaServices.createDateUpdateDict('i'),
                 ...{
                   ['courses.$[i].' +
               academiaFields.TS_LAST_LIST_MODIFICATION]: true,

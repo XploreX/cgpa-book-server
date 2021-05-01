@@ -39,7 +39,7 @@ router.post('/semester', (req, res, next) => {
                 'courses.$[i].branches.$[j].semesters': query['semester'],
               },
               $currentDate: {
-                ...academiaService.getDateUpdateDict('i', 'j'),
+                ...academiaService.createDateUpdateDict('i', 'j'),
                 ...{
                   ['courses.$[i].branches.$[j].' +
               academiaFields.TS_LAST_LIST_MODIFICATION]: true,

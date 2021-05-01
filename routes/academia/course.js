@@ -26,7 +26,7 @@ router.post('/course', (req, res, next) => {
             {
               $push: {courses: query['course']},
               $currentDate: {
-                ...academiaServices.getDateUpdateDict(),
+                ...academiaServices.createDateUpdateDict(),
                 ...{[academiaFields.TS_LAST_LIST_MODIFICATION]: true},
               },
             },
