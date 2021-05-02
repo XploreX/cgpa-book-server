@@ -39,6 +39,9 @@ function replaceAcademiaValuesWithIds(user) {
   critera = ['college', 'course', 'branch', 'semster'];
   query = {};
   for (const criterion of critera) {
+    if (!user[criterion]) {
+      continue;
+    }
     user[criterion] = new RegExp(_.escapeRegExp(user[criterion]), 'i');
     query[possiblyFormerKey(criterion)] = user[criterion];
   }
