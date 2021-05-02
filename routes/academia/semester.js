@@ -6,7 +6,7 @@ const utility = require(ROOT + '/utility');
 const {College} = require(ROOT + '/models').academia;
 const academiaService = require(ROOT + '/services/academia');
 const academiaFields = require(ROOT + '/fields/academia');
-
+const CustomError = require(ROOT + '/CustomError');
 // eslint-disable-next-line new-cap
 const router = express.Router();
 
