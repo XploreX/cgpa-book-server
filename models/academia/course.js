@@ -49,7 +49,7 @@ courseSchema.methods.getBranch = function(branchName) {
 
 courseSchema.methods.getBranchById = function(branchId) {
   return _.find(this.branches, (branch) => {
-    return branch.branchId == branchId;
+    return branch.branchId.equals(branchId);
   });
 };
 

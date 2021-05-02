@@ -53,7 +53,7 @@ semesterSchema.methods.getSubject = function(subjectName) {
 
 semesterSchema.methods.getSubjectById = function(subjectId) {
   return _.find(this.subjects, (subject) => {
-    return subject.subjectId == subjectId;
+    return subject.subjectId.equals(subjectId);
   });
 };
 

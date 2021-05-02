@@ -42,7 +42,7 @@ branchSchema.methods.getSemester = function(semesterName) {
 
 branchSchema.methods.getSemesterById = function(semesterId) {
   return _.find(this.branches, (semester) => {
-    return semester.semesterId == semesterId;
+    return semester.semesterId.equals(semesterId);
   });
 };
 

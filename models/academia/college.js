@@ -58,7 +58,7 @@ collegeSchema.methods.getCourse = function(courseName) {
 
 collegeSchema.methods.getCourseById = function(courseId) {
   return _.find(this.courses, (course)=>{
-    return course.courseId == courseId;
+    return course.courseId.equals(courseId);
   });
 };
 
