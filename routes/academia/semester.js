@@ -72,6 +72,10 @@ router.get('/semester', (req, res, next) => {
       .exec()
       .then((college) => {
         if (!college) {
+          throw new CustomError(
+              'Requested semester data not found',
+              StatusCodes.NOT_FOUND,
+          );
           return utility.responseUtil.sendEmptyDict(res);
         }
         const course = college.getCourse(query['course']);
@@ -123,9 +127,9 @@ router.get('/semester-list', (req, res, next) => {
         for (semester of branch.semesters) {
           semesterList.push(semester.semester);
         }
-        semesterList.sort((a, b)=>{
+        semesterList.sort((a, b) => {
           if (!isNaN(a) && !isNaN(b)) {
-            return Number(a)-Number(b);
+            return Number(a) - Number(b);
           } else if (!isNaN(a)) {
             return -1;
           } else {
