@@ -25,6 +25,9 @@ const userSchema = new Schema(
       unlocked: {
         type: 'Number',
       },
+      rated: {
+        type: 'Boolean',
+      },
       semesters: {},
     },
     {
