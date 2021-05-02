@@ -12,7 +12,7 @@ app.use((req, res, next) => {
   console.log('req.query =', req.query);
   // console.log('req.params =', req.params);
   // console.log('req.headers =', req.headers);
-  // console.log('req.body =', req.body);
+  console.log('req.body =', req.body);
   next();
 });
 
