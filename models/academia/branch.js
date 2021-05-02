@@ -13,7 +13,7 @@ const branchSchema = new Schema({
     minlength: 1,
   },
   branchNameHistory: [String],
-  branchId: 'Number',
+  branchId: mongoose.Types.ObjectId,
   abbreviation: {
     type: String,
     trim: true,

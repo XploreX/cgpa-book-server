@@ -55,12 +55,6 @@ function replaceAcademiaValuesWithIds(user) {
         const mp = {};
         const academiaOrder = ['college', 'course', 'branch'];
 
-        // initialize all id fields
-        for (const item of academiaOrder) {
-          const itemIdField = academiaFields[item.toUpperCase() + '_ID'];
-          user[itemIdField] = 0;
-        }
-
         mp['college'] = college;
         for (let i = 0; i < academiaOrder.length; ++i) {
           const key = academiaFields[academiaOrder[i].toUpperCase()];

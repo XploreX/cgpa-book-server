@@ -15,6 +15,8 @@ const checkList = ['college', 'course', 'branch'];
 router.post('/branch', (req, res, next) => {
   const query = req.post;
   utility.requestUtil.ensureCertainFields(query, checkList);
+  academiaServices.addIdFields(query[academiaFields['BRANCH']]);
+  academiaServices.updateHistoryFields(query[academiaFields['BRANCH']]);
   academiaServices
       .fillMissingData(query)
       .then(() => {

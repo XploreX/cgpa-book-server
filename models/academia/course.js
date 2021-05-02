@@ -15,7 +15,7 @@ const courseSchema = new Schema({
   },
   courseNameHistory: [String],
   branches: [branchSchema],
-  courseId: 'Number',
+  courseId: mongoose.Types.ObjectId,
   gpaMetric: {
     type: String,
     trim: true,

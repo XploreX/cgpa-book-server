@@ -12,7 +12,7 @@ const semesterSchema = new Schema({
     required: true,
   },
   semesterNameHistory: [String],
-  semesterId: Number,
+  semesterId: mongoose.Types.ObjectId,
   creditsTotal: {
     type: Number,
   },

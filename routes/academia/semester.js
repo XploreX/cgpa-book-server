@@ -5,15 +5,18 @@ const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT + '/utility');
 const {College} = require(ROOT + '/models').academia;
 const academiaService = require(ROOT + '/services/academia');
+const academiaFields = require(ROOT + '/fields/academia');
+
 // eslint-disable-next-line new-cap
 const router = express.Router();
-const academiaFields = require(ROOT + '/fields/academia');
 
 const checkList = ['college', 'course', 'branch', 'semester'];
 
 router.post('/semester', (req, res, next) => {
   const query = req.body;
   utility.requestUtil.ensureCertainFields(query, checkList);
+  academiaService.addIdFields(query[academiaFields['SEMESTER']]);
+  academiaService.updateHistoryFields(query[academiaFields['SEMESTER']]);
   academiaService
       .fillMissingData(query)
       .then((queryRes) => {

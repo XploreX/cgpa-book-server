@@ -15,7 +15,7 @@ const collegeSchema = new Schema({
     index: true,
   },
   collegeNameHistory: [String],
-  collegeId: Number,
+  collegeId: mongoose.Types.ObjectId,
   abbreviation: {
     type: String,
     trim: true,

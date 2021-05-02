@@ -11,13 +11,13 @@ const userSchema = new Schema(
         minlength: 1,
       },
       collegeId: {
-        type: 'Number',
+        type: mongoose.Types.ObjectId,
       },
       courseId: {
-        type: 'Number',
+        type: mongoose.Types.ObjectId,
       },
       branchId: {
-        type: 'Number',
+        type: mongoose.Types.ObjectId,
       },
       unlocked: {
         type: 'Number',
