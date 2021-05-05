@@ -45,19 +45,13 @@ collegeSchema.pre('validate', function(next) {
 });
 
 collegeSchema.methods.getCourse = function(courseName) {
-  if (courseName instanceof RegExp) {
-    return _.find(this.courses, (course) => {
-      return courseName.test(course.course);
-    });
-  } else {
-    return _.find(this.courses, (course) => {
-      return course.course == courseName;
-    });
-  }
+  return _.find(this.courses, (course) => {
+    return courseName.test(course.course);
+  });
 };
 
 collegeSchema.methods.getCourseById = function(courseId) {
-  return _.find(this.courses, (course)=>{
+  return _.find(this.courses, (course) => {
     return course.courseId.equals(courseId);
   });
 };

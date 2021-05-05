@@ -40,15 +40,9 @@ semesterSchema.pre('save', function(next) {
 });
 
 semesterSchema.methods.getSubject = function(subjectName) {
-  if (subjectName instanceof RegExp) {
-    return _.find(this.subjects, (subject) => {
-      return subjectName.test(subject.subject);
-    });
-  } else {
-    return _.find(this.subjects, (subject) => {
-      return subject.subject == subjectName;
-    });
-  }
+  return _.find(this.subjects, (subject) => {
+    return subjectName.test(subject.subject);
+  });
 };
 
 semesterSchema.methods.getSubjectById = function(subjectId) {

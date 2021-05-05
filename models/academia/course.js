@@ -36,15 +36,9 @@ const courseSchema = new Schema({
 });
 
 courseSchema.methods.getBranch = function(branchName) {
-  if (branchName instanceof RegExp) {
-    return _.find(this.branches, (branch) => {
-      return branchName.test(branch.branch);
-    });
-  } else {
-    return _.find(this.branches, (branch) => {
-      return branch.branch == branchName;
-    });
-  }
+  return _.find(this.branches, (branch) => {
+    return branchName.test(branch.branch);
+  });
 };
 
 courseSchema.methods.getBranchById = function(branchId) {

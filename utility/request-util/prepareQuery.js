@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 /**
  * Modifies the values of query object suitable to the format
  * needed by the program
@@ -17,9 +19,7 @@ function prepareQuery(query) {
   }
   for (key in query) {
     if (typeof query[key] === 'string' && key!='semester') {
-      query[key] = query[key].replace('(', '\\(');
-      query[key] = query[key].replace(')', '\\)');
-      query[key] = new RegExp(query[key], flags);
+      query[key] = new RegExp(_.escapeRegExp(query[key]), flags);
     }
   }
 }
