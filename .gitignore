@@ -1,4 +1,5 @@
 node_modules/
 .vscode/
 try-docs.txt
-**/*-backup.*
+backups/
+.env

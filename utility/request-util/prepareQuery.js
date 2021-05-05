@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 /**
  * Modifies the values of query object suitable to the format
  * needed by the program
@@ -16,13 +18,10 @@ function prepareQuery(query) {
     }
   }
   for (key in query) {
-    // console.log(key);
+    // substring search is used for college, course, branch
+    // and subject, whereas for semester exact search is used.
     if (typeof query[key] === 'string' && key!='semester') {
-      // console.log(key + " is string");
-      query[key] = query[key].replace('(', '\\(');
-      query[key] = query[key].replace(')', '\\)');
-      query[key] = new RegExp(query[key], flags);
-      // console.log(query[key]);
+      query[key] = new RegExp(_.escapeRegExp(query[key]), flags);
     }
   }
 }

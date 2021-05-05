@@ -5,7 +5,7 @@ const ROOT = require(__dirname + '/../../config').ROOT;
 const authenticateUser = require(ROOT + '/middlewares/authenticateUser');
 const {User} = require(ROOT + '/models/user');
 const utility = require(ROOT + '/utility');
-
+const userServices = require(ROOT + '/services/user');
 // eslint-disable-next-line new-cap
 const router = express.Router();
 
@@ -15,16 +15,24 @@ router.get('/gpa-data', authenticateUser, (req, res, next) => {
       .exec()
       .then((user) => {
         if (user === null) {
-          user = {};
+          return {};
+        } else {
+          return userServices.replaceAcademiaIdsWithValues(user.toObject());
         }
+      })
+      .then((user) => {
         res.status(StatusCodes.OK).json(user);
       })
       .catch(next);
 });
+
 router.post('/gpa-data', authenticateUser, (req, res, next) => {
-  req.body.email = req.user.email;
-  User.findOne({email: req.user.email})
-      .exec()
+  userServices
+      .replaceAcademiaValuesWithIds(req.body)
+      .then(() => {
+        req.body.email = req.user.email;
+        return User.findOne({email: req.user.email}).exec();
+      })
       .then((user) => {
         if (user === null) {
           user = new User(req.body);

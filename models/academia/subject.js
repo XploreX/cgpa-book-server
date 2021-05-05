@@ -7,11 +7,11 @@ const utility = require(ROOT + '/utility');
 const subjectSchema = new Schema({
   subject: {
     type: String,
-    required: true,
+    required: false,
     trim: true,
-    minlength: 1,
   },
   subjectNameHistory: [String],
+  subjectId: mongoose.Types.ObjectId,
   subjectCode: {
     type: String,
     trim: true,

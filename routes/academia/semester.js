@@ -5,15 +5,18 @@ const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT + '/utility');
 const {College} = require(ROOT + '/models').academia;
 const academiaService = require(ROOT + '/services/academia');
+const academiaFields = require(ROOT + '/fields/academia');
+const CustomError = require(ROOT + '/CustomError');
 // eslint-disable-next-line new-cap
 const router = express.Router();
-const academiaFields = require(ROOT + '/fields/academia');
 
 const checkList = ['college', 'course', 'branch', 'semester'];
 
 router.post('/semester', (req, res, next) => {
   const query = req.body;
   utility.requestUtil.ensureCertainFields(query, checkList);
+  academiaService.addIdFields(query[academiaFields['SEMESTER']]);
+  academiaService.updateHistoryFields(query[academiaFields['SEMESTER']]);
   academiaService
       .fillMissingData(query)
       .then((queryRes) => {
@@ -39,7 +42,7 @@ router.post('/semester', (req, res, next) => {
                 'courses.$[i].branches.$[j].semesters': query['semester'],
               },
               $currentDate: {
-                ...academiaService.getDateUpdateDict('i', 'j'),
+                ...academiaService.createDateUpdateDict('i', 'j'),
                 ...{
                   ['courses.$[i].branches.$[j].' +
               academiaFields.TS_LAST_LIST_MODIFICATION]: true,
@@ -65,10 +68,14 @@ router.post('/semester', (req, res, next) => {
 router.get('/semester', (req, res, next) => {
   const query = req.query;
   utility.requestUtil.ensureCertainFields(query, checkList);
-  College.findOne(academiaService.getDataFindQuery(query))
+  College.findOne(academiaService.createFindQuery(query))
       .exec()
       .then((college) => {
         if (!college) {
+          throw new CustomError(
+              'Requested semester data not found',
+              StatusCodes.NOT_FOUND,
+          );
           return utility.responseUtil.sendEmptyDict(res);
         }
         const course = college.getCourse(query['course']);
@@ -120,9 +127,9 @@ router.get('/semester-list', (req, res, next) => {
         for (semester of branch.semesters) {
           semesterList.push(semester.semester);
         }
-        semesterList.sort((a, b)=>{
+        semesterList.sort((a, b) => {
           if (!isNaN(a) && !isNaN(b)) {
-            return Number(a)-Number(b);
+            return Number(a) - Number(b);
           } else if (!isNaN(a)) {
             return -1;
           } else {

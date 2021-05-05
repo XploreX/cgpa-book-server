@@ -5,7 +5,6 @@ const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT + '/utility');
 const {College, CollegeHeader} = require(ROOT + '/models').academia;
 const academiaService = require(ROOT + '/services/academia');
-
 // eslint-disable-next-line new-cap
 const router = express.Router();
 
@@ -14,6 +13,8 @@ const checkList = ['college'];
 router.post('/college', (req, res, next) => {
   const query = req.body;
   utility.requestUtil.ensureCertainFields(query, checkList);
+  academiaService.addIdFields(query['college']);
+  academiaService.updateHistoryFields(query['college']);
   college = new College(query['college']);
   college
       .save()
@@ -29,7 +30,7 @@ router.post('/college', (req, res, next) => {
 router.get('/college', (req, res, next) => {
   const query = req.query;
   utility.requestUtil.ensureCertainFields(query, checkList);
-  College.findOne(academiaService.getDataFindQuery(query))
+  College.findOne(academiaService.createFindQuery(query))
       .exec()
       .then((college) => {
         if (!college) {
@@ -72,7 +73,6 @@ router.get('/college-list', (req, res, next) => {
       })
       .then((colleges) => {
         for (college of colleges) {
-        // console.log(college);
           collegeName = college.college;
           if (college['abbreviation']) {
             collegeName += ' ( ' + college.abbreviation + ' ) ';

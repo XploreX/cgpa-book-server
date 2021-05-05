@@ -28,7 +28,6 @@ function notFoundHandler(req, res, next) {
 function logErrors(err, req, res, next) {
   if ('statusCode' in err) {
     if (err.statusCode === StatusCodes.NOT_MODIFIED) {
-      // console.log("yeah here", err);
       return next(err);
     }
   }

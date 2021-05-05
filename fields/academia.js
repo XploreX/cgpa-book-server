@@ -5,7 +5,7 @@ module.exports = Object.freeze({
 
   COLLEGE: 'college',
   COLLEGE_NAME_HISTORY: 'collegeNameHistory',
-  COLLEGE_ID: '_id',
+  COLLEGE_ID: 'collegeId',
 
   COURSE: 'course',
   COURSES: 'courses',

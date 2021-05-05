@@ -15,6 +15,8 @@ const checkList = ['college', 'course'];
 router.post('/course', (req, res, next) => {
   const query = req.body;
   utility.requestUtil.ensureCertainFields(query, checkList);
+  academiaServices.addIdFields(query[academiaFields['COURSE']]);
+  academiaServices.updateHistoryFields(query[academiaFields['COURSE']]);
   academiaServices
       .fillMissingData(query)
       .then(() => {
@@ -26,7 +28,7 @@ router.post('/course', (req, res, next) => {
             {
               $push: {courses: query['course']},
               $currentDate: {
-                ...academiaServices.getDateUpdateDict(),
+                ...academiaServices.createDateUpdateDict(),
                 ...{[academiaFields.TS_LAST_LIST_MODIFICATION]: true},
               },
             },
@@ -43,7 +45,7 @@ router.get('/course', (req, res, next) => {
   const query = req.query;
   utility.requestUtil.ensureCertainFields(query, checkList);
   College.findOne(
-      academiaServices.getDataFindQuery(query),
+      academiaServices.createFindQuery(query),
   )
       .exec()
       .then((college) => {

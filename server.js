@@ -1,11 +1,11 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 
 const app = require('./index');
 const {basicErrorHandler} = require('./utility/error-util');
 
 const PORT = process.env.PORT || 3000;
-const DB_CONNECTION_STRING =
-  process.env.DB_CONNECTION_STRING || 'mongodb://localhost:27017/cgpa_book';
+const DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
 
 console.log(DB_CONNECTION_STRING);
 

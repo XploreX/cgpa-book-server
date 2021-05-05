@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const _ = require('lodash');
 
 const ROOT = require(__dirname + '/../../config').ROOT;
 const utility = require(ROOT + '/utility');
@@ -11,6 +12,7 @@ const semesterSchema = new Schema({
     required: true,
   },
   semesterNameHistory: [String],
+  semesterId: mongoose.Types.ObjectId,
   creditsTotal: {
     type: Number,
   },
@@ -37,23 +39,24 @@ semesterSchema.pre('save', function(next) {
   next();
 });
 
-
 semesterSchema.methods.getSubject = function(subjectName) {
-  if (subjectName instanceof RegExp) {
-    for (const subject of this.subjects) {
-      if (subject.subject.match(subjectName)) {
-        return subject;
-      }
-    }
-  } else {
-    return utility.arrayUtil.findNeedle(
-        this.subjects,
-        subjectName,
-        true,
-        'subject',
-    );
-  }
-  return null;
+  return _.find(this.subjects, (subject) => {
+    return subjectName.test(subject.subject);
+  });
+};
+
+semesterSchema.methods.getSubjectById = function(subjectId) {
+  return _.find(this.subjects, (subject) => {
+    return subject.subjectId.equals(subjectId);
+  });
+};
+
+semesterSchema.methods.getSubjectByFormerName = function(subjectName) {
+  return _.find(this.subjects, (subject) => {
+    return _.find(subject.subjectNameHistory, (formerSubjectName) => {
+      return subjectName.test(formerSubjectName);
+    });
+  });
 };
 
 semesterSchema.methods.getLastModified =
