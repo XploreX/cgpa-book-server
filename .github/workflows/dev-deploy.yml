@@ -1,0 +1,151 @@
+name: Development deployment
+
+on:
+  issue_comment:
+    types: [created]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  deploy-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: acknowledge deployment request to commenter
+        id: check
+        uses: Khan/pull-request-comment-trigger@1.0.0
+        with:
+          trigger: "@github deploy"
+          reaction: rocket
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: validate user
+        id: validate_user
+        if: ${{ steps.check.outputs.triggered == 'true' }}
+        run: |
+          if [[ "${AUTHOR_ASSOCIATION}" != 'MEMBER' && "${AUTHOR_ASSOCIATION}" != 'OWNER' ]]
+          then
+            echo "User authorization failed"
+            exit 1
+          else
+            echo "User authorization successful"
+          fi
+        env:
+          AUTHOR_ASSOCIATION: ${{ github.event.comment.author_association }}
+    outputs:
+      triggered: ${{ steps.check.outputs.triggered }}
+   
+  deploy:
+    runs-on: ubuntu-latest
+    needs: deploy-check
+    if: ${{ needs.deploy-check.outputs.triggered == 'true' }}
+    steps:
+      - name: get pull request ref
+        id: get_pull_request_ref
+        uses: octokit/request-action@v2.0.2
+        with:
+          route: GET /repos/{owner}/{repository}/pulls/{issue_id} 
+          owner: ${{ github.repository_owner }}
+          repository: ${{ github.event.repository.name }}
+          issue_id: ${{ github.event.issue.number }}
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      
+      - name: create deployment
+        id: create_deployment
+        uses: octokit/request-action@v2.0.2
+        with:
+          route: POST /repos/{owner}/{repository}/deployments
+          owner: ${{ github.repository_owner }}
+          repository: ${{ github.event.repository.name }}
+          ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
+          environment: dev
+          auto_merge: false
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: obtain necessary info
+        id: info
+        run: |
+          echo "::set-output name=deploy_route::/repos/${OWNER}/${REPO_NAME}/deployments/${DEPLOY_ID}"
+          echo "PR_BRANCH_NAME=${PR_REF}" >> $GITHUB_ENV
+        env:
+          OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          DEPLOY_ID: ${{ fromJson(steps.create_deployment.outputs.data).id }}
+          PR_REF: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
+
+      - name: set deployment to in progress
+        id: start_deployment
+        uses: octokit/request-action@v2.0.2
+        with:
+          route: POST ${{ steps.info.outputs.deploy_route}}/statuses
+          environment: dev
+          environment_url: ${{ secrets.HEROKU_DEV_ENVIRONMENT_URL }}
+          log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          state: in_progress
+          mediaType: '{"previews": ["flash", "ant-man"]}'
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with: 
+          fetch-depth: 0
+      - name: Heroku login
+        run: |
+          cat > ~/.netrc <<EOF
+            machine api.heroku.com
+              login $HEROKU_EMAIL
+              password $HEROKU_API_KEY
+            machine git.heroku.com
+              login $HEROKU_EMAIL
+              password $HEROKU_API_KEY
+          EOF
+        env:
+          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+
+      - name: Add heroku dev remote
+        run: heroku git:remote --app $HEROKU_DEV_APP_NAME
+        env:
+          HEROKU_DEV_APP_NAME: ${{ secrets.HEROKU_DEV_APP_NAME }}
+
+      - name: Push to heroku master
+        run: |
+          git checkout "${PR_BRANCH_NAME}"
+          git push -f heroku "${PR_BRANCH_NAME}":master
+
+      - name: set deployment status to success
+        id: successful_deployment
+        uses: octokit/request-action@v2.0.2
+        with:
+          route: POST ${{ steps.info.outputs.deploy_route }}/statuses
+          environment: dev
+          environment_url: ${{ secrets.HEROKU_DEV_ENVIRONMENT_URL }}
+          log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          mediaType: '{"previews": ["ant-man"]}'
+          state: success
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: set deployment status to failure
+        if: failure()
+        id: failed_deployment
+        uses: octokit/request-action@v2.0.2
+        with:
+          route: POST ${{ steps.info.outputs.deploy_route }}/statuses
+          environment_url: ${{ secrets.HEROKU_DEV_ENVIRONMENT_URL }}
+          log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          mediaType: '{"previews": ["ant-man"]}'
+          state: failure
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+
+
+           
+  
+
