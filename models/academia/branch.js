@@ -35,6 +35,8 @@ const branchSchema = new Schema({
 });
 
 branchSchema.methods.getSemester = function(semesterName) {
+  // semester name have to match exactly unlike course, branch
+  // and subject names
   return _.find(this.semesters, (semester) => {
     return semester.semester == semesterName;
   });

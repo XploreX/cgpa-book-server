@@ -18,6 +18,8 @@ function prepareQuery(query) {
     }
   }
   for (key in query) {
+    // substring search is used for college, course, branch
+    // and subject, whereas for semester exact search is used.
     if (typeof query[key] === 'string' && key!='semester') {
       query[key] = new RegExp(_.escapeRegExp(query[key]), flags);
     }
