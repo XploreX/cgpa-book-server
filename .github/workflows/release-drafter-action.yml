@@ -1,4 +1,4 @@
-name: Package build
+name: Release Drafter
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
-      - name: Setup release drafter
+      - name: Run release drafter
         id: release-drafter
         uses: release-drafter/release-drafter@v5
         with:
