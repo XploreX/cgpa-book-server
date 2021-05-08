@@ -1,8 +1,7 @@
+const {StatusCodes, ReasonPhrases} = require('http-status-codes');
 const ROOT = require(__dirname + '/../config').ROOT;
 const authenticateClientId = require(ROOT +
   '/utility/oauth/authenticateClientId');
-const CustomError = require(ROOT + '/CustomError');
-
 /**
  *
  * @param {RequestObject} req
@@ -23,8 +22,8 @@ function authenticateUser(req, res, next) {
         next();
       })
       .catch((err) => {
-        err.statusCode = 401;
-        err.name = CustomError.NAME_AUTHENTICATION_ERROR;
+        err.statusCode = StatusCodes.UNAUTHORIZED;
+        err.name = ReasonPhrases.UNAUTHORIZED;
         next(err);
       });
 }
