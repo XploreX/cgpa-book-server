@@ -17,6 +17,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          ref: production
+
       - name: Heroku login
         run: |
           cat > ~/.netrc <<EOF
@@ -38,8 +40,7 @@ jobs:
 
       - name: Push to heroku master
         run: |
-          git checkout "${GITHUB_REF##*/}"
-          git push -f heroku "${GITHUB_REF##*/}":master
+          git push -f heroku HEAD:master
 
 
 
